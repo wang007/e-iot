@@ -26,7 +26,6 @@ import java.util.concurrent.TimeoutException;
  */
 public abstract class ChargeConnectionBase extends ConnectionBase implements ChargeConnection {
 
-
     private final Map<String, Object> map;
 
     protected final SslChannelProvider sslChannelProvider;
@@ -142,30 +141,6 @@ public abstract class ChargeConnectionBase extends ConnectionBase implements Cha
         }
     }
 
-
-    @Override
-    public Object put(String key, Object obj) {
-        return map.put(key, obj);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T get(String key) {
-        return (T) map.get(key);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T get(String key, T defaultValue) {
-        return (T) map.getOrDefault(key, defaultValue);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T remove(String key) {
-        return (T) map.remove(key);
-    }
-
     @Override
     public Map<String, Object> attributes() {
         return map;
@@ -225,7 +200,7 @@ public abstract class ChargeConnectionBase extends ConnectionBase implements Cha
      * @param timeout      the timeout
      * @return the ops result of Future
      */
-    protected Future<RequestFrame<?, ?>> beforeSend(RequestFrame<?, ?> requestFrame, int timeout) {
+    protected Future<RequestFrame<?, Frame<?>>> beforeSend(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
         return Future.succeededFuture(requestFrame);
     }
 
@@ -234,7 +209,7 @@ public abstract class ChargeConnectionBase extends ConnectionBase implements Cha
     }
 
     @Override
-    public final Future<Frame<?>> send(RequestFrame<?, ?> frame, int timeoutMs) {
+    public final Future<Frame<?>> send(RequestFrame<?, Frame<?>> frame, int timeoutMs) {
         if (timeoutMs <= 0) {
             timeoutMs = this.waitResponseTimeout;
         }

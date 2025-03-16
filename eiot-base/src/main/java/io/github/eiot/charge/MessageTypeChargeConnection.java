@@ -29,17 +29,17 @@ public abstract class MessageTypeChargeConnection extends ChargeConnectionBase {
     }
 
     @Override
-    protected Future<RequestFrame<?, ?>> beforeSend(RequestFrame<?, ?> requestFrame, int timeout) {
+    protected Future<RequestFrame<?, Frame<?>>> beforeSend(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
         String responseType = requestFrame.responseMessageType();
         synchronized (this) {
-            Future<RequestFrame<?, ?>> future;
+            Future<RequestFrame<?, Frame<?>>> future;
             PendingRequestFrames requestFrames = waitResults.get(responseType);
             if (requestFrames == null) {
                 requestFrames = new PendingRequestFrames(requestFrame);
                 waitResults.put(responseType, requestFrames);
                 future = Future.succeededFuture(requestFrame);
             } else {
-                Promise<RequestFrame<?, ?>> promise = context.promise();
+                Promise<RequestFrame<?, Frame<?>>> promise = context.promise();
                 requestFrames.addPending(promise, requestFrame);
                 future = promise.future();
             }
@@ -78,9 +78,8 @@ public abstract class MessageTypeChargeConnection extends ChargeConnectionBase {
                 frame = null;
             }
 
-            RequestFrame<?, Object> current = (RequestFrame<?, Object>) requestFrames.current;
-            Frame<Object> f = (Frame<Object>) frame;
-            return current.trySetResponseResult(f, ex);
+            RequestFrame<?, Frame<?>> current = requestFrames.current;
+            return current.trySetResponseResult(frame, ex);
         }
     }
 
@@ -88,11 +87,11 @@ public abstract class MessageTypeChargeConnection extends ChargeConnectionBase {
     // not thread safe
     private static class PendingRequestFrames {
 
-        private RequestFrame<?, ?> current;
+        private RequestFrame<?, Frame<?>> current;
 
         private Queue<PendingRequestFrame> pendingRequests;
 
-        PendingRequestFrames(RequestFrame<?, ?> requestFrame) {
+        PendingRequestFrames(RequestFrame<?, Frame<?>> requestFrame) {
             this.current = requestFrame;
         }
 
@@ -100,7 +99,7 @@ public abstract class MessageTypeChargeConnection extends ChargeConnectionBase {
             return pendingRequests != null && !pendingRequests.isEmpty();
         }
 
-        public void addPending(Promise<RequestFrame<?, ?>> promise, RequestFrame<?, ?> requestFrame) {
+        public void addPending(Promise<RequestFrame<?, Frame<?>>> promise, RequestFrame<?, Frame<?>> requestFrame) {
             getPendingRequests().add(new PendingRequestFrame(promise, requestFrame));
         }
 
@@ -112,7 +111,6 @@ public abstract class MessageTypeChargeConnection extends ChargeConnectionBase {
         }
 
         /**
-         *
          * @return empty to remove
          */
         private boolean next() {
@@ -130,10 +128,10 @@ public abstract class MessageTypeChargeConnection extends ChargeConnectionBase {
     }
 
     private static class PendingRequestFrame {
-        public final Promise<RequestFrame<?, ?>> promise;
-        public final RequestFrame<?, ?> requestFrame;
+        public final Promise<RequestFrame<?, Frame<?>>> promise;
+        public final RequestFrame<?, Frame<?>> requestFrame;
 
-        public PendingRequestFrame(Promise<RequestFrame<?, ?>> promise, RequestFrame<?, ?> requestFrame) {
+        public PendingRequestFrame(Promise<RequestFrame<?, Frame<?>>> promise, RequestFrame<?, Frame<?>> requestFrame) {
             this.promise = promise;
             this.requestFrame = requestFrame;
         }

@@ -31,7 +31,7 @@ public abstract class ChargeServerBase extends TCPServerBase implements ChargeSe
 
     protected static final Logger log = LoggerFactory.getLogger(ChargeServerBase.class);
 
-    private static final Handler<Throwable> DEFAULT_EXCEPTION_HANDLER = t -> log.warn("", t);
+    private static final Handler<Throwable> DEFAULT_EXCEPTION_HANDLER = t -> log.warn("Connection failure", t);
 
     protected final ChargeServerOptions options;
 

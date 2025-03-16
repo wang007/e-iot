@@ -1,13 +1,15 @@
 package io.github.eiot.charge;
 
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.impl.JsonUtil;
-
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 /**
- * Converter and mapper for {@link FrameCodecOptions}.
- * NOTE: This class has been automatically generated from the {@link FrameCodecOptions} original class using Vert.x codegen.
+ * Converter and mapper for {@link io.github.eiot.charge.FrameCodecOptions}.
+ * NOTE: This class has been automatically generated from the {@link io.github.eiot.charge.FrameCodecOptions} original class using Vert.x codegen.
  */
 public class FrameCodecOptionsConverter {
 

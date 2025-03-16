@@ -1,14 +1,15 @@
 package io.github.eiot.charge.server;
 
-import io.github.eiot.charge.FrameCodecOptions;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.impl.JsonUtil;
-
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 /**
- * Converter and mapper for {@link ChargeServerOptions}.
- * NOTE: This class has been automatically generated from the {@link ChargeServerOptions} original class using Vert.x codegen.
+ * Converter and mapper for {@link io.github.eiot.charge.server.ChargeServerOptions}.
+ * NOTE: This class has been automatically generated from the {@link io.github.eiot.charge.server.ChargeServerOptions} original class using Vert.x codegen.
  */
 public class ChargeServerOptionsConverter {
 
@@ -21,7 +22,7 @@ public class ChargeServerOptionsConverter {
       switch (member.getKey()) {
         case "frameCodecOptions":
           if (member.getValue() instanceof JsonObject) {
-            obj.setFrameCodecOptions(new FrameCodecOptions((io.vertx.core.json.JsonObject)member.getValue()));
+            obj.setFrameCodecOptions(new io.github.eiot.charge.FrameCodecOptions((io.vertx.core.json.JsonObject)member.getValue()));
           }
           break;
         case "frameConverter":

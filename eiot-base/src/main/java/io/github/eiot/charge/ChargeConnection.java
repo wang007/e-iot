@@ -46,7 +46,7 @@ public interface ChargeConnection extends AttributeHolder, ReadStream<Buffer>, W
      * @param timeoutMs timeout
      * @return
      */
-    Future<Frame<?>> send(RequestFrame<?, ?> frame, int timeoutMs);
+    Future<Frame<?>> send(RequestFrame<?, Frame<?>> frame, int timeoutMs);
 
     /**
      * Use default timeout send the current frame and wait for the response frame.
@@ -54,7 +54,7 @@ public interface ChargeConnection extends AttributeHolder, ReadStream<Buffer>, W
      * @param frame request frame
      * @return
      */
-    default Future<Frame<?>> send(RequestFrame<?, ?> frame) {
+    default Future<Frame<?>> send(RequestFrame<?, Frame<?>> frame) {
         return send(frame, 0);
     }
 
@@ -115,7 +115,7 @@ public interface ChargeConnection extends AttributeHolder, ReadStream<Buffer>, W
      * NOTE: don't called it, is internal method.
      *
      * @param frame the response frame
-     * @param ex the failed result
+     * @param ex    the failed result
      * @return set result
      */
     boolean trySetResponseResult(Frame<?> frame, Throwable ex);

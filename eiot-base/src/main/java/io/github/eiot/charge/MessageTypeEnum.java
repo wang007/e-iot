@@ -2,7 +2,6 @@ package io.github.eiot.charge;
 
 /**
  *
- *
  * created by wang007 on 2025/2/20
  */
 public interface MessageTypeEnum {

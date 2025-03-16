@@ -40,7 +40,4 @@ public interface CodecContext extends AttributeHolder {
             return Collections.emptyMap();
         }
     };
-
-    @Override
-    Object put(String key, Object obj);
 }

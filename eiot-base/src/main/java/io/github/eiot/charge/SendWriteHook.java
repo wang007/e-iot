@@ -19,7 +19,7 @@ public interface SendWriteHook {
      * @param frame The frame that needs to be sent
      * @return a future completed with the request frame
      */
-    default Future<RequestFrame<?, ?>> beforeSend(RequestFrame<?, ?> frame) {
+    default Future<RequestFrame<?, Frame<?>>> beforeSend(RequestFrame<?, Frame<?>> frame) {
         return Future.succeededFuture(frame);
     }
 

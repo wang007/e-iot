@@ -27,7 +27,7 @@ public abstract class SeqNoChargeConnection extends ChargeConnectionBase {
 
     private final Queue<Integer> seqNoQueue;
 
-    protected final Map<Integer, RequestFrame<?, ?>> waitingResults = new HashMap<>(8, 1.0f);
+    protected final Map<Integer, RequestFrame<?, Frame<?>>> waitingResults = new HashMap<>(8, 1.0f);
 
     protected SeqNoChargeConnection(ContextInternal context, ChannelHandlerContext chctx,
                                     SslChannelProvider sslChannelProvider, TCPMetrics<?> metrics,
@@ -51,10 +51,10 @@ public abstract class SeqNoChargeConnection extends ChargeConnectionBase {
 
 
     @Override
-    protected Future<RequestFrame<?, ?>> beforeSend(RequestFrame<?, ?> requestFrame, int timeout) {
+    protected Future<RequestFrame<?, Frame<?>>> beforeSend(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
         synchronized (this) {
             BooleanRef success = new BooleanRef();
-            Future<RequestFrame<?, ?>> frameFuture;
+            Future<RequestFrame<?, Frame<?>>> frameFuture;
             if (seqNoQueue.isEmpty()) {
                 String terminalNo = requestFrame.terminalNo();
                 logger.warn("terminalNo: " + terminalNo + " not seqNo use, waiting");
@@ -128,7 +128,7 @@ public abstract class SeqNoChargeConnection extends ChargeConnectionBase {
                         // save to waiting result.
                         int seqNo = getSeqNo(f);
                         synchronized (this) {
-                            RequestFrame<?, ?> old = waitingResults.put(seqNo, f);
+                            RequestFrame<?, Frame<?>> old = waitingResults.put(seqNo, f);
                             if (old != null) {
                                 waitingResults.put(seqNo, old);
                                 throw new IllegalStateException("the same seqNo for waiting result");
@@ -154,12 +154,12 @@ public abstract class SeqNoChargeConnection extends ChargeConnectionBase {
     @Override
     public boolean trySetResponseResult(Frame<?> frame, Throwable ex) {
         int seqNo = getSeqNo(frame);
-        if (seqNo <= 0) {
+        if (seqNo <= 1) {
             return false;
         }
 
         synchronized (this) {
-            RequestFrame<?, Object> waitFrame = (RequestFrame<?, Object>) waitingResults.get(seqNo);
+            RequestFrame<?, Frame<?>> waitFrame = waitingResults.get(seqNo);
             if (waitFrame == null) {
                 return false;
             }
@@ -177,9 +177,7 @@ public abstract class SeqNoChargeConnection extends ChargeConnectionBase {
             }
 
             waitingResults.remove(seqNo);
-
-            Frame<Object> f = (Frame<Object>) frame;
-            return waitFrame.trySetResponseResult(f, ex);
+            return waitFrame.trySetResponseResult(frame, ex);
         }
     }
 
@@ -189,7 +187,7 @@ public abstract class SeqNoChargeConnection extends ChargeConnectionBase {
      * @param requestFrame the request frame
      * @param seqNo        seqNo
      */
-    protected abstract void updateSeqNo(RequestFrame<?, ?> requestFrame, int seqNo);
+    protected abstract void updateSeqNo(RequestFrame<?, Frame<?>> requestFrame, int seqNo);
 
     /**
      * get seqNo from frame
