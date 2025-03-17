@@ -24,7 +24,7 @@ public class AsciiCodec extends AbstractCodec<Ascii> {
     public Ascii decode(ByteBuf byteBuf, CodecContext context) {
         byte[] bs = CodecUtil.readBytes(byteBuf, length);
         if (byteOrder == ByteOrder.BIG_ENDIAN){
-            bs = CodecUtil.reverseBytes(bs);
+            CodecUtil.reverseBytes(bs);
         }
         return new Ascii(new String(bs));
     }

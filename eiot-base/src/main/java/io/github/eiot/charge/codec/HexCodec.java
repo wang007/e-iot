@@ -24,7 +24,7 @@ public class HexCodec extends AbstractCodec<Hex> {
     public Hex decode(ByteBuf byteBuf, CodecContext context) {
         byte[] bs = CodecUtil.readBytes(byteBuf, length);
         if (byteOrder == ByteOrder.BIG_ENDIAN){
-            return new Hex(CodecUtil.reverseBytes(bs));
+            CodecUtil.reverseBytes(bs);
         }
         return new Hex(bs);
     }
@@ -32,7 +32,7 @@ public class HexCodec extends AbstractCodec<Hex> {
     @Override
     public void encode(ByteBuf byteBuf, Hex data, CodecContext context) {
         if (byteOrder == ByteOrder.BIG_ENDIAN){
-            byteBuf.writeBytes(CodecUtil.reverseBytes(data.getBytes()));
+            byteBuf.writeBytes(CodecUtil.reverseBytesNewOne(data.getBytes()));
         }else {
             byteBuf.writeBytes(data.getBytes());
         }
