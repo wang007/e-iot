@@ -1,5 +1,6 @@
 package io.github.eiot.charge.codec;
 
+import io.github.eiot.charge.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.ByteOrder;
@@ -21,11 +22,19 @@ public class HexCodec extends AbstractCodec<Hex> {
 
     @Override
     public Hex decode(ByteBuf byteBuf, CodecContext context) {
-        return null;
+        byte[] bs = CodecUtil.readBytes(byteBuf, length);
+        if (byteOrder == ByteOrder.BIG_ENDIAN){
+            return new Hex(CodecUtil.reverseBytes(bs));
+        }
+        return new Hex(bs);
     }
 
     @Override
     public void encode(ByteBuf byteBuf, Hex data, CodecContext context) {
-
+        if (byteOrder == ByteOrder.BIG_ENDIAN){
+            byteBuf.writeBytes(CodecUtil.reverseBytes(data.getBytes()));
+        }else {
+            byteBuf.writeBytes(data.getBytes());
+        }
     }
 }

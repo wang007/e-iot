@@ -90,17 +90,11 @@ public class BCD {
             return from(bcdString);
         }
         StringBuilder s = new StringBuilder(len);
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < len - bcdString.length(); i++) {
             s.append('0');
         }
         s.append(bcdString);
         return from(s.toString());
     }
-
-
-
-
-
-
 
 }
