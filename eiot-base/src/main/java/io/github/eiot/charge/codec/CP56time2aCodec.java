@@ -1,5 +1,6 @@
 package io.github.eiot.charge.codec;
 
+import io.github.eiot.charge.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.ByteOrder;
@@ -17,11 +18,19 @@ public class CP56time2aCodec extends AbstractCodec<CP56time2a> {
 
     @Override
     public CP56time2a decode(ByteBuf byteBuf, CodecContext context) {
-        return null;
+        byte[] bs = CodecUtil.readBytes(byteBuf, length);
+        if (byteOrder == ByteOrder.BIG_ENDIAN){
+            CodecUtil.reverseBytes(bs);
+        }
+        return new CP56time2a(bs);
     }
 
     @Override
     public void encode(ByteBuf byteBuf, CP56time2a data, CodecContext context) {
-
+        byte[] bs = data.getBytes();
+        if (byteOrder == ByteOrder.BIG_ENDIAN){
+            bs = CodecUtil.reverseBytesNewOne(bs);
+        }
+        byteBuf.writeBytes(bs);
     }
 }

@@ -20,6 +20,10 @@ public class BCDTime {
         }
     }
 
+    public byte[] getBytes(){
+        return bcd;
+    }
+
     /**
      * @return the date
      */

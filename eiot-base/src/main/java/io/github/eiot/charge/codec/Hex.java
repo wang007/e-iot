@@ -2,8 +2,6 @@ package io.github.eiot.charge.codec;
 
 import io.netty.buffer.ByteBufUtil;
 
-import java.util.Arrays;
-
 /**
  * hex data type
  * <p>
@@ -23,7 +21,7 @@ public class Hex {
     }
 
     public byte[] getBytes() {
-        return Arrays.copyOf(this.bytes, this.bytes.length);
+        return this.bytes;
     }
 
     public static Hex from(String hexString) {
