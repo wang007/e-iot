@@ -9,11 +9,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * abstract for raw frame
- *
+ * <p>
  * The data field is usually byteBuf
- *
+ * <p>
  * {@link #isRaw()} must be true
- *
+ * <p>
  * created by wang007 on 2025/3/14
  */
 public abstract class AbstractRawFrame<T> implements Frame<T> {
@@ -129,6 +129,13 @@ public abstract class AbstractRawFrame<T> implements Frame<T> {
 
     @Override
     public boolean isRaw() {
+        return true;
+    }
+
+    /**
+     * @return return true if data type is ByteBuf, return false if data type is String(ocpp)
+     */
+    protected boolean isByteBufData() {
         return true;
     }
 

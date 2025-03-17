@@ -20,6 +20,7 @@ import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.net.SocketAddress;
 import io.vertx.core.net.impl.*;
+import io.vertx.core.shareddata.Shareable;
 import io.vertx.core.spi.metrics.TCPMetrics;
 
 import java.util.function.BiConsumer;
@@ -27,7 +28,7 @@ import java.util.function.BiConsumer;
 /**
  * created by wang007 on 2025/3/1
  */
-public abstract class ChargeServerBase extends TCPServerBase implements ChargeServer, Closeable {
+public abstract class ChargeServerBase extends TCPServerBase implements ChargeServer, Closeable, Shareable {
 
     protected static final Logger log = LoggerFactory.getLogger(ChargeServerBase.class);
 

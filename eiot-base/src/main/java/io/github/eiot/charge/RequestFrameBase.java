@@ -20,12 +20,6 @@ public interface RequestFrameBase<Req, ResFrame extends Frame<?>> extends Reques
     }
 
     @Override
-    default ResFrame responseFrame() {
-        // TODO 反射 messageTypeEnum() 生成 responseFrame
-        return null;
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     default Future<ResFrame> send() {
         Future<Frame<?>> future = chargeConnection().send((RequestFrame<?, Frame<?>>) this);

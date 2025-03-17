@@ -2,7 +2,9 @@ package io.github.eiot.charge.server;
 
 import io.github.eiot.charge.ChargeConnection;
 import io.github.eiot.charge.FrameCodecOptions;
+import io.github.eiot.charge.MessageTypeChargeConnection;
 import io.github.eiot.charge.RequestFrame;
+import io.github.eiot.charge.SeqNoChargeConnection;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.codegen.json.annotations.JsonGen;
 import io.vertx.core.json.JsonObject;
@@ -32,6 +34,10 @@ public class ChargeServerOptions extends NetServerOptions {
      */
     public static final boolean DEFAULT_SET_RESPONSE_RESULT = true;
 
+    /**
+     * default set seqNoMatchFirst
+     */
+    public static final boolean DEFAULT_SEQNO_MATCH_FIRST = true;
 
     /**
      * frame code options
@@ -59,6 +65,16 @@ public class ChargeServerOptions extends NetServerOptions {
     private boolean setResponseResult;
 
     /**
+     * Normally, seq no is used to match response, but since some devices do not implement seq no well,
+     * message type matching is used
+     *
+     * match by seq no: {@link SeqNoChargeConnection}
+     * match by message type: {@link MessageTypeChargeConnection}
+     */
+    private boolean seqNoMatchFirst;
+
+
+    /**
      * protocol
      */
     private String protocol;
@@ -75,6 +91,7 @@ public class ChargeServerOptions extends NetServerOptions {
         this.frameConverter = others.frameConverter;
         this.setResponseResult = others.setResponseResult;
         this.protocol = others.protocol;
+        this.seqNoMatchFirst = others.seqNoMatchFirst;
     }
 
     public ChargeServerOptions(JsonObject jsonObject) {
@@ -88,6 +105,7 @@ public class ChargeServerOptions extends NetServerOptions {
         waitResponseTimeout = DEFAULT_WAIT_RESPONSE_TIMEOUT;
         frameConverter = DEFAULT_FRAME_CONVERTER;
         setResponseResult = DEFAULT_SET_RESPONSE_RESULT;
+        seqNoMatchFirst = DEFAULT_SEQNO_MATCH_FIRST;
     }
 
     public FrameCodecOptions getFrameCodecOptions() {
@@ -123,6 +141,15 @@ public class ChargeServerOptions extends NetServerOptions {
 
     public ChargeServerOptions setSetResponseResult(boolean setResponseResult) {
         this.setResponseResult = setResponseResult;
+        return this;
+    }
+
+    public boolean isSeqNoMatchFirst() {
+        return seqNoMatchFirst;
+    }
+
+    public ChargeServerOptions setSeqNoMatchFirst(boolean seqNoMatchFirst) {
+        this.seqNoMatchFirst = seqNoMatchFirst;
         return this;
     }
 

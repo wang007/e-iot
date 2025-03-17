@@ -27,8 +27,8 @@ public class YkcRequestFrame<Req, Resp> extends DefaultYkcFrame<Req> implements 
 
     @Override
     public YkcFrame<Resp> responseFrame() {
-        YkcFrame<Resp> respYkcFrame = RequestFrameBase.super.responseFrame();
-        respYkcFrame.sequenceNo(sequenceNo());
-        return respYkcFrame;
+        DefaultYkcFrame<Resp> responseFrame = new DefaultYkcFrame<Resp>(chargeConnection(), messageTypeEnum().responseType());
+        responseFrame.sequenceNo(sequenceNo());
+        return responseFrame;
     }
 }

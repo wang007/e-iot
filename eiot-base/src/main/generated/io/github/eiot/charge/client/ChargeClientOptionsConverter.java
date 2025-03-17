@@ -1,4 +1,4 @@
-package io.github.eiot.charge.server;
+package io.github.eiot.charge.client;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.JsonArray;
@@ -8,16 +8,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 /**
- * Converter and mapper for {@link io.github.eiot.charge.server.ChargeServerOptions}.
- * NOTE: This class has been automatically generated from the {@link io.github.eiot.charge.server.ChargeServerOptions} original class using Vert.x codegen.
+ * Converter and mapper for {@link io.github.eiot.charge.client.ChargeClientOptions}.
+ * NOTE: This class has been automatically generated from the {@link io.github.eiot.charge.client.ChargeClientOptions} original class using Vert.x codegen.
  */
-public class ChargeServerOptionsConverter {
+public class ChargeClientOptionsConverter {
 
 
   private static final Base64.Decoder BASE64_DECODER = JsonUtil.BASE64_DECODER;
   private static final Base64.Encoder BASE64_ENCODER = JsonUtil.BASE64_ENCODER;
 
-   static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, ChargeServerOptions obj) {
+   static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, ChargeClientOptions obj) {
     for (java.util.Map.Entry<String, Object> member : json) {
       switch (member.getKey()) {
         case "frameCodecOptions":
@@ -54,11 +54,11 @@ public class ChargeServerOptionsConverter {
     }
   }
 
-   static void toJson(ChargeServerOptions obj, JsonObject json) {
+   static void toJson(ChargeClientOptions obj, JsonObject json) {
     toJson(obj, json.getMap());
   }
 
-   static void toJson(ChargeServerOptions obj, java.util.Map<String, Object> json) {
+   static void toJson(ChargeClientOptions obj, java.util.Map<String, Object> json) {
     if (obj.getFrameCodecOptions() != null) {
       json.put("frameCodecOptions", obj.getFrameCodecOptions().toJson());
     }

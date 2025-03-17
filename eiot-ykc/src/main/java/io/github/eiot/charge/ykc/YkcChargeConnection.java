@@ -5,11 +5,14 @@ import io.github.eiot.charge.RequestFrame;
 import io.github.eiot.charge.SeqNoChargeConnection;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.vertx.core.Future;
 import io.vertx.core.impl.ContextInternal;
 import io.vertx.core.net.impl.SslChannelProvider;
 import io.vertx.core.spi.metrics.TCPMetrics;
 
 /**
+ * 基于 message type 匹配 response frame
+ *
  * created by wang007 on 2025/3/16
  */
 public class YkcChargeConnection extends SeqNoChargeConnection {
@@ -41,5 +44,12 @@ public class YkcChargeConnection extends SeqNoChargeConnection {
     protected int getSeqNo(Frame<?> frame) {
         YkcFrame<?> ykcFrame = (YkcFrame<?>) frame;
         return ykcFrame.sequenceNo();
+    }
+
+    @Override
+    protected Future<Frame<?>> beforeWrite(Frame<?> frame) {
+        // TODO update checkCode()
+
+        return super.beforeWrite(frame);
     }
 }
