@@ -40,6 +40,6 @@ public class ChargeClientBase implements ChargeClient {
 
     @Override
     public String protocol() {
-        return null;
+        return options.getProtocol();
     }
 }

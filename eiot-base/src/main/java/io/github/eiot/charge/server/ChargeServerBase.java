@@ -41,7 +41,6 @@ public abstract class ChargeServerBase extends TCPServerBase implements ChargeSe
     private Handler<ChargeConnection> connectionHandler;
     private Handler<Throwable> exceptionHandler;
 
-
     /**
      * @param vertx   the vertx
      * @param options the options
@@ -249,10 +248,12 @@ public abstract class ChargeServerBase extends TCPServerBase implements ChargeSe
         }
 
         protected void initChannel(ChannelPipeline pipeline, boolean ssl) {
-            if (ssl || !vertx.transport().supportFileRegion() || (options.getTrafficShapingOptions() != null && options.getTrafficShapingOptions().getOutboundGlobalBandwidth() > 0)) {
+            // not use sendfile, remove ChunkedWriteHandler
+            /*if (ssl || !vertx.transport().supportFileRegion() || (options.getTrafficShapingOptions() != null && options.getTrafficShapingOptions().getOutboundGlobalBandwidth() > 0)) {
                 // only add ChunkedWriteHandler when SSL is enabled or FileRegion isn't supported or when outbound traffic shaping is enabled
                 pipeline.addLast("chunkedWriter", new ChunkedWriteHandler());       // For large file / sendfile support
-            }
+            }*/
+
             int idleTimeout = options.getIdleTimeout();
             int readIdleTimeout = options.getReadIdleTimeout();
             int writeIdleTimeout = options.getWriteIdleTimeout();
