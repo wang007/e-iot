@@ -19,7 +19,7 @@ import io.vertx.core.net.impl.SocketAddressImpl;
  * <p>
  * created by wang007 on 2025/2/22
  */
-public interface ChargeServer{
+public interface ChargeServer {
 
     /**
      * Tell the server to start listening. The server will listen on the port and host specified in the

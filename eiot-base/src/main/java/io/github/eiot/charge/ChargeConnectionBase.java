@@ -28,7 +28,6 @@ public abstract class ChargeConnectionBase extends ConnectionBase implements Cha
 
     private final Map<String, Object> map;
 
-    protected final SslChannelProvider sslChannelProvider;
     protected final TCPMetrics<?> metrics;
     protected final boolean frameConverter;
     protected final boolean setResponseResult;
@@ -46,13 +45,11 @@ public abstract class ChargeConnectionBase extends ConnectionBase implements Cha
     private Handler<Void> drainHandler;
     private Handler<Buffer> handler;
 
-    protected ChargeConnectionBase(ContextInternal context, ChannelHandlerContext chctx,
-                                   SslChannelProvider sslChannelProvider, TCPMetrics<?> metrics,
+    protected ChargeConnectionBase(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,
                                    boolean frameConverter, boolean setResponseResult,
                                    int waitResponseTimeout, String protocol) {
         super(context, chctx);
         this.map = new ConcurrentHashMap<>();
-        this.sslChannelProvider = sslChannelProvider;
         this.metrics = metrics;
         this.frameConverter = frameConverter;
         this.setResponseResult = setResponseResult;

@@ -24,8 +24,8 @@ public abstract class MessageTypeChargeConnection extends ChargeConnectionBase {
 
     private final Map<String, PendingRequestFrames> waitResults = new HashMap<>();
 
-    protected MessageTypeChargeConnection(ContextInternal context, ChannelHandlerContext chctx, SslChannelProvider sslChannelProvider, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
-        super(context, chctx, sslChannelProvider, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
+    protected MessageTypeChargeConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
+        super(context, chctx, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
     }
 
     @Override

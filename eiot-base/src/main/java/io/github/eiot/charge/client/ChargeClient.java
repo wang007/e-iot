@@ -30,13 +30,10 @@ public interface ChargeClient {
      * @param remoteAddress the remote address
      * @return returns a Future of the asynchronous result
      */
-    Future<NetSocket> connect(SocketAddress remoteAddress);
+    Future<ChargeConnection> connect(SocketAddress remoteAddress);
 
     /**
-     * Close the client.
-     * <p>
-     * Any sockets which have not been closed manually will be closed here. The close is asynchronous and may not
-     * complete until some time after the method has returned.
+     * Close the client and all created ChargeConnection
      *
      * @return returns a Future of the asynchronous result
      */

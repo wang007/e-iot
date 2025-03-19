@@ -21,14 +21,14 @@ import java.nio.ByteOrder;
  */
 public class YkcChargeServer extends ChargeServerBase {
 
-    private static final FrameCodecOptions FRAME_CODEC_OPTIONS = new FrameCodecOptions()
+    static final FrameCodecOptions FRAME_CODEC_OPTIONS = new FrameCodecOptions()
             .setByteOrder(ByteOrder.LITTLE_ENDIAN)
             .setMaxFrameLength(255)
             .setLengthFieldLength(1)
             .setLengthFieldOffset(1)
             .setLengthAdjustment(2);
 
-    private static final String PROTOCOL = "ykc/1.6";
+    public static final String PROTOCOL = "ykc/1.x";
 
     public static ChargeServerOptions newOptions(JsonObject options) {
         ChargeServerOptions serverOptions = new ChargeServerOptions(options);
@@ -46,7 +46,7 @@ public class YkcChargeServer extends ChargeServerBase {
 
 
     public static ChargeServer create(Vertx vertx) {
-        return new YkcChargeServer(vertx);
+        return new YkcChargeServer(vertx, newOptions());
     }
 
     public static ChargeServer create(Vertx vertx, ChargeServerOptions options) {
@@ -60,28 +60,19 @@ public class YkcChargeServer extends ChargeServerBase {
      * @param vertx   the vertx
      * @param options the options
      */
-    protected YkcChargeServer(Vertx vertx, ChargeServerOptions options) {
+    YkcChargeServer(Vertx vertx, ChargeServerOptions options) {
         super(vertx, options);
-    }
-
-    /**
-     * create ykc charge server instance
-     *
-     * @param vertx the vertx
-     */
-    protected YkcChargeServer(Vertx vertx) {
-        this(vertx, newOptions());
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <T extends ChargeConnectionBase> T newChargeConnection(ContextInternal context, ChannelHandlerContext chctx, SslChannelProvider sslChannelProvider, TCPMetrics<?> metrics, ChargeServerOptions options) {
+    protected <T extends ChargeConnectionBase> T newChargeConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, ChargeServerOptions options) {
         if (options.isSeqNoMatchFirst()) {
-            YkcChargeConnection chargeConnection = new YkcChargeConnection(context, chctx, sslChannelProvider, metrics,
+            YkcChargeConnection chargeConnection = new YkcChargeConnection(context, chctx, metrics,
                     options.isFrameConverter(), options.isSetResponseResult(), options.getWaitResponseTimeout(), options.getProtocol());
             return (T) chargeConnection;
         }
-        YkcMTChargeConnection chargeConnection = new YkcMTChargeConnection(context, chctx, sslChannelProvider, metrics,
+        YkcMTChargeConnection chargeConnection = new YkcMTChargeConnection(context, chctx, metrics,
                 options.isFrameConverter(), options.isSetResponseResult(), options.getWaitResponseTimeout(), options.getProtocol());
         return (T) chargeConnection;
     }

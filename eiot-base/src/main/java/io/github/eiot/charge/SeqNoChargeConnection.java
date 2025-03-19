@@ -29,11 +29,10 @@ public abstract class SeqNoChargeConnection extends ChargeConnectionBase {
 
     protected final Map<Integer, RequestFrame<?, Frame<?>>> waitingResults = new HashMap<>(8, 1.0f);
 
-    protected SeqNoChargeConnection(ContextInternal context, ChannelHandlerContext chctx,
-                                    SslChannelProvider sslChannelProvider, TCPMetrics<?> metrics,
+    protected SeqNoChargeConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,
                                     boolean frameConverter, boolean setResponseResult,
                                     int waitResponseTimeout, String protocol) {
-        super(context, chctx, sslChannelProvider, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
+        super(context, chctx, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
         this.seqNoQueue = initSeqNoQueue();
     }
 

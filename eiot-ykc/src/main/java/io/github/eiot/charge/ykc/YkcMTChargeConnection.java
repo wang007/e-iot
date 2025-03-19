@@ -16,8 +16,8 @@ import io.vertx.core.spi.metrics.TCPMetrics;
  */
 public class YkcMTChargeConnection extends MessageTypeChargeConnection {
 
-    protected YkcMTChargeConnection(ContextInternal context, ChannelHandlerContext chctx, SslChannelProvider sslChannelProvider, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
-        super(context, chctx, sslChannelProvider, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
+    protected YkcMTChargeConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
+        super(context, chctx, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
     }
 
     @Override
