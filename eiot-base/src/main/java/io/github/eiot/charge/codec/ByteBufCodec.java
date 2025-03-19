@@ -1,8 +1,6 @@
 package io.github.eiot.charge.codec;
 
-import io.github.eiot.charge.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 import java.nio.ByteOrder;
 
@@ -26,8 +24,7 @@ public class ByteBufCodec extends AbstractCodec<ByteBufRef> {
         if (byteOrder == ByteOrder.BIG_ENDIAN){
             throw new UnsupportedOperationException("byteBuf not support BIG_ENDIAN");
         }
-        byte[] bs = CodecUtil.readBytes(byteBuf, length);
-        return ByteBufRef.from(Unpooled.wrappedBuffer(bs));
+        return new ByteBufRef(byteBuf.readSlice(length));
     }
 
     @Override

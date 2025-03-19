@@ -1,21 +1,17 @@
 package io.github.eiot.charge.codec;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * ascii data type
  * created by wang007 on 2025/2/28
  */
 public class Ascii {
 
-    private static final String DEFAULT_PADDING = new String(new char[]{0});
+    private static final char NULL_PADDING = 0;
 
     private final String value;
-    private final short len;
 
     public Ascii(String value) {
         this.value = value;
-        this.len = (short) value.length();
     }
 
     /**
@@ -36,27 +32,28 @@ public class Ascii {
             int remaining = completeLength - len;
             StringBuilder sb = new StringBuilder(completeLength);
             for (int i = 0; i < remaining; i++) {
-                sb.append(DEFAULT_PADDING);
+                sb.append(NULL_PADDING);
             }
             sb.append(value);
             this.value = sb.toString();
         }
-        this.len = (short) len;
-    }
-
-    /**
-     * @return the real string
-     */
-    public String toRealString() {
-        return value.substring(value.length() - len);
     }
 
     /**
      * filter invalid char
+     *
      * @return a valid string
      */
     public String toValidString() {
-        return StringUtils.strip(value, DEFAULT_PADDING);
+        int start = 0;
+        while (start != value.length() && value.charAt(start) == NULL_PADDING) {
+            start++;
+        }
+        int end = value.length();
+        while (end != 0 && value.charAt(end - 1) == NULL_PADDING) {
+            end--;
+        }
+        return value.substring(start, end);
     }
 
     /**

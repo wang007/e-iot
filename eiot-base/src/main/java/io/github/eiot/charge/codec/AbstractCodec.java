@@ -13,7 +13,7 @@ public abstract class AbstractCodec<T> implements Codec<T> {
     protected final ByteOrder byteOrder;
 
     public AbstractCodec(int length) {
-        this(length, ByteOrder.BIG_ENDIAN);
+        this(length, ByteOrder.LITTLE_ENDIAN);
     }
 
     public AbstractCodec(int length, ByteOrder byteOrder) {

@@ -145,7 +145,7 @@ public class BCDNumber extends NumberUnit {
      * @return new BCDNumber instance
      */
     public static BCDNumber from(double actualNumber, int unit, int length) {
-        long v = unit == 0 || unit == 1 ? (long) actualNumber : (long) actualNumber * unit;
+        long v = unit == 0 || unit == 1 ? (long) actualNumber : (long) (actualNumber * unit);
         return new BCDNumber(v, unit, 0, false, length);
     }
 
@@ -178,7 +178,7 @@ public class BCDNumber extends NumberUnit {
      * @param length        bcd length. NOTE: bcd length, Not the length of the underlying bytes
      */
     public static BCDNumber from(int actualNumber, int unit, int offset, boolean offsetReverse, int length) {
-        long v = unit == 0 || unit == 1 ? (long) actualNumber : (long) actualNumber * unit;
+        long v = originNumber(actualNumber, unit, offset, offsetReverse);
         return new BCDNumber(v, unit, offset, offsetReverse, length);
     }
 
@@ -190,9 +190,8 @@ public class BCDNumber extends NumberUnit {
      * @param length        bcd length. NOTE: bcd length, Not the length of the underlying bytes
      */
     public static BCDNumber from(double actualNumber, int unit, int offset, boolean offsetReverse, int length) {
-        long v = unit == 0 || unit == 1 ? (long) actualNumber : (long) actualNumber * unit;
+        long v = originNumber(actualNumber, unit, offset, offsetReverse);
         return new BCDNumber(v, unit, offset, offsetReverse, length);
     }
-
 
 }

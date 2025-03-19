@@ -30,7 +30,7 @@ public class BIN4Codec extends AbstractCodec<Integer> {
     @Override
     public Integer decode(ByteBuf byteBuf, CodecContext context) {
         long number = CodecUtil.readNumber(byteBuf, byteOrder, length);
-        return (int) (number & 0xFF);
+        return (int) number;
     }
 
     @Override

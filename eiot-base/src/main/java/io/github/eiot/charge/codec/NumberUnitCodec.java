@@ -15,6 +15,14 @@ public class NumberUnitCodec extends AbstractCodec<NumberUnit> {
     private final int offset;
     private final boolean offsetReverse;
 
+    public NumberUnitCodec(int length, int unit) {
+        this(length, unit, 0, false);
+    }
+
+    public NumberUnitCodec(int length, int unit, int offset) {
+        this(length, unit, offset, false);
+    }
+
     public NumberUnitCodec(int length, int unit, int offset, boolean offsetReverse) {
         super(length);
         this.unit = unit;
@@ -22,8 +30,12 @@ public class NumberUnitCodec extends AbstractCodec<NumberUnit> {
         this.offsetReverse = offsetReverse;
     }
 
-    public NumberUnitCodec(int length, int unit, int offset) {
-        this(length, unit, offset, false);
+    public NumberUnitCodec(int length, ByteOrder byteOrder, int unit) {
+        this(length, byteOrder, unit, 0, false);
+    }
+
+    public NumberUnitCodec(int length, ByteOrder byteOrder, int unit, int offset) {
+        this(length, byteOrder, unit, offset, false);
     }
 
     public NumberUnitCodec(int length, ByteOrder byteOrder, int unit, int offset, boolean offsetReverse) {
@@ -31,10 +43,6 @@ public class NumberUnitCodec extends AbstractCodec<NumberUnit> {
         this.unit = unit;
         this.offset = offset;
         this.offsetReverse = offsetReverse;
-    }
-
-    public NumberUnitCodec(int length, ByteOrder byteOrder, int unit, int offset) {
-        this(length, byteOrder, unit, offset, false);
     }
 
     @Override

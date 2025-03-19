@@ -12,6 +12,10 @@ import java.nio.ByteOrder;
  */
 public class CP56time2aCodec extends AbstractCodec<CP56time2a> {
 
+    public CP56time2aCodec() {
+        super(7);
+    }
+
     public CP56time2aCodec(ByteOrder byteOrder) {
         super(7, byteOrder);
     }

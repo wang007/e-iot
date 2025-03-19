@@ -1,6 +1,5 @@
 package io.github.eiot.charge.codec;
 
-import io.github.eiot.charge.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.ByteOrder;
@@ -10,25 +9,26 @@ import java.nio.ByteOrder;
  */
 public class BCDTimeCodec extends AbstractCodec<BCDTime> {
 
+    private final BCDCodec bcdCodec;
+
+    public BCDTimeCodec() {
+        super(6);
+        this.bcdCodec = new BCDCodec(length, byteOrder);
+    }
+
     public BCDTimeCodec(ByteOrder byteOrder) {
         super(6, byteOrder);
+        this.bcdCodec = new BCDCodec(length, byteOrder);
     }
 
     @Override
     public BCDTime decode(ByteBuf byteBuf, CodecContext context) {
-        byte[] bs = CodecUtil.readBytes(byteBuf, length);
-        if (byteOrder == ByteOrder.BIG_ENDIAN) {
-            CodecUtil.reverseBytes(bs);
-        }
-        return new BCDTime(bs);
+        BCD bcd = bcdCodec.decode(byteBuf, context);
+        return new BCDTime(bcd.getBytes());
     }
 
     @Override
     public void encode(ByteBuf byteBuf, BCDTime data, CodecContext context) {
-        byte[] bs = data.getBytes();
-        if (byteOrder == ByteOrder.BIG_ENDIAN) {
-            bs = CodecUtil.reverseBytesNewOne(bs);
-        }
-        byteBuf.writeBytes(bs);
+        bcdCodec.encode(byteBuf, data.getBcd());
     }
 }

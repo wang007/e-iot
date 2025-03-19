@@ -1,6 +1,5 @@
 package io.github.eiot.charge.codec;
 
-import io.github.eiot.charge.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.ByteOrder;
@@ -18,6 +17,10 @@ public class BCDNumberCodec extends AbstractCodec<BCDNumber> {
     private final boolean offsetReverse;
     private final BCDCodec bcdCodec;
 
+    public BCDNumberCodec(int length, int unit) {
+        this(length, unit, 0, false);
+    }
+
     public BCDNumberCodec(int length, int unit, int offset) {
         this(length, unit, offset, false);
     }
@@ -28,6 +31,10 @@ public class BCDNumberCodec extends AbstractCodec<BCDNumber> {
         this.offset = offset;
         this.offsetReverse = offsetReverse;
         this.bcdCodec = new BCDCodec(length, byteOrder);
+    }
+
+    public BCDNumberCodec(int length, ByteOrder byteOrder, int unit) {
+        this(length, byteOrder, unit, 0, false);
     }
 
     public BCDNumberCodec(int length, ByteOrder byteOrder, int unit, int offset) {
@@ -50,10 +57,6 @@ public class BCDNumberCodec extends AbstractCodec<BCDNumber> {
 
     @Override
     public void encode(ByteBuf byteBuf, BCDNumber data, CodecContext context) {
-        BCD bcd = data.getBcd();
-        if (byteOrder == ByteOrder.BIG_ENDIAN) {
-            byteBuf.writeBytes(CodecUtil.reverseBytesNewOne(bcd.getBytes()));
-        }
-        byteBuf.writeBytes(bcd.getBytes());
+        bcdCodec.encode(byteBuf, data.getBcd());
     }
 }

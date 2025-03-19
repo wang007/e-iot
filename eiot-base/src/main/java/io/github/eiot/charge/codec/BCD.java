@@ -42,7 +42,7 @@ public class BCD {
                 s.append(j);
                 break;
             }
-            if (j == 48) { // '0'
+            if (j == 0) {
                 break;
             }
             append = true;

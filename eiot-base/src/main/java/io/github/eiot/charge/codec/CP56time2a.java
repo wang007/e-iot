@@ -116,13 +116,14 @@ public class CP56time2a implements Comparable<CP56time2a> {
     public static CP56time2a from(LocalDateTime dateTime) {
         byte[] bytes = new byte[7];
         int millSec = (int) ((dateTime.getSecond() * 1000) + TimeUnit.NANOSECONDS.toMillis(dateTime.getNano()));
-        int week = dateTime.getDayOfWeek().getValue();
+        //int week = dateTime.getDayOfWeek().getValue();
         int day = dateTime.getDayOfMonth();
         bytes[0] = (byte) millSec;
         bytes[1] = (byte) (millSec >>> 8);
         bytes[2] = (byte) (dateTime.getMinute() & 0x3F);
         bytes[3] = (byte) (dateTime.getHour() & 0x1F);
-        bytes[4] = (byte) ((week << 5) | (day & 0x1F));
+        //bytes[4] = (byte) ((week << 5) | (day & 0x1F));
+        bytes[4] = (byte) (day & 0x1F);
         bytes[5] = (byte) (dateTime.getMonthValue() & 0x0F);
         bytes[6] = (byte) (((dateTime.getYear() - 2000) & 0x7F));
         return new CP56time2a(bytes);

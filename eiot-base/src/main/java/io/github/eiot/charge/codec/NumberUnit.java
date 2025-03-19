@@ -8,10 +8,10 @@ import java.math.RoundingMode;
  * <p>
  * eg:
  * value = 1500, unit = 100, offset = -500, offsetReverse = false (calc number + offset)
- * actual value = (1500 - 500) / 100 = 10
+ * actual value = 1500 / 100 + (-500) = -485
  * <p>
  * value = 350, unit = 1000, offset = 500, offsetReverse = true (calc offset - number)
- * actual value = (500 - 350) / 1000 = 0.15
+ * actual value = 500 - 350 / 1000 = 499.65
  * <p>
  * created by wang007 on 2025/2/27
  */
@@ -101,11 +101,11 @@ public class NumberUnit extends Number {
      */
     @Override
     public double doubleValue() {
-        long v = number;
+        double v = unit == 0 || unit == 1 ? number : number / (double) unit;
         if (offset != 0) {
             v = offsetReverse ? offset - v : v + offset;
         }
-        return unit == 0 || unit == 1 ? v : v / (double) unit;
+        return v;
     }
 
     /**
@@ -146,9 +146,6 @@ public class NumberUnit extends Number {
      */
     public BigDecimal bigDecimalValue() {
         long v = number;
-        if (offset != 0) {
-            v = offsetReverse ? offset - v : v + offset;
-        }
         if (unit == 0 || unit == 1) {
             return new BigDecimal(v);
         }
@@ -156,8 +153,13 @@ public class NumberUnit extends Number {
         for (int i = 10; i < this.unit; i = i * 10) {
             scale++;
         }
-        return new BigDecimal(v)
+        BigDecimal decimal = new BigDecimal(v)
                 .divide(BigDecimal.valueOf(this.unit), scale, RoundingMode.DOWN);
+        if (offset != 0) {
+            BigDecimal of = BigDecimal.valueOf(offset);
+            decimal = offsetReverse ? of.subtract(decimal) : of.add(decimal);
+        }
+        return decimal;
     }
 
     /**
@@ -183,7 +185,7 @@ public class NumberUnit extends Number {
      * @return new NumberUnit instance
      */
     public static NumberUnit from(double actualNumber, int unit) {
-        long v = unit == 0 || unit == 1 ? (long) actualNumber : (long) actualNumber * unit;
+        long v = (unit == 0 || unit == 1) ? (long) actualNumber : (long) (actualNumber * unit);
         return new NumberUnit(v, unit);
     }
 
@@ -214,7 +216,7 @@ public class NumberUnit extends Number {
      * @param offsetReverse Decide how to calculate offset. true: offset - number, false: number + offset
      */
     public static NumberUnit from(int actualNumber, int unit, int offset, boolean offsetReverse) {
-        long v = unit == 0 || unit == 1 ? (long) actualNumber : (long) actualNumber * unit;
+        long v = originNumber(actualNumber, unit, offset, offsetReverse);
         return new NumberUnit(v, unit, offset, offsetReverse);
     }
 
@@ -225,8 +227,44 @@ public class NumberUnit extends Number {
      * @param offsetReverse Decide how to calculate offset. true: offset - number, false: number + offset
      */
     public static NumberUnit from(double actualNumber, int unit, int offset, boolean offsetReverse) {
-        long v = unit == 0 || unit == 1 ? (long) actualNumber : (long) actualNumber * unit;
+        long v = originNumber(actualNumber, unit, offset, offsetReverse);
         return new NumberUnit(v, unit, offset, offsetReverse);
     }
 
+    /**
+     * get originNumber by actualNumber
+     *
+     * @param actualNumber  the actual number
+     * @param unit          the unit
+     * @param offset        number offset
+     * @param offsetReverse Decide how to calculate offset. true: offset - number, false: number + offset
+     * @return originNumber
+     */
+    protected static long originNumber(int actualNumber, int unit, int offset, boolean offsetReverse) {
+        int v = actualNumber;
+        if (offset != 0) {
+            v = offsetReverse ? offset - v : v - offset;
+        }
+        long n = unit == 0 || unit == 1 ? (long) v : (long) v * unit;
+        return n;
+    }
+
+    /**
+     * get originNumber by actualNumber
+     *
+     * @param actualNumber  the actual number
+     * @param unit          the unit
+     * @param offset        number offset
+     * @param offsetReverse Decide how to calculate offset. true: offset - number, false: number + offset
+     * @return originNumber
+     */
+    protected static long originNumber(double actualNumber, int unit, int offset, boolean offsetReverse) {
+        BigDecimal v = BigDecimal.valueOf(actualNumber);
+        if (offset != 0) {
+            BigDecimal of = BigDecimal.valueOf(offset);
+            v = offsetReverse ? of.subtract(v) : v.subtract(of);
+        }
+        long n = unit == 0 || unit == 1 ? v.longValue() : v.multiply(BigDecimal.valueOf(unit)).longValue();
+        return n;
+    }
 }

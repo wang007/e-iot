@@ -11,17 +11,25 @@ import java.util.Date;
  */
 public class BCDTime {
 
-    private final byte[] bcd;
+    private final BCD bcd;
 
-    BCDTime(byte[] bcd) {
+    BCDTime(BCD bcd){
         this.bcd = bcd;
-        if (bcd.length != 12) {
+    }
+
+    BCDTime(byte[] bytes) {
+        this.bcd = new BCD(bytes);
+        if (bytes.length != 12) {
             throw new IllegalArgumentException("bcd length must be = 12");
         }
     }
 
+    public BCD getBcd(){
+        return this.bcd;
+    }
+
     public byte[] getBytes(){
-        return bcd;
+        return bcd.getBytes();
     }
 
     /**
@@ -36,12 +44,13 @@ public class BCDTime {
      */
     public LocalDateTime toLocalDateTime() {
         try {
-            return LocalDateTime.of(2000 + bcd[0] * 10 + bcd[1],
-                    bcd[2] * 10 + bcd[3],
-                    bcd[4] * 10 + bcd[5],
-                    bcd[6] * 10 + bcd[7],
-                    bcd[8] * 10 + bcd[9],
-                    bcd[10] * 10 + bcd[11]);
+            byte[] bs = bcd.getBytes();
+            return LocalDateTime.of(2000 + bs[0] * 10 + bs[1],
+                    bs[2] * 10 + bs[3],
+                    bs[4] * 10 + bs[5],
+                    bs[6] * 10 + bs[7],
+                    bs[8] * 10 + bs[9],
+                    bs[10] * 10 + bs[11]);
         } catch (DateTimeException e) {
             return LocalDateTime.of(1970, 1, 1, 8, 0, 0);
         }

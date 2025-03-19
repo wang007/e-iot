@@ -4,6 +4,7 @@ import io.github.eiot.charge.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
 
 /**
  * ascii codec
@@ -22,11 +23,13 @@ public class AsciiCodec extends AbstractCodec<Ascii> {
 
     @Override
     public Ascii decode(ByteBuf byteBuf, CodecContext context) {
-        byte[] bs = CodecUtil.readBytes(byteBuf, length);
-        if (byteOrder == ByteOrder.BIG_ENDIAN){
+        if (byteOrder == ByteOrder.BIG_ENDIAN) {
+            byte[] bs = CodecUtil.readBytes(byteBuf, length);
             CodecUtil.reverseBytes(bs);
+            return new Ascii(new String(bs));
+        } else {
+            return new Ascii(byteBuf.toString(0, length, Charset.defaultCharset()));
         }
-        return new Ascii(new String(bs));
     }
 
     @Override
