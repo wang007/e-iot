@@ -53,13 +53,17 @@ public interface ChargeRoute {
     ChargeRoute failureHandler(Handler<ChargeRoutingContext> failureHandler);
 
     /**
-     * @param order
-     * @return
+     * Specify the order for this route. The router tests routes in that order.
+     *
+     * @param order the order
+     * @return this
      */
     ChargeRoute order(int order);
 
     /**
-     * @return
+     * Specify this is the first route for the router.
+     *
+     * @return this
      */
     default ChargeRoute first() {
         return order(Integer.MIN_VALUE);

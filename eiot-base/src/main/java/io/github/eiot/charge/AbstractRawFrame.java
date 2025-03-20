@@ -48,14 +48,10 @@ public abstract class AbstractRawFrame<T> implements Frame<T> {
 
     @Override
     public final T data() {
-        T data;
-        synchronized (this) {
-            if (this.data != null) {
-                return this.data;
-            }
-            data = decodeData();
-            this.data = data;
+        if (this.data != null) {
+            return this.data;
         }
+        this.data = decodeData();
         return data;
     }
 
@@ -65,9 +61,7 @@ public abstract class AbstractRawFrame<T> implements Frame<T> {
     public final Frame<T> data(T t) {
         ensureWriteable(true);
         encodeData(t);
-        synchronized (this) {
-            this.data = t;
-        }
+        this.data = t;
         return this;
     }
 
@@ -84,9 +78,7 @@ public abstract class AbstractRawFrame<T> implements Frame<T> {
             throw new IllegalStateException("receiver frame not write");
         }
         if (update) {
-            synchronized (this) {
-                dirty = true;
-            }
+            dirty = true;
         }
     }
 
@@ -101,14 +93,12 @@ public abstract class AbstractRawFrame<T> implements Frame<T> {
     @Override
     public final ByteBuf toByteBuf() {
         ByteBuf byteBuf;
-        synchronized (this) {
-            if (dirty || this.frameByteBuf == null) {
-                byteBuf = genByteBuf();
-                this.frameByteBuf = byteBuf;
-                this.dirty = false;
-            } else {
-                byteBuf = this.frameByteBuf;
-            }
+        if (dirty || this.frameByteBuf == null) {
+            byteBuf = genByteBuf();
+            this.frameByteBuf = byteBuf;
+            this.dirty = false;
+        } else {
+            byteBuf = this.frameByteBuf;
         }
         return byteBuf.slice();
     }

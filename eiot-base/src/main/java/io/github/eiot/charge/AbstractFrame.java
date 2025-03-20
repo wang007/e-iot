@@ -84,7 +84,7 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame<?>> implements
 
     @Override
     public Future<Void> write() {
-        return rawFrame().write();
+        return chargeConnection().write(this);
     }
 
     @Override

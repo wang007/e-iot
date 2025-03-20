@@ -23,7 +23,17 @@ public interface ChargeRouter extends Handler<Frame<?>> {
     ChargeRoute route();
 
     /**
-     * {@link #route(String)} but use {@link MessageTypeEnum#messageType()}
+     * Add a route with matches the specified message type and handler
+     *
+     * @param messageTypeHandler the handler
+     * @return the route
+     */
+    default ChargeRoute route(MessageTypeHandler messageTypeHandler) {
+        return route(messageTypeHandler.messageType()).handler(messageTypeHandler);
+    }
+
+    /**
+     * like {@link #route(String)} but use {@link MessageTypeEnum#messageType()}
      *
      * @param messageType the message type
      * @return the route
