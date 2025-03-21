@@ -6,15 +6,15 @@ import io.github.eiot.charge.Frame;
 import io.github.eiot.charge.SeqNoChargeConnection;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
-import io.vertx.core.impl.logging.Logger;
-import io.vertx.core.impl.logging.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * created by wang007 on 2025/3/21
  */
 interface YkcChargeConnectionBase extends ChargeConnection {
 
-     Logger logger = LoggerFactory.getLogger(SeqNoChargeConnection.class);
+    Logger logger = LoggerFactory.getLogger(SeqNoChargeConnection.class);
 
     default Future<Frame<?>> beforeWrite(Frame<?> frame) {
         if (!frame.isRaw()) {
@@ -42,7 +42,6 @@ interface YkcChargeConnectionBase extends ChargeConnection {
     }
 
     default Frame<?> convertConcreteFrame(Frame<?> rawFrame) {
-        // TODO convertConcreteFrame
-        return null;
+        return YkcFramerConverter.INSTANCE.apply(rawFrame);
     }
 }

@@ -100,7 +100,12 @@ public abstract class ChargeConnectionBase extends ConnectionBase implements Cha
                     frame = convertRawFrame(byteBuf);
                 } catch (Throwable e) {
                     String terminalNo = get(TERMINAL_NO_KEY, "");
-                    Throwable ex = new ConvertChargeException(terminalNo, null, "convert raw frame failed", e);
+                    Throwable ex;
+                    if (e instanceof ConvertChargeException) {
+                        ex = e;
+                    } else {
+                        ex = new ConvertChargeException(terminalNo, null, "convert raw frame failed", e);
+                    }
                     if (setResponseResult && trySetResponseResult(null, ex)) {
                         return;
                     }
@@ -114,8 +119,13 @@ public abstract class ChargeConnectionBase extends ConnectionBase implements Cha
                     try {
                         frame = convertConcreteFrame(frame);
                     } catch (Throwable e) {
-                        String terminalNo = frame.terminalNo();
-                        Throwable ex = new ConvertChargeException(terminalNo, frame, "convert concrete frame failed", e);
+                        Throwable ex;
+                        if (e instanceof ConvertChargeException) {
+                            ex = e;
+                        } else {
+                            String terminalNo = frame.terminalNo();
+                            ex = new ConvertChargeException(terminalNo, frame, "convert concrete frame failed", e);
+                        }
                         if (setResponseResult && trySetResponseResult(null, ex)) {
                             return;
                         }

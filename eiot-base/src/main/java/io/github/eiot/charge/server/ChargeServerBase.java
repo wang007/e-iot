@@ -3,29 +3,18 @@ package io.github.eiot.charge.server;
 import io.github.eiot.charge.*;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.haproxy.HAProxyMessageDecoder;
-import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.stream.ChunkedWriteHandler;
-import io.netty.handler.timeout.IdleStateHandler;
-import io.netty.handler.traffic.GlobalTrafficShapingHandler;
-import io.netty.util.concurrent.GenericFutureListener;
 import io.vertx.core.*;
-import io.vertx.core.http.impl.HttpUtils;
 import io.vertx.core.impl.ContextInternal;
-import io.vertx.core.impl.VertxImpl;
 import io.vertx.core.impl.VertxInternal;
 import io.vertx.core.impl.future.PromiseInternal;
-import io.vertx.core.impl.logging.Logger;
-import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.net.SocketAddress;
 import io.vertx.core.net.impl.*;
 import io.vertx.core.shareddata.Shareable;
 import io.vertx.core.spi.metrics.TCPMetrics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.function.BiConsumer;
 
 /**
  * created by wang007 on 2025/3/1

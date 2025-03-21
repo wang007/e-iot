@@ -1,14 +1,13 @@
 package io.github.eiot.charge.ykc;
 
+import io.github.eiot.charge.ConvertChargeException;
 import io.github.eiot.charge.Frame;
 import io.github.eiot.charge.FrameConverter;
-import io.github.eiot.charge.MessageTypeEnum;
 import io.github.eiot.charge.SeqNoChargeConnection;
-import io.vertx.core.impl.logging.Logger;
-import io.vertx.core.impl.logging.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +18,7 @@ import java.util.Map;
  */
 public class YkcFramerConverter implements FrameConverter {
 
-    Logger logger = LoggerFactory.getLogger(SeqNoChargeConnection.class);
+    private static final Logger logger = LoggerFactory.getLogger(SeqNoChargeConnection.class);
 
     public static final YkcFramerConverter INSTANCE = new YkcFramerConverter();
 
@@ -55,19 +54,23 @@ public class YkcFramerConverter implements FrameConverter {
         String messageType = rawFrame.messageType();
         YkcMessageTypeEnum messageTypeEnum = YkcMessageTypeEnum.match(messageType);
         if (messageTypeEnum == null) {
-            // TODO log
+            if (logger.isDebugEnabled()) {
+                logger.debug("terminalNo: {} messageType: {} not found messageTypeEnum.", frame.terminalNo(), frame.messageType());
+            }
             return frame;
         }
         Constructor<?> constructor = constructors.get(messageTypeEnum.name());
         if (constructor == null) {
-            // TODO log
+            if (logger.isDebugEnabled()) {
+                logger.debug("terminalNo: {} message type: {} not match constructor.", frame.terminalNo(), messageTypeEnum.name());
+            }
             return frame;
         }
         try {
             return (Frame<?>) constructor.newInstance(rawFrame);
         } catch (Throwable e) {
-            // TODO log
-            throw new RuntimeException(e);
+            logger.warn("terminalNo: {} messagetype: {} convert failed.", frame.terminalNo(), messageTypeEnum.name());
+            throw new ConvertChargeException(frame.terminalNo(), frame);
         }
     }
 }
