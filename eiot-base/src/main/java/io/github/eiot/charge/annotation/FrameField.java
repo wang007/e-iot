@@ -35,7 +35,12 @@ public @interface FrameField {
     /**
      * @return frame field data length
      */
-    int length() default -1;
+    int len() default -1;
+
+    /**
+     * @return if len = -1, lenByFields != null, try to get by CodecContext use lenByField as key
+     */
+    String lenByField() default "";
 
     /**
      * put current value to {@link CodecContext}, use field name as key

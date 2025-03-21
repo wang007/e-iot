@@ -21,7 +21,7 @@ import java.util.concurrent.TimeoutException;
  */
 public abstract class SeqNoChargeConnection extends ChargeConnectionBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(SeqNoChargeConnection.class);
+    protected static final Logger logger = LoggerFactory.getLogger(SeqNoChargeConnection.class);
 
     private Queue<Promise<Integer>> pendingRequests;
 

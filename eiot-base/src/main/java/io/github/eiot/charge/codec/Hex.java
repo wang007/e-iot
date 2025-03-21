@@ -20,6 +20,10 @@ public class Hex {
         return this.hexString;
     }
 
+    /**
+     *
+     * @return never update byte[]!!!
+     */
     public byte[] getBytes() {
         return this.bytes;
     }

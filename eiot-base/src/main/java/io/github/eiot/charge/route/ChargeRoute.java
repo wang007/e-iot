@@ -1,5 +1,6 @@
 package io.github.eiot.charge.route;
 
+import io.github.eiot.charge.Frame;
 import io.github.eiot.charge.MessageTypeEnum;
 import io.vertx.core.Handler;
 
@@ -8,7 +9,7 @@ import io.vertx.core.Handler;
  * <p>
  * created by wang007 on 2025/3/19
  */
-public interface ChargeRoute {
+public interface ChargeRoute<T extends Frame<?>> {
 
     /**
      * set match by message type
@@ -16,7 +17,7 @@ public interface ChargeRoute {
      * @param messageType the message type
      * @return this
      */
-    ChargeRoute messageType(String messageType);
+    ChargeRoute<T> messageType(String messageType);
 
     /**
      * {@link #messageType(String)}, but use {@link MessageTypeEnum#messageType()}
@@ -24,7 +25,7 @@ public interface ChargeRoute {
      * @param messageTypeEnum the messageType enum
      * @return this
      */
-    default ChargeRoute messageTypeEnum(MessageTypeEnum messageTypeEnum) {
+    default ChargeRoute<T> messageTypeEnum(MessageTypeEnum messageTypeEnum) {
         return messageType(messageTypeEnum.messageType());
     }
 
@@ -34,7 +35,7 @@ public interface ChargeRoute {
      * @param handler the handler
      * @return this
      */
-    ChargeRoute handler(Handler<ChargeRoutingContext> handler);
+    ChargeRoute<T> handler(Handler<ChargeRoutingContext<T>> handler);
 
     /**
      * Append a blockingHandler to the route handlers list.
@@ -42,7 +43,7 @@ public interface ChargeRoute {
      * @param blockingHandler the blockingHandler
      * @return this
      */
-    ChargeRoute blockingHandler(Handler<ChargeRoutingContext> blockingHandler);
+    ChargeRoute<T> blockingHandler(Handler<ChargeRoutingContext<T>> blockingHandler);
 
     /**
      * Append a failureHandler to the route handlers list.
@@ -50,7 +51,7 @@ public interface ChargeRoute {
      * @param failureHandler the failureHandler
      * @return
      */
-    ChargeRoute failureHandler(Handler<ChargeRoutingContext> failureHandler);
+    ChargeRoute<T> failureHandler(Handler<ChargeRoutingContext<T>> failureHandler);
 
     /**
      * Specify the order for this route. The router tests routes in that order.
@@ -58,14 +59,14 @@ public interface ChargeRoute {
      * @param order the order
      * @return this
      */
-    ChargeRoute order(int order);
+    ChargeRoute<T> order(int order);
 
     /**
      * Specify this is the first route for the router.
      *
      * @return this
      */
-    default ChargeRoute first() {
+    default ChargeRoute<T> first() {
         return order(Integer.MIN_VALUE);
     }
 
@@ -74,7 +75,7 @@ public interface ChargeRoute {
      *
      * @return a reference to this, so the API can be used fluently
      */
-    default ChargeRoute last() {
+    default ChargeRoute<T> last() {
         return order(Integer.MAX_VALUE);
     }
 
@@ -85,7 +86,7 @@ public interface ChargeRoute {
      *
      * @return a reference to this, so the API can be used fluently
      */
-    ChargeRoute alsoMatchRaw();
+    ChargeRoute<T> alsoMatchRaw();
 
     /**
      * only match raw and not match concrete frame
@@ -94,6 +95,6 @@ public interface ChargeRoute {
      *
      * @return a reference to this, so the API can be used fluently
      */
-    ChargeRoute onlyMatchRaw();
+    ChargeRoute<T> onlyMatchRaw();
 
 }

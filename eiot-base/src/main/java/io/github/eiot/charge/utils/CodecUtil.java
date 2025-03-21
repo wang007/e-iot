@@ -192,4 +192,18 @@ public class CodecUtil {
                 throw new IllegalArgumentException("length must be 0 ~ 8");
         }
     }
+
+    public static byte[] numberToBytes(long num, int len, ByteOrder order) {
+        byte[] bs = new byte[len];
+        for (int i = 0; i < len; i++) {
+            byte b;
+            if (order == ByteOrder.BIG_ENDIAN) {
+                b = (byte) (num >>> (8 * (len - i)) & 0xFF);
+            } else {
+                b = (byte) ((num >>> (8 * i)) & 0xFF);
+            }
+            bs[i] = b;
+        }
+        return bs;
+    }
 }

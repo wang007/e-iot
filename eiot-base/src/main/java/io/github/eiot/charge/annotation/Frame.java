@@ -18,12 +18,12 @@ public @interface Frame {
     /**
      * @return byte orders
      */
-    ByteOrder byteOrder() default ByteOrder.BIG_ENDIAN;
+    ByteOrder byteOrder() default ByteOrder.LITTLE_ENDIAN;
 
     /**
      * @return the length of the class annotated by @frame
      */
-    int length() default 0;
+    int len() default 0;
 
     /**
      * Whether the parsing process needs to carry context

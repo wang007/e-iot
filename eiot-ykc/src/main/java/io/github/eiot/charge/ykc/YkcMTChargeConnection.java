@@ -1,5 +1,6 @@
 package io.github.eiot.charge.ykc;
 
+import io.github.eiot.charge.AbstractFrame;
 import io.github.eiot.charge.Frame;
 import io.github.eiot.charge.MessageTypeChargeConnection;
 import io.netty.buffer.ByteBuf;
@@ -14,26 +15,24 @@ import io.vertx.core.spi.metrics.TCPMetrics;
  *
  * created by wang007 on 2025/3/17
  */
-public class YkcMTChargeConnection extends MessageTypeChargeConnection {
+public class YkcMTChargeConnection extends MessageTypeChargeConnection implements YkcChargeConnectionBase {
 
     protected YkcMTChargeConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
         super(context, chctx, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
     }
 
     @Override
-    protected Frame<?> convertRawFrame(ByteBuf byteBuf) {
-        return RawYkcFrame.new4Receiver(this, byteBuf);
+    public Frame<?> convertRawFrame(ByteBuf byteBuf) {
+        return YkcChargeConnectionBase.super.convertRawFrame(byteBuf);
     }
 
     @Override
-    protected Frame<?> convertConcreteFrame(Frame<?> rawFrame) {
-        // TODO
-        return null;
+    public Frame<?> convertConcreteFrame(Frame<?> rawFrame) {
+        return YkcChargeConnectionBase.super.convertConcreteFrame(rawFrame);
     }
 
     @Override
-    protected Future<Frame<?>> beforeWrite(Frame<?> frame) {
-        // TODO update checkCode
-        return super.beforeWrite(frame);
+    public Future<Frame<?>> beforeWrite(Frame<?> frame) {
+        return YkcChargeConnectionBase.super.beforeWrite(frame);
     }
 }
