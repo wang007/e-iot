@@ -91,7 +91,7 @@ public interface ChargeRoute<T extends Frame<?>> {
     /**
      * only match raw and not match concrete frame
      * <p>
-     * default: false. only match Concrete frame
+     * default: false. only match raw frame
      *
      * @return a reference to this, so the API can be used fluently
      */

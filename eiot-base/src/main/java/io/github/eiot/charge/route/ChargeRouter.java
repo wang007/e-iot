@@ -16,12 +16,9 @@ import io.vertx.core.Vertx;
  */
 public interface ChargeRouter<T extends Frame<?>> extends Handler<T> {
 
-
     static <T extends Frame<?>> ChargeRouter<T> router(Vertx vertx) {
-        // TODO
-        return null;
+        return new ChargeRouterImpl<>(vertx);
     }
-
 
     /**
      * Add a route with no matching criteria, i.e. it matches all frame or failures.

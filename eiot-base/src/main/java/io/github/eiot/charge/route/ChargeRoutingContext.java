@@ -69,7 +69,7 @@ public interface ChargeRoutingContext<T extends Frame<?>> extends AttributeHolde
     /**
      * @return the current route this context is being routed through.
      */
-    ChargeRoute currentRoute();
+    ChargeRoute<T> currentRoute();
 
     /**
      * @return vertx
