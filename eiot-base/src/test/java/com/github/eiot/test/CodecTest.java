@@ -1,7 +1,7 @@
 package com.github.eiot.test;
 
-import io.github.eiot.charge.codec.*;
-import io.github.eiot.charge.utils.CodecUtil;
+import io.github.eiot.codec.*;
+import io.github.eiot.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.junit.AfterClass;

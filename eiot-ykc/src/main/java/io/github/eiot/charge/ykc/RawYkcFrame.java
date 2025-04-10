@@ -1,8 +1,11 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.charge.*;
-import io.github.eiot.charge.codec.*;
-import io.github.eiot.charge.utils.CodecUtil;
+import io.github.eiot.AbstractRawFrame;
+import io.github.eiot.IotConnection;
+import io.github.eiot.RequestFrame;
+import io.github.eiot.Side;
+import io.github.eiot.codec.*;
+import io.github.eiot.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -35,13 +38,13 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
         YKC_CODEC = new ComposeCodec(Arrays.asList(start, len, seqNo, cryptType, messageType, data, checkCode));
     }
 
-    public static RawYkcFrame new4Receiver(ChargeConnection connection, ByteBuf byteBuf) {
+    public static RawYkcFrame new4Receiver(IotConnection connection, ByteBuf byteBuf) {
         List<Object> fields = YKC_CODEC.decode(byteBuf.slice(), new DefaultCodecContext());
         Hex messageType = (Hex) fields.get(4);
         return new RawYkcFrame(connection, messageType.toString(), fields, byteBuf);
     }
 
-    public static RawYkcFrame new4Sender(ChargeConnection connection, String messageType) {
+    public static RawYkcFrame new4Sender(IotConnection connection, String messageType) {
         return new RawYkcFrame(connection, messageType);
     }
 
@@ -54,7 +57,7 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
     /**
      * 用于 {@link Side#RECEIVER} 接收场景
      */
-    RawYkcFrame(ChargeConnection connection, String messageType, List<Object> fields, ByteBuf byteBuf) {
+    RawYkcFrame(IotConnection connection, String messageType, List<Object> fields, ByteBuf byteBuf) {
         super(connection, Side.RECEIVER, messageType);
         this.fields = fields;
         this.bytebuf = byteBuf;
@@ -77,7 +80,7 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
     /**
      * 用于 {@link Side#SENDER} 发送出去的 frame
      */
-    RawYkcFrame(ChargeConnection connection, String messageType) {
+    RawYkcFrame(IotConnection connection, String messageType) {
         super(connection, Side.SENDER, messageType);
         List<Object> fields = new ArrayList<>(7);
         initFields(fields, messageType);
@@ -112,7 +115,7 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
 
     @Override
     public String terminalNo() {
-        return chargeConnection().get(ChargeConnection.TERMINAL_NO_KEY, "");
+        return iotConnection().get(IotConnection.TERMINAL_NO_KEY, "");
     }
 
     @Override

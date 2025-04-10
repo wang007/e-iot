@@ -1,8 +1,8 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.charge.Frame;
-import io.github.eiot.charge.RequestFrame;
-import io.github.eiot.charge.SeqNoChargeConnection;
+import io.github.eiot.Frame;
+import io.github.eiot.RequestFrame;
+import io.github.eiot.SeqNoIotConnection;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Future;
@@ -14,7 +14,7 @@ import io.vertx.core.spi.metrics.TCPMetrics;
  * <p>
  * created by wang007 on 2025/3/16
  */
-public class YkcChargeConnection extends SeqNoChargeConnection implements YkcChargeConnectionBase {
+public class YkcChargeConnection extends SeqNoIotConnection implements YkcChargeConnectionBase {
 
 
     protected YkcChargeConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,

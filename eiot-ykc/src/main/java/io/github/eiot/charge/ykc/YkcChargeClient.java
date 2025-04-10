@@ -1,9 +1,9 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.charge.ChargeConnectionBase;
-import io.github.eiot.charge.client.ChargeClient;
-import io.github.eiot.charge.client.ChargeClientBase;
-import io.github.eiot.charge.client.ChargeClientOptions;
+import io.github.eiot.IotConnectionBase;
+import io.github.eiot.client.IotClient;
+import io.github.eiot.client.IotClientBase;
+import io.github.eiot.client.IotClientOptions;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Vertx;
 import io.vertx.core.impl.ContextInternal;
@@ -14,32 +14,32 @@ import io.vertx.core.spi.metrics.TCPMetrics;
 /**
  * created by wang007 on 2025/3/18
  */
-public class YkcChargeClient extends ChargeClientBase {
+public class YkcChargeClient extends IotClientBase {
 
-    public static ChargeClientOptions newOptions() {
-        return new ChargeClientOptions()
+    public static IotClientOptions newOptions() {
+        return new IotClientOptions()
                 .setFrameCodecOptions(YkcChargeServer.FRAME_CODEC_OPTIONS)
                 .setProtocol(YkcChargeServer.PROTOCOL);
     }
 
-    public static ChargeClientOptions newOptions(JsonObject jsonObject) {
-        return new ChargeClientOptions(jsonObject);
+    public static IotClientOptions newOptions(JsonObject jsonObject) {
+        return new IotClientOptions(jsonObject);
     }
 
-    public static ChargeClient create(Vertx vertx, ChargeClientOptions options) {
+    public static YkcChargeClient create(Vertx vertx, IotClientOptions options) {
         return new YkcChargeClient((VertxInternal) vertx, options);
     }
 
-    public static ChargeClient create(Vertx vertx) {
+    public static YkcChargeClient create(Vertx vertx) {
         return create(vertx, newOptions());
     }
 
-    YkcChargeClient(VertxInternal vertxInternal, ChargeClientOptions options) {
+    YkcChargeClient(VertxInternal vertxInternal, IotClientOptions options) {
         super(vertxInternal, options);
     }
 
     @Override
-    protected <T extends ChargeConnectionBase> T newChargeConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, ChargeClientOptions options) {
+    protected <T extends IotConnectionBase> T newIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, IotClientOptions options) {
         if (options.isSeqNoMatchFirst()) {
             YkcChargeConnection chargeConnection = new YkcChargeConnection(context, chctx, metrics,
                     options.isFrameConverter(), options.isSetResponseResult(), options.getWaitResponseTimeout(), options.getProtocol());

@@ -1,8 +1,9 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.charge.*;
-import io.github.eiot.charge.codec.Hex;
-import io.vertx.core.Promise;
+import io.github.eiot.MessageType;
+import io.github.eiot.RequestFrame;
+import io.github.eiot.RequestFrameBase;
+import io.github.eiot.codec.Hex;
 
 /**
  * created by wang007 on 2025/3/16
@@ -20,7 +21,7 @@ public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, YkcFrame<R
     @Override
     public YkcFrame<Resp> responseFrame() {
         MessageType<Resp> messageType = (MessageType<Resp>) frame.messageTypeEnum().responseType();
-        DefaultYkcFrame<Resp> responseFrame = new DefaultYkcFrame<Resp>(chargeConnection(), messageType);
+        DefaultYkcFrame<Resp> responseFrame = new DefaultYkcFrame<>(iotConnection(), messageType);
         responseFrame.sequenceNo(sequenceNo());
         return responseFrame;
     }

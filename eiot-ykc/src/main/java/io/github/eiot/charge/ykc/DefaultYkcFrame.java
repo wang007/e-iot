@@ -1,7 +1,10 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.charge.*;
-import io.github.eiot.charge.codec.Hex;
+import io.github.eiot.AbstractFrame;
+import io.github.eiot.IotConnection;
+import io.github.eiot.MessageType;
+import io.github.eiot.RequestFrame;
+import io.github.eiot.codec.Hex;
 import io.github.eiot.charge.ykc.data.YkcBaseData;
 
 /**
@@ -9,7 +12,7 @@ import io.github.eiot.charge.ykc.data.YkcBaseData;
  */
 public class DefaultYkcFrame<T> extends AbstractFrame<T, RawYkcFrame> implements YkcFrame<T> {
 
-    public DefaultYkcFrame(ChargeConnection connection, MessageType<T> messageTypeEnum) {
+    public DefaultYkcFrame(IotConnection connection, MessageType<T> messageTypeEnum) {
         super(connection, messageTypeEnum);
     }
 
@@ -60,7 +63,7 @@ public class DefaultYkcFrame<T> extends AbstractFrame<T, RawYkcFrame> implements
     }
 
     @Override
-    protected RawYkcFrame initRawFrame(ChargeConnection connection, String messageType) {
+    protected RawYkcFrame initRawFrame(IotConnection connection, String messageType) {
         return RawYkcFrame.new4Sender(connection, messageType);
     }
 

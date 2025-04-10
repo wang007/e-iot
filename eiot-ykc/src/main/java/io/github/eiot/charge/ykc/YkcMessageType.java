@@ -1,10 +1,7 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.charge.MessageType;
+import io.github.eiot.MessageType;
 import io.github.eiot.charge.ykc.data.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * created by wang007 on 2025/3/17
@@ -22,7 +19,7 @@ public interface YkcMessageType {
      */
     MessageType<YkcBillingModelVerifyResponse> YkcBillingModelVerifyResponse = createAndSave("06", YkcBillingModelVerifyResponse.class, null);
 
-    MessageType<YkcBillingModelVerifyRequest> YkcBillingModelVerifyRequest = createAndSave("05", YkcBillingModelVerifyRequest.class, YkcBillingModelVerifyResponse);
+    MessageType<io.github.eiot.charge.ykc.data.YkcBillingModelVerifyRequest> YkcBillingModelVerifyRequest = createAndSave("05", YkcBillingModelVerifyRequest.class, YkcBillingModelVerifyResponse);
 
 
     /**
@@ -33,13 +30,13 @@ public interface YkcMessageType {
     /**
      * 充电过程 BMS 信息
      */
-    MessageType<YkcBmsChargingStatus> YkcBmsChargingStatus = createAndSave("25", YkcBmsChargingStatus.class, null);
+    MessageType<io.github.eiot.charge.ykc.data.YkcBmsChargingStatus> YkcBmsChargingStatus = createAndSave("25", YkcBmsChargingStatus.class, null);
 
     /**
      * 参数配置
      * bms
      */
-    MessageType<YkcBmsParamConfig> YkcBmsParamConfig = createAndSave("17", YkcBmsParamConfig.class, null);
+    MessageType<io.github.eiot.charge.ykc.data.YkcBmsParamConfig> YkcBmsParamConfig = createAndSave("17", YkcBmsParamConfig.class, null);
 
     /**
      * 充电握手
@@ -59,12 +56,12 @@ public interface YkcMessageType {
      */
     MessageType<YkcChargingData> YkcChargingData = createAndSave("13", YkcChargingData.class, null);
 
-    MessageType<YkcReadChargingDataRequest> YkcReadChargingDataRequest = createAndSave("12", YkcReadChargingDataRequest.class, YkcChargingData);
+    MessageType<io.github.eiot.charge.ykc.data.YkcReadChargingDataRequest> YkcReadChargingDataRequest = createAndSave("12", YkcReadChargingDataRequest.class, YkcChargingData);
 
     /**
      * 心跳
      */
-    MessageType<YkcHeartbeatResponse> YkcHeartbeatResponse = createAndSave("04", YkcHeartbeatResponse.class, null);
+    MessageType<io.github.eiot.charge.ykc.data.YkcHeartbeatResponse> YkcHeartbeatResponse = createAndSave("04", YkcHeartbeatResponse.class, null);
 
     MessageType<YkcHeartbeatRequest> YkcHeartbeatRequest = createAndSave("03", YkcHeartbeatRequest.class, YkcHeartbeatResponse);
 

@@ -1,9 +1,9 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.charge.AbstractFrame;
-import io.github.eiot.charge.ChargeConnection;
-import io.github.eiot.charge.Frame;
-import io.github.eiot.charge.SeqNoChargeConnection;
+import io.github.eiot.AbstractFrame;
+import io.github.eiot.IotConnection;
+import io.github.eiot.Frame;
+import io.github.eiot.SeqNoIotConnection;
 import io.github.eiot.charge.ykc.data.YkcLoginRequest;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 /**
  * created by wang007 on 2025/3/21
  */
-interface YkcChargeConnectionBase extends ChargeConnection {
+interface YkcChargeConnectionBase extends IotConnection {
 
-    Logger logger = LoggerFactory.getLogger(SeqNoChargeConnection.class);
+    Logger logger = LoggerFactory.getLogger(SeqNoIotConnection.class);
 
     default Future<Frame<?>> beforeWrite(Frame<?> frame) {
         if (!frame.isRaw()) {

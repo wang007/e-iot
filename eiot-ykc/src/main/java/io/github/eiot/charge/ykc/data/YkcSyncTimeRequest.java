@@ -1,8 +1,8 @@
 package io.github.eiot.charge.ykc.data;
 
-import io.github.eiot.charge.annotation.Frame;
-import io.github.eiot.charge.annotation.FrameField;
-import io.github.eiot.charge.codec.CP56time2a;
+import io.github.eiot.annotation.Frame;
+import io.github.eiot.annotation.FrameField;
+import io.github.eiot.codec.CP56time2a;
 import lombok.Data;
 import lombok.ToString;
 

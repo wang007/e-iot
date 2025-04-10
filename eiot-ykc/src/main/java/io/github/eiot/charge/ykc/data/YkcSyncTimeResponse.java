@@ -1,6 +1,6 @@
 package io.github.eiot.charge.ykc.data;
 
-import io.github.eiot.charge.annotation.Frame;
+import io.github.eiot.annotation.Frame;
 import lombok.Data;
 import lombok.ToString;
 

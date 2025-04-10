@@ -1,13 +1,11 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.charge.AbstractFrame;
-import io.github.eiot.charge.Frame;
-import io.github.eiot.charge.MessageTypeChargeConnection;
+import io.github.eiot.MessageTypeIotConnection;
+import io.github.eiot.Frame;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Future;
 import io.vertx.core.impl.ContextInternal;
-import io.vertx.core.net.impl.SslChannelProvider;
 import io.vertx.core.spi.metrics.TCPMetrics;
 
 /**
@@ -15,7 +13,7 @@ import io.vertx.core.spi.metrics.TCPMetrics;
  *
  * created by wang007 on 2025/3/17
  */
-public class YkcMTChargeConnection extends MessageTypeChargeConnection implements YkcChargeConnectionBase {
+public class YkcMTChargeConnection extends MessageTypeIotConnection implements YkcChargeConnectionBase {
 
     protected YkcMTChargeConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
         super(context, chctx, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);

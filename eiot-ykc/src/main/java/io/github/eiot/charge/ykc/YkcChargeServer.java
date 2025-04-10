@@ -1,15 +1,14 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.charge.ChargeConnectionBase;
-import io.github.eiot.charge.FrameCodecOptions;
-import io.github.eiot.charge.server.ChargeServer;
-import io.github.eiot.charge.server.ChargeServerBase;
-import io.github.eiot.charge.server.ChargeServerOptions;
+import io.github.eiot.IotConnectionBase;
+import io.github.eiot.FrameCodecOptions;
+import io.github.eiot.server.IotServer;
+import io.github.eiot.server.IotServerBase;
+import io.github.eiot.server.IotServerOptions;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Vertx;
 import io.vertx.core.impl.ContextInternal;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.net.impl.SslChannelProvider;
 import io.vertx.core.spi.metrics.TCPMetrics;
 
 import java.nio.ByteOrder;
@@ -19,7 +18,7 @@ import java.nio.ByteOrder;
  * <p>
  * created by wang007 on 2025/3/17
  */
-public class YkcChargeServer extends ChargeServerBase {
+public class YkcChargeServer extends IotServerBase {
 
     static final FrameCodecOptions FRAME_CODEC_OPTIONS = new FrameCodecOptions()
             .setByteOrder(ByteOrder.LITTLE_ENDIAN)
@@ -30,26 +29,26 @@ public class YkcChargeServer extends ChargeServerBase {
 
     public static final String PROTOCOL = "ykc/1.x";
 
-    public static ChargeServerOptions newOptions(JsonObject options) {
-        ChargeServerOptions serverOptions = new ChargeServerOptions(options);
+    public static IotServerOptions newOptions(JsonObject options) {
+        IotServerOptions serverOptions = new IotServerOptions(options);
         serverOptions.setFrameCodecOptions(new FrameCodecOptions(FRAME_CODEC_OPTIONS))
                 .setProtocol(PROTOCOL);
         return serverOptions;
     }
 
-    public static ChargeServerOptions newOptions() {
-        ChargeServerOptions serverOptions = new ChargeServerOptions();
+    public static IotServerOptions newOptions() {
+        IotServerOptions serverOptions = new IotServerOptions();
         serverOptions.setFrameCodecOptions(new FrameCodecOptions(FRAME_CODEC_OPTIONS))
                 .setProtocol(PROTOCOL);
         return serverOptions;
     }
 
 
-    public static ChargeServer create(Vertx vertx) {
+    public static IotServer create(Vertx vertx) {
         return new YkcChargeServer(vertx, newOptions());
     }
 
-    public static ChargeServer create(Vertx vertx, ChargeServerOptions options) {
+    public static IotServer create(Vertx vertx, IotServerOptions options) {
         return new YkcChargeServer(vertx, options);
     }
 
@@ -60,13 +59,13 @@ public class YkcChargeServer extends ChargeServerBase {
      * @param vertx   the vertx
      * @param options the options
      */
-    YkcChargeServer(Vertx vertx, ChargeServerOptions options) {
+    YkcChargeServer(Vertx vertx, IotServerOptions options) {
         super(vertx, options);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    protected <T extends ChargeConnectionBase> T newChargeConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, ChargeServerOptions options) {
+    protected <T extends IotConnectionBase> T newIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, IotServerOptions options) {
         if (options.isSeqNoMatchFirst()) {
             YkcChargeConnection chargeConnection = new YkcChargeConnection(context, chctx, metrics,
                     options.isFrameConverter(), options.isSetResponseResult(), options.getWaitResponseTimeout(), options.getProtocol());

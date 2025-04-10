@@ -1,10 +1,10 @@
 package io.github.eiot.charge.ykc;
 
 
-import io.github.eiot.charge.Frame;
-import io.github.eiot.charge.FrameConverter;
-import io.github.eiot.charge.MessageType;
-import io.github.eiot.charge.SeqNoChargeConnection;
+import io.github.eiot.Frame;
+import io.github.eiot.FrameConverter;
+import io.github.eiot.MessageType;
+import io.github.eiot.SeqNoIotConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class YkcFramerConverter implements FrameConverter {
 
-    private static final Logger logger = LoggerFactory.getLogger(SeqNoChargeConnection.class);
+    private static final Logger logger = LoggerFactory.getLogger(SeqNoIotConnection.class);
 
     public static final YkcFramerConverter INSTANCE = new YkcFramerConverter();
 
