@@ -1,54 +1,137 @@
 package io.github.eiot.charge;
 
+import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 
+import java.util.Map;
+
 /**
- *
- *
  * created by wang007 on 2025/3/15
  */
-public interface RequestFrameBase<Req, ResFrame extends Frame<?>> extends RequestFrame<Req, ResFrame> {
+public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implements RequestFrame<Req, ResFrame> {
 
-    Promise<ResFrame> sendPromise();
+    private final Promise<ResFrame> promise;
 
-    MessageTypeEnum messageTypeEnum();
+    protected final AbstractFrame<Req, ? extends Frame<?>> frame;
+
+    public RequestFrameBase(AbstractFrame<Req, ? extends Frame<?>> frame) {
+        if (frame.messageTypeEnum().responseType() == null) {
+            throw new IllegalStateException("Current frame is not request type");
+        }
+        promise = frame.side() == Side.SENDER ? Promise.promise() : null;
+        this.frame = frame;
+    }
 
     @Override
-    default String responseMessageType() {
-        return messageTypeEnum().responseType().messageType();
+    public String responseMessageType() {
+        return frame.messageTypeEnum().responseType().messageType();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    default Future<ResFrame> send() {
+    public Future<ResFrame> send() {
+        if (promise == null) {
+            throw new IllegalStateException("receiver frame not send.");
+        }
         Future<Frame<?>> future = chargeConnection().send((RequestFrame<?, Frame<?>>) this);
         return (Future<ResFrame>) future;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    default Future<ResFrame> send(int timeout) {
+    public Future<ResFrame> send(int timeout) {
+        if (promise == null) {
+            throw new IllegalStateException("receiver frame not send.");
+        }
         Future<Frame<?>> future = chargeConnection().send((RequestFrame<?, Frame<?>>) this, timeout);
         return (Future<ResFrame>) future;
     }
 
     @Override
-    default Future<ResFrame> sendResult() {
-        return sendPromise().future();
-    }
-
-    @Override
-    default boolean trySetResponseResult(ResFrame frame, Throwable ex) {
-        if (ex != null) {
-            return sendPromise().tryFail(ex);
+    public Future<ResFrame> sendResult() {
+        if (promise == null) {
+            throw new IllegalStateException("receiver frame not send.");
         }
-        return sendPromise().tryComplete(frame);
+        return promise.future();
     }
 
     @Override
-    default boolean isRaw() {
+    public boolean trySetResponseResult(ResFrame frame, Throwable ex) {
+        if (ex != null) {
+            return promise.tryFail(ex);
+        }
+        return promise.tryComplete(frame);
+    }
+
+    @Override
+    public boolean isRaw() {
         return false;
     }
 
+
+    @Override
+    public Map<String, Object> attributes() {
+        return frame.attributes();
+    }
+
+    @Override
+    public String messageType() {
+        return frame.messageType();
+    }
+
+    @Override
+    public String terminalNo() {
+        return frame.terminalNo();
+    }
+
+    @Override
+    public Req data() {
+        return frame.data();
+    }
+
+    @Override
+    public Frame<Req> data(Req req) {
+        return frame.data(req);
+    }
+
+    @Override
+    public int rawDataSize() {
+        return frame.rawDataSize();
+    }
+
+    @Override
+    public Side side() {
+        return frame.side();
+    }
+
+    @Override
+    public boolean checkCodeResult() {
+        return frame.checkCodeResult();
+    }
+
+    @Override
+    public Future<Void> write() {
+        return frame.write();
+    }
+
+    @Override
+    public ChargeConnection chargeConnection() {
+        return frame.chargeConnection();
+    }
+
+    @Override
+    public ByteBuf toByteBuf() {
+        return frame.toByteBuf();
+    }
+
+    @Override
+    public String toRawString() {
+        return frame.toRawString();
+    }
+
+    @Override
+    public Req newDate() {
+        return frame.newDate();
+    }
 }

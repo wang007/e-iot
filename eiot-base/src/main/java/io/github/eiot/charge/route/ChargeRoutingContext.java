@@ -16,7 +16,7 @@ import io.vertx.core.Vertx;
  * <p>
  * created by wang007 on 2025/3/19
  */
-public interface ChargeRoutingContext<T extends Frame<?>> extends AttributeHolder {
+public interface ChargeRoutingContext<Req> extends AttributeHolder {
 
     /**
      * @return the  message type of current frame
@@ -40,7 +40,7 @@ public interface ChargeRoutingContext<T extends Frame<?>> extends AttributeHolde
      *
      * @return the frame
      */
-    T frame();
+    Frame<Req> frame();
 
     /**
      * replace current frame
@@ -48,7 +48,7 @@ public interface ChargeRoutingContext<T extends Frame<?>> extends AttributeHolde
      * @param frame new frame
      * @return this
      */
-    ChargeRoutingContext<T> replaceFrame(T frame);
+     ChargeRoutingContext<?> replaceFrame(Frame<?> frame);
 
     /**
      * @return
@@ -69,7 +69,7 @@ public interface ChargeRoutingContext<T extends Frame<?>> extends AttributeHolde
     /**
      * @return the current route this context is being routed through.
      */
-    ChargeRoute<T> currentRoute();
+    ChargeRoute<Req> currentRoute();
 
     /**
      * @return vertx

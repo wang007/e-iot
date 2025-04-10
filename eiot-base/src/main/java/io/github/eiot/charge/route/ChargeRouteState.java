@@ -10,7 +10,7 @@ import java.util.List;
  * @author yan
  * @since 2025-03-26
  */
-public class ChargeRouteState<T extends Frame<?>> {
+public class ChargeRouteState<T> {
 
     private final int order;
     private final String messageType;
@@ -73,7 +73,7 @@ public class ChargeRouteState<T extends Frame<?>> {
                 .handle(context);
     }
 
-    boolean match(T frame) {
+    boolean match(Frame<?> frame) {
         // messageType = null match all
         if (this.messageType == null) {
             return true;
@@ -91,11 +91,11 @@ public class ChargeRouteState<T extends Frame<?>> {
         return route;
     }
 
-    boolean hasNextHandler(ChargeRoutingContextImpl<T> context) {
+    boolean hasNextHandler(ChargeRoutingContextImpl<?> context) {
         return context.currentRouteNextHandlerIndex() < getContextHandlersLength();
     }
 
-    public boolean hasNextFailureHandler(ChargeRoutingContextImpl<T> context) {
+    public boolean hasNextFailureHandler(ChargeRoutingContextImpl<?> context) {
         return context.currentRouteNextFailureHandlerIndex() < getFailureHandlersLength();
     }
 
@@ -136,7 +136,7 @@ public class ChargeRouteState<T extends Frame<?>> {
                 .handle(context);
     }
 
-    public ChargeRouterImpl<T> getRouter() {
+    public ChargeRouterImpl getRouter() {
         return route.router();
     }
 

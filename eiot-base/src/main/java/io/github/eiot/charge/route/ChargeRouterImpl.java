@@ -11,30 +11,30 @@ import java.util.List;
  * @author yan
  * @since 2025-03-23
  */
-public class ChargeRouterImpl<T extends Frame<?>> implements ChargeRouter<T> {
+class ChargeRouterImpl implements ChargeRouter {
 
     private final Vertx vertx;
-    private volatile ChargeRouterState<T> routerState;
+    private volatile ChargeRouterState routerState;
 
     public ChargeRouterImpl(Vertx vertx) {
         this.vertx = vertx;
-        this.routerState = new ChargeRouterState<>(this);
+        this.routerState = new ChargeRouterState(this);
     }
 
     @Override
-    public synchronized ChargeRoute<T> route() {
+    public synchronized <T> ChargeRoute<T> route() {
         routerState = routerState.incrementOrderSequence();
         return new ChargeRouteImpl<>(this, routerState.orderSequence());
     }
 
     @Override
-    public synchronized ChargeRoute<T> route(String messageType) {
+    public synchronized <T> ChargeRoute<T> route(String messageType) {
         routerState = routerState.incrementOrderSequence();
         return new ChargeRouteImpl<>(this, messageType, routerState.orderSequence());
     }
 
     @Override
-    public synchronized ChargeRouter<T> exceptionHandler(Handler<Throwable> exceptionHandler) {
+    public synchronized ChargeRouter exceptionHandler(Handler<Throwable> exceptionHandler) {
         routerState = routerState.addExceptionHandler(exceptionHandler);
         return this;
     }
@@ -44,16 +44,16 @@ public class ChargeRouterImpl<T extends Frame<?>> implements ChargeRouter<T> {
     }
 
     @Override
-    public void handle(T frame) {
-        ChargeRoutingContextImpl<T> context = new ChargeRoutingContextImpl<T>(vertx, frame, this, routerState.routes());
+    public void handle(Frame<?> frame) {
+        ChargeRoutingContextImpl<?> context = new ChargeRoutingContextImpl<Object>(vertx, frame, this, routerState.routes());
         context.next();
     }
 
-    synchronized void add(ChargeRouteImpl<T> route) {
+    synchronized void add(ChargeRouteImpl<?> route) {
         this.routerState = routerState.addRoute(route);
     }
 
-    public Iterator<ChargeRouteImpl<T>> routes() {
+    public Iterator<ChargeRouteImpl<?>> routes() {
         return routerState.routes().iterator();
     }
 }

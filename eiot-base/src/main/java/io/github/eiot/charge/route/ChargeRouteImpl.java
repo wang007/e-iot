@@ -1,23 +1,22 @@
 package io.github.eiot.charge.route;
 
-import io.github.eiot.charge.Frame;
 import io.vertx.core.Handler;
 
 /**
  * @author yan
  * @since 2025-03-23
  */
-public class ChargeRouteImpl<T extends Frame<?>> implements ChargeRoute<T> {
+class ChargeRouteImpl<T> implements ChargeRoute<T> {
 
-    private final ChargeRouterImpl<T> router;
+    private final ChargeRouterImpl router;
     private volatile ChargeRouteState<T> routeState;
 
-    public ChargeRouteImpl(ChargeRouterImpl<T> router, int order) {
+    public ChargeRouteImpl(ChargeRouterImpl router, int order) {
         this.router = router;
         this.routeState = new ChargeRouteState<>(this, order);
     }
 
-    public ChargeRouteImpl(ChargeRouterImpl<T> router, String messageType, int order) {
+    public ChargeRouteImpl(ChargeRouterImpl router, String messageType, int order) {
         this.router = router;
         this.routeState = new ChargeRouteState<>(this, order, messageType);
     }
@@ -83,7 +82,7 @@ public class ChargeRouteImpl<T extends Frame<?>> implements ChargeRoute<T> {
         return routeState;
     }
 
-    public ChargeRouterImpl<T> router() {
+    public ChargeRouterImpl router() {
         return router;
     }
 

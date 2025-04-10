@@ -9,6 +9,10 @@ import java.util.concurrent.TimeoutException;
  * The {@link Frame} is divided into two types: one is written to ignore the result,
  * and the other is written to expect the corresponding response frame result.
  * <p>
+ * The request frame must have a response type, if not, it is not a request frame.
+ * eg: LoginRequest -> LoginResponse.
+ *
+ * <p>
  * When the {@link Frame} does not require attention to the result, use {@link #write()}
  * <p>
  * When sending a frame and expecting a corresponding response frame, use {@link #send()}
@@ -66,7 +70,7 @@ public interface RequestFrame<Req, ResFrame extends Frame<?>> extends Frame<Req>
      * NOTE: don't called it, is internal method.
      *
      * @param frame the response frame
-     * @param ex failed result
+     * @param ex    failed result
      * @return set result
      */
     boolean trySetResponseResult(ResFrame frame, Throwable ex);

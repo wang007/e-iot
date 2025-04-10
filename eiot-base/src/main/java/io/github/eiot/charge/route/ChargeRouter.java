@@ -1,7 +1,7 @@
 package io.github.eiot.charge.route;
 
 import io.github.eiot.charge.Frame;
-import io.github.eiot.charge.MessageTypeEnum;
+import io.github.eiot.charge.MessageType;
 import io.github.eiot.charge.server.ChargeServer;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -14,10 +14,10 @@ import io.vertx.core.Vertx;
  * <p>
  * created by wang007 on 2025/3/19
  */
-public interface ChargeRouter<T extends Frame<?>> extends Handler<T> {
+public interface ChargeRouter extends Handler<Frame<?>> {
 
-    static <T extends Frame<?>> ChargeRouter<T> router(Vertx vertx) {
-        return new ChargeRouterImpl<>(vertx);
+    static ChargeRouter router(Vertx vertx) {
+        return new ChargeRouterImpl(vertx);
     }
 
     /**
@@ -25,7 +25,7 @@ public interface ChargeRouter<T extends Frame<?>> extends Handler<T> {
      *
      * @return the route
      */
-    ChargeRoute<T> route();
+    <Req> ChargeRoute<Req> route();
 
     /**
      * Add a route with matches the specified message type and handler
@@ -34,18 +34,18 @@ public interface ChargeRouter<T extends Frame<?>> extends Handler<T> {
      * @return the route
      */
     @SuppressWarnings("unchecked")
-    default ChargeRoute<? extends T> route(MessageTypeHandler<? extends T> messageTypeHandler) {
-        MessageTypeHandler<T> handler = (MessageTypeHandler<T>) messageTypeHandler;
-        return route(messageTypeHandler.messageType()).handler(handler);
+    default <Req> ChargeRoute<Req> route(MessageTypeHandler<Req> messageTypeHandler) {
+        ChargeRoute<Req> r = route(messageTypeHandler.messageType());
+        return r.handler(messageTypeHandler);
     }
 
     /**
-     * like {@link #route(String)} but use {@link MessageTypeEnum#messageType()}
+     * like {@link #route(String)} but use {@link MessageType#messageType()}
      *
      * @param messageType the message type
      * @return the route
      */
-    default ChargeRoute<T> route(MessageTypeEnum messageType) {
+    default <Req> ChargeRoute<Req> route(MessageType<Req> messageType) {
         return route(messageType.messageType());
     }
 
@@ -55,7 +55,7 @@ public interface ChargeRouter<T extends Frame<?>> extends Handler<T> {
      * @param messageType the message type
      * @return the message type
      */
-    ChargeRoute<T> route(String messageType);
+    <Req> ChargeRoute<Req> route(String messageType);
 
     /**
      * Specify an handler to handle an error.
@@ -63,5 +63,5 @@ public interface ChargeRouter<T extends Frame<?>> extends Handler<T> {
      * @param exceptionHandler the handler
      * @return this
      */
-    ChargeRouter<T> exceptionHandler(Handler<Throwable> exceptionHandler);
+    ChargeRouter exceptionHandler(Handler<Throwable> exceptionHandler);
 }

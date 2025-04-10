@@ -14,10 +14,10 @@ import java.util.Map;
  * <p>
  * created by wang007 on 2025/3/15
  */
-public abstract class AbstractFrame<V, F extends AbstractRawFrame<?>> implements Frame<V> {
+public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Frame<V> {
 
     private final F rawFrame;
-    private final MessageTypeEnum messageTypeEnum;
+    private final MessageType<V> messageTypeEnum;
 
     private V data;
 
@@ -27,12 +27,12 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame<?>> implements
      * @param connection      the connection
      * @param messageTypeEnum the messageType
      */
-    public AbstractFrame(ChargeConnection connection, MessageTypeEnum messageTypeEnum) {
+    public AbstractFrame(ChargeConnection connection, MessageType<V> messageTypeEnum) {
         rawFrame = initRawFrame(connection, messageTypeEnum.messageType());
         this.messageTypeEnum = messageTypeEnum;
     }
 
-    public AbstractFrame(F frame, MessageTypeEnum messageTypeEnum) {
+    public AbstractFrame(F frame, MessageType<V> messageTypeEnum) {
         this.rawFrame = frame;
         this.messageTypeEnum = messageTypeEnum;
     }
@@ -46,7 +46,7 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame<?>> implements
      */
     protected abstract F initRawFrame(ChargeConnection connection, String messageType);
 
-    public MessageTypeEnum messageTypeEnum() {
+    public MessageType<V> messageTypeEnum() {
         return this.messageTypeEnum;
     }
 
@@ -98,15 +98,10 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame<?>> implements
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V data() {
         if (this.data != null) {
             return this.data;
         }
-        if (!rawFrame.isByteBufData()) {
-            throw new IllegalStateException("rawFrame not support byteBuf data");
-        }
-        AbstractRawFrame<ByteBuf> rawFrame = (AbstractRawFrame<ByteBuf>) this.rawFrame;
         ByteBuf byteBuf = rawFrame.data();
         V v = newDate();
         FrameUtil.decode(messageTypeEnum.dataType(), v, byteBuf);
@@ -115,12 +110,7 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame<?>> implements
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Frame<V> data(V v) {
-        if (!rawFrame.isByteBufData()) {
-            throw new IllegalStateException("rawFrame not support byteBuf data");
-        }
-        AbstractRawFrame<ByteBuf> rawFrame = (AbstractRawFrame<ByteBuf>) this.rawFrame;
         ByteBuf byteBuf = FrameUtil.encode(messageTypeEnum().dataType(), v);
         rawFrame.data(byteBuf);
         this.data = v;
@@ -138,4 +128,8 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame<?>> implements
         return false;
     }
 
+    @Override
+    public String toRawString() {
+        return rawFrame.toRawString();
+    }
 }

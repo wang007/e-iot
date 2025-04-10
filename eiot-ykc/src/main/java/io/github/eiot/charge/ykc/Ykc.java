@@ -1,14 +1,17 @@
+/*
 package io.github.eiot.charge.ykc;
 
 import io.github.eiot.charge.ChargeConnection;
 import io.github.eiot.charge.MessageTypeEnum;
 import io.github.eiot.charge.ykc.data.*;
 
+*/
 /**
  * 云快充 frame 列表
  * <p>
  * created by wang007 on 2025/3/21
- */
+ *//*
+
 public interface Ykc {
 
     class YkcBillingModelRequestFrame extends YkcRequestFrame<YkcBillingModelRequest, YkcBillingModelResponse> {
@@ -401,3 +404,4 @@ public interface Ykc {
     }
 
 }
+*/

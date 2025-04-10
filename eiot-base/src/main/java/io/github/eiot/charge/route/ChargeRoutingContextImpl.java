@@ -14,21 +14,21 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author yan
  * @since 2025-03-23
  */
-public class ChargeRoutingContextImpl<T extends Frame<?>> implements ChargeRoutingContext<T> {
+class ChargeRoutingContextImpl<T> implements ChargeRoutingContext<T> {
 
     protected static final Logger LOG = LoggerFactory.getLogger(ChargeRoutingContextImpl.class);
 
     private final Vertx vertx;
-    private T frame;
-    private final ChargeRouterImpl<T> router;
+    private Frame<?> frame;
+    private final ChargeRouterImpl router;
     private final AtomicInteger currentRouteNextHandlerIndex;
     private final AtomicInteger currentRouteNextFailureHandlerIndex;
     private final Map<String, Object> attributes;
-    private ChargeRouteState<T> currentRoute;
-    private volatile Iterator<ChargeRouteImpl<T>> routes;
+    private ChargeRouteState<?> currentRoute;
+    private volatile Iterator<ChargeRouteImpl<?>> routes;
     private volatile Throwable failure;
 
-    public ChargeRoutingContextImpl(Vertx vertx, T frame, ChargeRouterImpl<T> router, Set<ChargeRouteImpl<T>> routes) {
+    public ChargeRoutingContextImpl(Vertx vertx, Frame<?> frame, ChargeRouterImpl router, Set<ChargeRouteImpl<?>> routes) {
         this.vertx = vertx;
         this.frame = frame;
         this.router = router;
@@ -55,17 +55,19 @@ public class ChargeRoutingContextImpl<T extends Frame<?>> implements ChargeRouti
         }
     }
 
+    @SuppressWarnings("unchecked")
     private boolean iterateNext() {
         boolean failed = failed();
         if (currentRoute != null) {
             try {
-                if (!failed && currentRoute.hasNextHandler(this)) {
+                ChargeRouteState<T> routeState = (ChargeRouteState<T>) this.currentRoute;
+                if (!failed && routeState.hasNextHandler(this)) {
                     currentRouteNextHandlerIndex.incrementAndGet();
-                    currentRoute.handleContext(this);
+                    routeState.handleContext(this);
                     return true;
-                } else if (failed && currentRoute.hasNextFailureHandler(this)) {
+                } else if (failed && routeState.hasNextFailureHandler(this)) {
                     currentRouteNextHandlerIndex.incrementAndGet();
-                    currentRoute.handleFailure(this);
+                    routeState.handleFailure(this);
                     return true;
                 }
             } catch (Throwable t) {
@@ -75,7 +77,7 @@ public class ChargeRoutingContextImpl<T extends Frame<?>> implements ChargeRouti
         }
 
         while (routes.hasNext()) {
-            ChargeRouteState<T> routeState = routes.next().chargeRouteState();
+            ChargeRouteState<T> routeState = (ChargeRouteState<T>) routes.next().chargeRouteState();
             currentRouteNextHandlerIndex.set(0);
             currentRouteNextFailureHandlerIndex.set(0);
             try {
@@ -105,7 +107,7 @@ public class ChargeRoutingContextImpl<T extends Frame<?>> implements ChargeRouti
         return false;
     }
 
-    private void handleInHandlerRuntimeFailure(ChargeRouterImpl<T> router, boolean failed, Throwable t) {
+    private void handleInHandlerRuntimeFailure(ChargeRouterImpl router, boolean failed, Throwable t) {
         if (!failed) {
             fail(t);
         } else {
@@ -129,13 +131,14 @@ public class ChargeRoutingContextImpl<T extends Frame<?>> implements ChargeRouti
         next();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public T frame() {
-        return frame;
+    public Frame<T> frame() {
+        return (Frame<T>) frame;
     }
 
     @Override
-    public synchronized ChargeRoutingContext<T> replaceFrame(T frame) {
+    public synchronized ChargeRoutingContext<T> replaceFrame(Frame<?> frame) {
         this.frame = frame;
         return this;
     }
@@ -155,9 +158,10 @@ public class ChargeRoutingContextImpl<T extends Frame<?>> implements ChargeRouti
         return frame.chargeConnection();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public ChargeRoute<T> currentRoute() {
-        return currentRoute.chargeRoute();
+        return (ChargeRoute<T>) currentRoute.chargeRoute();
     }
 
     int currentRouteNextHandlerIndex() {

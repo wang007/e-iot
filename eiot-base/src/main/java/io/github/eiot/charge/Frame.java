@@ -23,7 +23,7 @@ public interface Frame<T> extends AttributeHolder {
     String messageType();
 
     /**
-     * @return return null if {@link #messageType()} not match {@link MessageTypeEnum}
+     * @return return null if {@link #messageType()} not match {@link MessageType}
      */
     //MessageTypeEnum messageTypeEnum();
 
@@ -39,6 +39,12 @@ public interface Frame<T> extends AttributeHolder {
      */
     T data();
 
+    /**
+     * set data.
+     *
+     * @param t data
+     * @return this
+     */
     Frame<T> data(T t);
 
     /**
@@ -77,6 +83,12 @@ public interface Frame<T> extends AttributeHolder {
     ByteBuf toByteBuf();
 
     /**
+     *
+     * @return return the raw byteBuf hex format
+     */
+    String toRawString();
+
+    /**
      * Create an instance of the data type corresponding to this frame
      *
      * @return data
@@ -89,4 +101,16 @@ public interface Frame<T> extends AttributeHolder {
      * @return true has not parsed
      */
     boolean isRaw();
+
+    /**
+     * Convert current frame to request frame type.
+     *
+     * NOTE: The current frame must be of the request type, otherwise an IllegalStateException is thrown
+     *
+     * @param <Resp> response type of the current request
+     * @return the request frame
+     * @throws IllegalStateException current frame is not request type
+     *
+     */
+    <Resp> RequestFrame<T, ? extends Frame<Resp>> asRequest() throws IllegalStateException;
 }

@@ -1,7 +1,7 @@
 package io.github.eiot.charge.route;
 
 import io.github.eiot.charge.Frame;
-import io.github.eiot.charge.MessageTypeEnum;
+import io.github.eiot.charge.MessageType;
 import io.vertx.core.Handler;
 
 /**
@@ -9,7 +9,7 @@ import io.vertx.core.Handler;
  * <p>
  * created by wang007 on 2025/3/19
  */
-public interface ChargeRoute<T extends Frame<?>> {
+public interface ChargeRoute<Req> {
 
     /**
      * set match by message type
@@ -17,15 +17,15 @@ public interface ChargeRoute<T extends Frame<?>> {
      * @param messageType the message type
      * @return this
      */
-    ChargeRoute<T> messageType(String messageType);
+    ChargeRoute<Req> messageType(String messageType);
 
     /**
-     * {@link #messageType(String)}, but use {@link MessageTypeEnum#messageType()}
+     * {@link #messageType(String)}, but use {@link MessageType#messageType()}
      *
      * @param messageTypeEnum the messageType enum
      * @return this
      */
-    default ChargeRoute<T> messageTypeEnum(MessageTypeEnum messageTypeEnum) {
+    default ChargeRoute<Req> messageTypeEnum(MessageType<Req> messageTypeEnum) {
         return messageType(messageTypeEnum.messageType());
     }
 
@@ -35,7 +35,7 @@ public interface ChargeRoute<T extends Frame<?>> {
      * @param handler the handler
      * @return this
      */
-    ChargeRoute<T> handler(Handler<ChargeRoutingContext<T>> handler);
+    ChargeRoute<Req> handler(Handler<ChargeRoutingContext<Req>> handler);
 
     /**
      * Append a blockingHandler to the route handlers list.
@@ -43,7 +43,7 @@ public interface ChargeRoute<T extends Frame<?>> {
      * @param blockingHandler the blockingHandler
      * @return this
      */
-    ChargeRoute<T> blockingHandler(Handler<ChargeRoutingContext<T>> blockingHandler);
+    ChargeRoute<Req> blockingHandler(Handler<ChargeRoutingContext<Req>> blockingHandler);
 
     /**
      * Append a failureHandler to the route handlers list.
@@ -51,7 +51,7 @@ public interface ChargeRoute<T extends Frame<?>> {
      * @param failureHandler the failureHandler
      * @return
      */
-    ChargeRoute<T> failureHandler(Handler<ChargeRoutingContext<T>> failureHandler);
+    ChargeRoute<Req> failureHandler(Handler<ChargeRoutingContext<Req>> failureHandler);
 
     /**
      * Specify the order for this route. The router tests routes in that order.
@@ -59,14 +59,14 @@ public interface ChargeRoute<T extends Frame<?>> {
      * @param order the order
      * @return this
      */
-    ChargeRoute<T> order(int order);
+    ChargeRoute<Req> order(int order);
 
     /**
      * Specify this is the first route for the router.
      *
      * @return this
      */
-    default ChargeRoute<T> first() {
+    default ChargeRoute<Req> first() {
         return order(Integer.MIN_VALUE);
     }
 
@@ -75,7 +75,7 @@ public interface ChargeRoute<T extends Frame<?>> {
      *
      * @return a reference to this, so the API can be used fluently
      */
-    default ChargeRoute<T> last() {
+    default ChargeRoute<Req> last() {
         return order(Integer.MAX_VALUE);
     }
 
@@ -86,7 +86,7 @@ public interface ChargeRoute<T extends Frame<?>> {
      *
      * @return a reference to this, so the API can be used fluently
      */
-    ChargeRoute<T> alsoMatchRaw();
+    ChargeRoute<Req> alsoMatchRaw();
 
     /**
      * only match raw and not match concrete frame
@@ -95,6 +95,6 @@ public interface ChargeRoute<T extends Frame<?>> {
      *
      * @return a reference to this, so the API can be used fluently
      */
-    ChargeRoute<T> onlyMatchRaw();
+    ChargeRoute<Req> onlyMatchRaw();
 
 }

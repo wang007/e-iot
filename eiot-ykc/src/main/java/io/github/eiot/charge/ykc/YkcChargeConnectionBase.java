@@ -4,6 +4,7 @@ import io.github.eiot.charge.AbstractFrame;
 import io.github.eiot.charge.ChargeConnection;
 import io.github.eiot.charge.Frame;
 import io.github.eiot.charge.SeqNoChargeConnection;
+import io.github.eiot.charge.ykc.data.YkcLoginRequest;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ interface YkcChargeConnectionBase extends ChargeConnection {
 
     default Future<Frame<?>> beforeWrite(Frame<?> frame) {
         if (!frame.isRaw()) {
-            frame = ((AbstractFrame<?,?>)frame).rawFrame();
+            frame = ((AbstractFrame<?, ?>) frame).rawFrame();
         }
         RawYkcFrame rawFrame = (RawYkcFrame) frame;
         rawFrame.checkCode(rawFrame.calcCheckCode());
@@ -27,9 +28,10 @@ interface YkcChargeConnectionBase extends ChargeConnection {
 
     default Frame<?> convertRawFrame(ByteBuf byteBuf) {
         RawYkcFrame rawYkcFrame = RawYkcFrame.new4Receiver(this, byteBuf);
-        if (YkcMessageTypeEnum.YkcLoginRequest.messageType().equals(rawYkcFrame.messageType())) {
+        if (YkcMessageType.YkcLoginRequest.messageType().equals(rawYkcFrame.messageType())) {
             try {
-                String terminalNo = new Ykc.YkcLoginRequestFrame(rawYkcFrame)
+                DefaultYkcFrame<YkcLoginRequest> ykcFrame = new DefaultYkcFrame<>(rawYkcFrame, YkcMessageType.YkcLoginRequest);
+                String terminalNo = ykcFrame
                         .data()
                         .getTerminalNo()
                         .toString();

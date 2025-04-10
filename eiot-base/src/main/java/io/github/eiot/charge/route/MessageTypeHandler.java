@@ -8,7 +8,7 @@ import io.vertx.core.Handler;
  * <p>
  * created by wang007 on 2025/3/20
  */
-public interface MessageTypeHandler<T extends Frame<?>> extends Handler<ChargeRoutingContext<T>> {
+public interface MessageTypeHandler<T> extends Handler<ChargeRoutingContext<T>> {
 
     /**
      * @return provide message type to match.
@@ -16,5 +16,5 @@ public interface MessageTypeHandler<T extends Frame<?>> extends Handler<ChargeRo
     String messageType();
 
     @Override
-    void handle(ChargeRoutingContext<T> rc);
+    void handle(ChargeRoutingContext<T> ctx);
 }

@@ -1,6 +1,7 @@
 package io.github.eiot.charge.ykc;
 
 import io.github.eiot.charge.Frame;
+import io.github.eiot.charge.RequestFrame;
 import io.github.eiot.charge.codec.Hex;
 
 /**
@@ -63,4 +64,6 @@ public interface YkcFrame<T> extends Frame<T> {
      */
     YkcFrame<T> checkCode(int checkCode);
 
+    @Override
+    <Resp> RequestFrame<T, YkcFrame<Resp>> asRequest();
 }

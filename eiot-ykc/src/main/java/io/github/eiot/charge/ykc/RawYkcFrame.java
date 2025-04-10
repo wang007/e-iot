@@ -1,8 +1,6 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.charge.AbstractRawFrame;
-import io.github.eiot.charge.ChargeConnection;
-import io.github.eiot.charge.Side;
+import io.github.eiot.charge.*;
 import io.github.eiot.charge.codec.*;
 import io.github.eiot.charge.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
@@ -18,7 +16,7 @@ import java.util.List;
  * <p>
  * created by wang007 on 2025/3/15
  */
-public class RawYkcFrame extends AbstractRawFrame<ByteBuf> implements YkcFrame<ByteBuf> {
+public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
 
     private static final ComposeCodec YKC_CODEC;
 
@@ -159,6 +157,11 @@ public class RawYkcFrame extends AbstractRawFrame<ByteBuf> implements YkcFrame<B
         ensureWriteable(true);
         fields.set(6, checkCode);
         return this;
+    }
+
+    @Override
+    public <Resp> RequestFrame<ByteBuf, YkcFrame<Resp>> asRequest() {
+        throw new IllegalStateException("raw frame not support");
     }
 
     @Override
