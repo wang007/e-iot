@@ -91,8 +91,9 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
     }
 
     @Override
-    public Frame<Req> data(Req req) {
-        return frame.data(req);
+    public RequestFrameBase<Req, ResFrame> data(Req req) {
+         frame.data(req);
+         return this;
     }
 
     @Override

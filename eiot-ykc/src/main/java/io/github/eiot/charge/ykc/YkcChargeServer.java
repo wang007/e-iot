@@ -44,11 +44,11 @@ public class YkcChargeServer extends IotServerBase {
     }
 
 
-    public static IotServer create(Vertx vertx) {
+    public static YkcChargeServer create(Vertx vertx) {
         return new YkcChargeServer(vertx, newOptions());
     }
 
-    public static IotServer create(Vertx vertx, IotServerOptions options) {
+    public static YkcChargeServer create(Vertx vertx, IotServerOptions options) {
         return new YkcChargeServer(vertx, options);
     }
 

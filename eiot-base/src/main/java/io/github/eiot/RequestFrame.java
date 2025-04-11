@@ -74,4 +74,7 @@ public interface RequestFrame<Req, ResFrame extends Frame<?>> extends Frame<Req>
      * @return set result
      */
     boolean trySetResponseResult(ResFrame frame, Throwable ex);
+
+    @Override
+    RequestFrame<Req, ResFrame> data(Req req);
 }
