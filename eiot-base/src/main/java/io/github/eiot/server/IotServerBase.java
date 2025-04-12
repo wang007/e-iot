@@ -112,8 +112,8 @@ public abstract class IotServerBase implements IotServer, Closeable, Shareable {
         ch.pipeline().replace(VertxHandler.class, "handler", handler);
     }
 
-    protected abstract <T extends IotConnectionBase> T newIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,
-                                                                           IotServerOptions options);
+    protected abstract IotConnectionBase newIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,
+                                                          IotServerOptions options);
 
 
     @Override

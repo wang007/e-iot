@@ -1,9 +1,6 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.AbstractFrame;
-import io.github.eiot.IotConnection;
-import io.github.eiot.Frame;
-import io.github.eiot.SeqNoIotConnection;
+import io.github.eiot.*;
 import io.github.eiot.charge.ykc.data.YkcLoginRequest;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
@@ -17,13 +14,17 @@ interface YkcChargeConnectionBase extends IotConnection {
 
     Logger logger = LoggerFactory.getLogger(SeqNoIotConnection.class);
 
-    default Future<Frame<?>> beforeWrite(Frame<?> frame) {
+    default Future<Frame<?>> beforeWrite(Frame<?> frame0) {
+        Frame<?> frame = frame0;
         if (!frame.isRaw()) {
+            if (frame instanceof RequestFrameBase) {
+                frame = ((RequestFrameBase<?, ?>) frame).delegateFrame();
+            }
             frame = ((AbstractFrame<?, ?>) frame).rawFrame();
         }
         RawYkcFrame rawFrame = (RawYkcFrame) frame;
         rawFrame.checkCode(rawFrame.calcCheckCode());
-        return Future.succeededFuture(frame);
+        return Future.succeededFuture(frame0);
     }
 
     default Frame<?> convertRawFrame(ByteBuf byteBuf) {

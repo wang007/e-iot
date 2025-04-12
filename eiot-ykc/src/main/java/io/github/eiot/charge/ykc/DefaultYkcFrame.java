@@ -76,9 +76,9 @@ public class DefaultYkcFrame<T> extends AbstractFrame<T, RawYkcFrame> implements
     }
 
     @Override
-    public T newDate() {
+    public T newData() {
         T req = data();
-        T data = super.newDate();
+        T data = super.newData();
         if (data instanceof YkcBaseData) {
             if (req instanceof YkcBaseData) {
                 ((YkcBaseData) data).setTerminalNo(((YkcBaseData) req).getTerminalNo());

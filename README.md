@@ -15,7 +15,7 @@ Simple, high performance, based on vertx to implement a variety of charging prot
 2. [代理服务实例](./eiot-example/src/main/java/io/github/eiot/example/YkcReverseServerExample.java)
 
 
-### 说明
+### 支持
 1. 由于协议定义涉及版权问题，如需私有 iot 协议开发，请联系我
 <div>
 	<img src="./wechat.png" alt="Editor" width="400">

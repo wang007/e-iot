@@ -4,11 +4,10 @@ import io.github.eiot.IotConnection;
 import io.github.eiot.Frame;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.impl.logging.Logger;
-import io.vertx.core.impl.logging.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author yan
@@ -21,26 +20,20 @@ class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
     private final Vertx vertx;
     private Frame<?> frame;
     private final IotRouterImpl router;
-    private final AtomicInteger currentRouteNextHandlerIndex;
-    private final AtomicInteger currentRouteNextFailureHandlerIndex;
-    private final Map<String, Object> attributes;
     private IotRouteState<?> currentRoute;
-    private volatile Iterator<IotRouteImpl<?>> routes;
-    private volatile Throwable failure;
+    private Iterator<IotRouteImpl<?>> routes;
+    private Throwable failure;
 
     public IotRoutingContextImpl(Vertx vertx, Frame<?> frame, IotRouterImpl router, Set<IotRouteImpl<?>> routes) {
         this.vertx = vertx;
         this.frame = frame;
         this.router = router;
-        this.currentRouteNextHandlerIndex = new AtomicInteger(0);
-        this.currentRouteNextFailureHandlerIndex = new AtomicInteger(0);
-        this.attributes = new HashMap<>();
         this.routes = routes.iterator();
     }
 
     @Override
     public Map<String, Object> attributes() {
-        return this.attributes;
+        return frame.attributes();
     }
 
     @Override
@@ -51,35 +44,35 @@ class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
     @Override
     public void next() {
         if (!iterateNext()) {
-            LOG.error("no route can be find!");
+            handleNotMatch();
         }
     }
+
+    private void handleNotMatch() {
+        if (failed()) {
+            Handler<Throwable> exceptionHandler = router.exceptionHandler();
+            if (exceptionHandler != null) {
+                try {
+                    exceptionHandler.handle(failure);
+                } catch (Throwable e) {
+                    LOG.error("terminalNo: {} error handle failed", frame.terminalNo(), e);
+                }
+            } else {
+                LOG.warn("terminalNo: {} fail() to next not found handler.", frame.terminalNo(), failure);
+            }
+            return;
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.warn("terminalNo: {} next() not found handler.", frame.terminalNo());
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     private boolean iterateNext() {
         boolean failed = failed();
-        if (currentRoute != null) {
-            try {
-                IotRouteState<T> routeState = (IotRouteState<T>) this.currentRoute;
-                if (!failed && routeState.hasNextHandler(this)) {
-                    currentRouteNextHandlerIndex.incrementAndGet();
-                    routeState.handleContext(this);
-                    return true;
-                } else if (failed && routeState.hasNextFailureHandler(this)) {
-                    currentRouteNextHandlerIndex.incrementAndGet();
-                    routeState.handleFailure(this);
-                    return true;
-                }
-            } catch (Throwable t) {
-                handleInHandlerRuntimeFailure(currentRoute.getRouter(), failed, t);
-                return true;
-            }
-        }
-
         while (routes.hasNext()) {
-            IotRouteState<T> routeState = (IotRouteState<T>) routes.next().chargeRouteState();
-            currentRouteNextHandlerIndex.set(0);
-            currentRouteNextFailureHandlerIndex.set(0);
+            IotRouteState<T> routeState = (IotRouteState<T>) routes.next().routeState();
             try {
                 if (!routeState.match(frame)) {
                     continue;
@@ -90,14 +83,15 @@ class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
             }
             try {
                 currentRoute = routeState;
-                if (failed && currentRoute.hasNextFailureHandler(this)) {
-                    currentRouteNextFailureHandlerIndex.incrementAndGet();
-                    routeState.handleFailure(this);
-                } else if (currentRoute.hasNextHandler(this)) {
-                    currentRouteNextHandlerIndex.incrementAndGet();
+                if (!failed && routeState.hasContextHandler()) {
                     routeState.handleContext(this);
+                } else if (failed && routeState.hasFailureHandler()) {
+                    routeState.handleFailure(this);
                 } else {
                     continue;
+                }
+                if (failed && routeState.hasFailureHandler()) {
+                    routeState.handleFailure(this);
                 }
             } catch (Throwable t) {
                 handleInHandlerRuntimeFailure(routeState.getRouter(), failed, t);
@@ -112,13 +106,15 @@ class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
             fail(t);
         } else {
             // invoke router error handler
-            List<Handler<Throwable>> exceptionHandlers = router.exceptionHandlers();
-            if (exceptionHandlers == null) {
-                LOG.error("Unhandled exception in chargeRouter", failure);
-            } else {
-                exceptionHandlers.forEach(handler -> {
-                    handler.handle(t);
-                });
+            Handler<Throwable> exceptionHandler = router.exceptionHandler();
+            if (exceptionHandler == null) {
+                LOG.error("terminalNo: {} Unhandled exception in IotRouter.", frame.terminalNo(), t);
+                return;
+            }
+            try {
+                exceptionHandler.handle(t);
+            } catch (Throwable e) {
+                LOG.error("terminalNo: {} error handle failed.", frame.terminalNo(), e);
             }
         }
     }
@@ -158,18 +154,9 @@ class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
         return frame.iotConnection();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public IotRoute<T> currentRoute() {
-        return (IotRoute<T>) currentRoute.chargeRoute();
-    }
-
-    int currentRouteNextHandlerIndex() {
-        return currentRouteNextHandlerIndex.get();
-    }
-
-    int currentRouteNextFailureHandlerIndex() {
-        return currentRouteNextFailureHandlerIndex.get();
+    public IotRoute<?> currentRoute() {
+        return currentRoute.chargeRoute();
     }
 
     @Override

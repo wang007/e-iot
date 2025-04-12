@@ -93,7 +93,7 @@ public interface Frame<T> extends AttributeHolder {
      *
      * @return data
      */
-    T newDate();
+    T newData();
 
     /**
      * used for the date field has not been further parsed

@@ -186,7 +186,7 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
     }
 
     @Override
-    public ByteBuf newDate() {
+    public ByteBuf newData() {
         return Unpooled.buffer();
     }
 

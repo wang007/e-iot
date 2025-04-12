@@ -64,16 +64,13 @@ public class YkcChargeServer extends IotServerBase {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    protected <T extends IotConnectionBase> T newIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, IotServerOptions options) {
+    protected IotConnectionBase newIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, IotServerOptions options) {
         if (options.isSeqNoMatchFirst()) {
-            YkcChargeConnection chargeConnection = new YkcChargeConnection(context, chctx, metrics,
+            return new YkcChargeConnection(context, chctx, metrics,
                     options.isFrameConverter(), options.isSetResponseResult(), options.getWaitResponseTimeout(), options.getProtocol());
-            return (T) chargeConnection;
         }
-        YkcMTChargeConnection chargeConnection = new YkcMTChargeConnection(context, chctx, metrics,
+        return new YkcMTChargeConnection(context, chctx, metrics,
                 options.isFrameConverter(), options.isSetResponseResult(), options.getWaitResponseTimeout(), options.getProtocol());
-        return (T) chargeConnection;
     }
 
 

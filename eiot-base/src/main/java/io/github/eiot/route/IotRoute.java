@@ -29,7 +29,7 @@ public interface IotRoute<Req> {
     }
 
     /**
-     * Append a handler to the route handlers list.
+     * set a handler to the route handlers list.
      *
      * @param handler the handler
      * @return this
@@ -37,7 +37,7 @@ public interface IotRoute<Req> {
     IotRoute<Req> handler(Handler<IotRoutingContext<Req>> handler);
 
     /**
-     * Append a blockingHandler to the route handlers list.
+     * set a blockingHandler to the route handlers list.
      *
      * @param blockingHandler the blockingHandler
      * @return this
@@ -45,7 +45,7 @@ public interface IotRoute<Req> {
     IotRoute<Req> blockingHandler(Handler<IotRoutingContext<Req>> blockingHandler);
 
     /**
-     * Append a failureHandler to the route handlers list.
+     * set a failureHandler to the route handlers list.
      *
      * @param failureHandler the failureHandler
      * @return

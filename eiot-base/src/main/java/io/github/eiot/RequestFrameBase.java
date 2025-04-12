@@ -23,6 +23,10 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
         this.frame = frame;
     }
 
+    public Frame<Req> delegateFrame() {
+        return frame;
+    }
+
     @Override
     public String responseMessageType() {
         return frame.messageTypeEnum().responseType().messageType();
@@ -132,7 +136,7 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
     }
 
     @Override
-    public Req newDate() {
-        return frame.newDate();
+    public Req newData() {
+        return frame.newData();
     }
 }

@@ -35,17 +35,17 @@ class IotRouterImpl implements IotRouter {
 
     @Override
     public synchronized IotRouter exceptionHandler(Handler<Throwable> exceptionHandler) {
-        routerState = routerState.addExceptionHandler(exceptionHandler);
+        routerState = routerState.exceptionHandler(exceptionHandler);
         return this;
     }
 
-    public List<Handler<Throwable>> exceptionHandlers(){
-        return routerState.exceptionHandlers();
+    public Handler<Throwable> exceptionHandler(){
+        return routerState.exceptionHandler();
     }
 
     @Override
     public void handle(Frame<?> frame) {
-        IotRoutingContextImpl<?> context = new IotRoutingContextImpl<Object>(vertx, frame, this, routerState.routes());
+        IotRoutingContextImpl<?> context = new IotRoutingContextImpl<>(vertx, frame, this, routerState.routes());
         context.next();
     }
 

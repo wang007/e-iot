@@ -65,9 +65,8 @@ public abstract class IotClientBase implements IotClient {
         return handler.getConnection();
     }
 
-    protected abstract <T extends IotConnectionBase> T newIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,
-                                                                           IotClientOptions options);
-
+    protected abstract IotConnectionBase newIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,
+                                                          IotClientOptions options);
 
     @Override
     public Future<Void> close() {

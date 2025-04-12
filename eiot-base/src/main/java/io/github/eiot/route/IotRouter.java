@@ -33,7 +33,6 @@ public interface IotRouter extends Handler<Frame<?>> {
      * @param messageTypeHandler the handler
      * @return the route
      */
-    @SuppressWarnings("unchecked")
     default <Req> IotRoute<Req> route(MessageTypeHandler<Req> messageTypeHandler) {
         IotRoute<Req> r = route(messageTypeHandler.messageType());
         return r.handler(messageTypeHandler);

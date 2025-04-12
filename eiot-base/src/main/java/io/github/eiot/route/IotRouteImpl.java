@@ -23,6 +23,9 @@ class IotRouteImpl<T> implements IotRoute<T> {
 
     @Override
     public synchronized IotRoute<T> messageType(String messageType) {
+        if (routeState.isAdded()) {
+            throw new IllegalStateException("Can't change messageType after route is active");
+        }
         routeState = routeState.messageType(messageType);
         return this;
     }
@@ -78,7 +81,7 @@ class IotRouteImpl<T> implements IotRoute<T> {
         return this;
     }
 
-    IotRouteState<T> chargeRouteState() {
+    IotRouteState<T> routeState() {
         return routeState;
     }
 

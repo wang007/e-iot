@@ -69,7 +69,7 @@ public interface IotRoutingContext<Req> extends AttributeHolder {
     /**
      * @return the current route this context is being routed through.
      */
-    IotRoute<Req> currentRoute();
+    IotRoute<?> currentRoute();
 
     /**
      * @return vertx

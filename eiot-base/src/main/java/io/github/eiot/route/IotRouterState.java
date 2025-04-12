@@ -8,22 +8,22 @@ import java.util.*;
  * @author yan
  * @since 2025-03-26
  */
-public class IotRouterState {
+class IotRouterState {
 
     private final IotRouter router;
     private final TreeSet<IotRouteImpl<?>> routes;
     private final int orderSequence;
-    private final List<Handler<Throwable>> exceptionHandlers;
+    private final Handler<Throwable> exceptionHandler;
 
     public IotRouterState(IotRouter router) {
         this(router, null, 0, null);
     }
 
-    public IotRouterState(IotRouter router, TreeSet<IotRouteImpl<?>> routes, int orderSequence, List<Handler<Throwable>> exceptionHandlers) {
+    public IotRouterState(IotRouter router, TreeSet<IotRouteImpl<?>> routes, int orderSequence, Handler<Throwable> exceptionHandler) {
         this.router = router;
         this.routes = routes;
         this.orderSequence = orderSequence;
-        this.exceptionHandlers = exceptionHandlers;
+        this.exceptionHandler = exceptionHandler;
     }
 
     public int orderSequence() {
@@ -31,18 +31,15 @@ public class IotRouterState {
     }
 
     public IotRouterState incrementOrderSequence() {
-        return new IotRouterState(router, routes, orderSequence + 1, exceptionHandlers);
+        return new IotRouterState(router, routes, orderSequence + 1, exceptionHandler);
     }
 
-    public IotRouterState addExceptionHandler(Handler<Throwable> exceptionHandler) {
-        IotRouterState state = new IotRouterState(
+    public IotRouterState exceptionHandler(Handler<Throwable> exceptionHandler) {
+        return new IotRouterState(
                 this.router,
                 routes,
                 this.orderSequence,
-                exceptionHandlers == null ? new ArrayList<>() : new ArrayList<>(this.exceptionHandlers)
-        );
-        state.exceptionHandlers.add(exceptionHandler);
-        return state;
+                exceptionHandler);
     }
 
     Set<IotRouteImpl<?>> routes() {
@@ -68,10 +65,10 @@ public class IotRouterState {
         }
         routes.add(route);
 
-        return new IotRouterState(this.router, routes, this.orderSequence, exceptionHandlers);
+        return new IotRouterState(this.router, routes, this.orderSequence, exceptionHandler);
     }
 
-    public List<Handler<Throwable>> exceptionHandlers() {
-        return exceptionHandlers;
+    public Handler<Throwable> exceptionHandler() {
+        return exceptionHandler;
     }
 }

@@ -3,45 +3,39 @@ package io.github.eiot.route;
 import io.github.eiot.Frame;
 import io.vertx.core.Handler;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author yan
  * @since 2025-03-26
  */
-public class IotRouteState<T> {
+class IotRouteState<T> {
 
     private final int order;
     private final String messageType;
-    private final List<Handler<IotRoutingContext<T>>> contextHandlers;
-    private final List<Handler<IotRoutingContext<T>>> failureHandlers;
+    private final Handler<IotRoutingContext<T>> contextHandler;
+    private final Handler<IotRoutingContext<T>> failureHandler;
     private final boolean add;
     private final IotRouteImpl<T> route;
-    private final boolean alsoMatchRaw;
-    private final boolean onlyMatchRaw;
+
+    // 0: not match raw  1: only match raw  2. all match
+    private final int matchType;
 
     public IotRouteState(IotRouteImpl<T> route, int order) {
-        this(route, order, null, null, null, false, false, false);
+        this(route, order, null, null, null, false, 0);
     }
 
     public IotRouteState(IotRouteImpl<T> route, int order, String messageType) {
-        this(route, order, messageType, null, null, false, false, false);
+        this(route, order, messageType, null, null, false, 0);
     }
 
-    public IotRouteState(IotRouteImpl<T> route, int order, String messageType, List<Handler<IotRoutingContext<T>>> contextHandlers) {
-        this(route, order, messageType, contextHandlers, null, false, false, false);
-    }
-
-    public IotRouteState(IotRouteImpl<T> route, int order, String messageType, List<Handler<IotRoutingContext<T>>> contextHandlers, List<Handler<IotRoutingContext<T>>> failureHandlers, boolean add, boolean alsoMatchRaw, boolean onlyMatchRaw) {
+    public IotRouteState(IotRouteImpl<T> route, int order, String messageType, Handler<IotRoutingContext<T>> contextHandler, Handler<IotRoutingContext<T>> failureHandler, boolean add, int matchType) {
         this.route = route;
         this.order = order;
         this.messageType = messageType;
-        this.contextHandlers = contextHandlers;
-        this.failureHandlers = failureHandlers;
+        this.contextHandler = contextHandler;
+        this.failureHandler = failureHandler;
         this.add = add;
-        this.alsoMatchRaw = alsoMatchRaw;
-        this.onlyMatchRaw = onlyMatchRaw;
+        this.matchType = matchType;
     }
 
     public IotRouteState<T> messageType(String messageType) {
@@ -49,14 +43,15 @@ public class IotRouteState<T> {
     }
 
     public IotRouteState<T> addContextHandler(Handler<IotRoutingContext<T>> contextHandler) {
-        IotRouteState<T> routeState = new IotRouteState<>(
+        return new IotRouteState<>(
                 route,
                 order,
                 messageType,
-                this.contextHandlers == null ? new ArrayList<>() : new ArrayList<>(this.contextHandlers)
+                contextHandler,
+                failureHandler,
+                add,
+                matchType
         );
-        routeState.contextHandlers.add(contextHandler);
-        return routeState;
     }
 
     public boolean isAdded() {
@@ -64,113 +59,86 @@ public class IotRouteState<T> {
     }
 
     public IotRouteState<T> setOrder(int order) {
-        return new IotRouteState<>(route, order, messageType, contextHandlers, failureHandlers, add, alsoMatchRaw, onlyMatchRaw);
+        return new IotRouteState<>(route, order, messageType, contextHandler, failureHandler, add, matchType);
     }
 
     void handleContext(IotRoutingContextImpl<T> context) {
-        contextHandlers
-                .get(context.currentRouteNextHandlerIndex() - 1)
-                .handle(context);
+        contextHandler.handle(context);
     }
 
     boolean match(Frame<?> frame) {
-        // messageType = null match all
         if (this.messageType == null) {
-            return true;
+            return matchType == 0 ? !frame.isRaw() : matchType != 1 || frame.isRaw();
         }
-        if (frame.isRaw() && alsoMatchRaw){
-            return true;
-        }
-        if (!frame.isRaw() && onlyMatchRaw){
+        boolean match = this.messageType.equals(frame.messageType());
+        if (!match) {
             return false;
         }
-        return this.messageType.equals(frame.messageType());
+        return matchType == 0 ? !frame.isRaw() : matchType != 1 || frame.isRaw();
     }
 
     IotRoute<T> chargeRoute() {
         return route;
     }
 
-    boolean hasNextHandler(IotRoutingContextImpl<?> context) {
-        return context.currentRouteNextHandlerIndex() < getContextHandlersLength();
-    }
-
-    public boolean hasNextFailureHandler(IotRoutingContextImpl<?> context) {
-        return context.currentRouteNextFailureHandlerIndex() < getFailureHandlersLength();
-    }
-
-    public int getContextHandlersLength() {
-        return contextHandlers == null ? 0 : contextHandlers.size();
-    }
-
-    public int getFailureHandlersLength() {
-        return failureHandlers == null ? 0 : failureHandlers.size();
-    }
-
     public IotRouteState<T> setAdded(boolean add) {
-        return new IotRouteState<>(route, order, messageType, contextHandlers, failureHandlers, add, alsoMatchRaw, onlyMatchRaw);
+        return new IotRouteState<>(route, order, messageType, contextHandler, failureHandler, add, matchType);
     }
 
     int getOrder() {
         return order;
     }
 
+    public boolean hasContextHandler() {
+        return contextHandler != null;
+    }
+
+    public boolean hasFailureHandler() {
+        return failureHandler != null;
+    }
+
+
     public IotRouteState<T> addFailureHandler(Handler<IotRoutingContext<T>> handler) {
-        IotRouteState<T> state = new IotRouteState<>(
+        return new IotRouteState<>(
                 route,
                 order,
                 messageType,
-                contextHandlers,
-                this.failureHandlers == null ? new ArrayList<>() : new ArrayList<>(this.failureHandlers),
+                contextHandler,
+                handler,
                 add,
-                alsoMatchRaw,
-                onlyMatchRaw
+                matchType
         );
-        state.failureHandlers.add(handler);
-        return state;
     }
 
     public void handleFailure(IotRoutingContextImpl<T> context) {
-        failureHandlers
-                .get(context.currentRouteNextFailureHandlerIndex() - 1)
-                .handle(context);
+        failureHandler.handle(context);
     }
 
     public IotRouterImpl getRouter() {
         return route.router();
     }
 
-    public IotRouteState<T> alsoMatchRaw(boolean match){
+    public IotRouteState<T> alsoMatchRaw(boolean match) {
         return new IotRouteState<>(
                 route,
                 order,
                 messageType,
-                contextHandlers,
-                failureHandlers,
+                contextHandler,
+                failureHandler,
                 add,
-                match,
-                onlyMatchRaw
+                2
         );
     }
 
-    public IotRouteState<T> onlyMatchRaw(boolean match){
+    public IotRouteState<T> onlyMatchRaw(boolean match) {
         return new IotRouteState<>(
                 route,
                 order,
                 messageType,
-                contextHandlers,
-                failureHandlers,
+                contextHandler,
+                failureHandler,
                 add,
-                alsoMatchRaw,
-                match
+                1
         );
-    }
-
-    boolean isAlsoMatchRaw() {
-        return alsoMatchRaw;
-    }
-
-    boolean isOnlyMatchRaw() {
-        return onlyMatchRaw;
     }
 }
