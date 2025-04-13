@@ -1,9 +1,6 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.AbstractRawFrame;
-import io.github.eiot.IotConnection;
-import io.github.eiot.RequestFrame;
-import io.github.eiot.Side;
+import io.github.eiot.*;
 import io.github.eiot.codec.*;
 import io.github.eiot.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
@@ -29,12 +26,12 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
 
     static {
         HexCodec start = new HexCodec(1);
-        BIN4ContextCodec len = new BIN4ContextCodec(2, ByteOrder.LITTLE_ENDIAN);
-        BIN4Codec seqNo = new BIN4Codec(2, ByteOrder.LITTLE_ENDIAN);
-        BIN4Codec cryptType = new BIN4Codec(1, ByteOrder.LITTLE_ENDIAN);
-        HexCodec messageType = new HexCodec(1, ByteOrder.LITTLE_ENDIAN);
-        ByteBufCodec data = new ByteBufCodec(-1, ByteOrder.LITTLE_ENDIAN);
-        BIN4Codec checkCode = new BIN4Codec(2, ByteOrder.LITTLE_ENDIAN);
+        BIN4ContextCodec len = new BIN4ContextCodec(2);
+        BIN4Codec seqNo = new BIN4Codec(2);
+        BIN4Codec cryptType = new BIN4Codec(1);
+        HexCodec messageType = new HexCodec(1);
+        ByteBufCodec data = new ByteBufCodec(-1);
+        BIN4Codec checkCode = new BIN4Codec(2);
         YKC_CODEC = new ComposeCodec(Arrays.asList(start, len, seqNo, cryptType, messageType, data, checkCode));
     }
 

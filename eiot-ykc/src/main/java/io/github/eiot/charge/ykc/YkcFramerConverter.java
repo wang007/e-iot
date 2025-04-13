@@ -14,9 +14,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * created by wang007 on 2025/3/21
  */
-public class YkcFramerConverter implements FrameConverter {
-
-    private static final Logger logger = LoggerFactory.getLogger(SeqNoIotConnection.class);
+public class YkcFramerConverter extends FrameConverter {
 
     public static final YkcFramerConverter INSTANCE = new YkcFramerConverter();
 
@@ -24,16 +22,7 @@ public class YkcFramerConverter implements FrameConverter {
     }
 
     @Override
-    public Frame<?> apply(Frame<?> frame) {
-        RawYkcFrame rawFrame = (RawYkcFrame) frame;
-        String messageType = rawFrame.messageType();
-        MessageType<?> messageTypeEnum = YkcMessageType.match(messageType);
-        if (messageTypeEnum == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("terminalNo: {} messageType: {} not found messageTypeEnum.", frame.terminalNo(), frame.messageType());
-            }
-            return frame;
-        }
-        return new DefaultYkcFrame<>(rawFrame, messageTypeEnum);
+    public Frame<?> convert(Frame<?> frame, MessageType<?> messageType) {
+        return new DefaultYkcFrame<>((RawYkcFrame) frame, messageType);
     }
 }

@@ -98,6 +98,11 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Fr
     }
 
     @Override
+    public int rawDataSize() {
+        return rawFrame().rawDataSize();
+    }
+
+    @Override
     public V data() {
         if (this.data != null) {
             return this.data;

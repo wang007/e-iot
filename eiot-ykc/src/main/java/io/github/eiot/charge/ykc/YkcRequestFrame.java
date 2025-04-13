@@ -37,8 +37,9 @@ public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, YkcFrame<R
     }
 
     @Override
-    public YkcFrame<Req> sequenceNo(int seqNo) {
-        return ykcFrame.sequenceNo(seqNo);
+    public YkcRequestFrame<Req, Resp> sequenceNo(int seqNo) {
+        ykcFrame.sequenceNo(seqNo);
+        return this;
     }
 
     @Override
@@ -57,8 +58,9 @@ public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, YkcFrame<R
     }
 
     @Override
-    public YkcFrame<Req> checkCode(int checkCode) {
-        return ykcFrame.checkCode(checkCode);
+    public YkcRequestFrame<Req, Resp> checkCode(int checkCode) {
+        ykcFrame.checkCode(checkCode);
+        return this;
     }
 
     @SuppressWarnings("unchecked")

@@ -90,9 +90,6 @@ class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
                 } else {
                     continue;
                 }
-                if (failed && routeState.hasFailureHandler()) {
-                    routeState.handleFailure(this);
-                }
             } catch (Throwable t) {
                 handleInHandlerRuntimeFailure(routeState.getRouter(), failed, t);
             }
