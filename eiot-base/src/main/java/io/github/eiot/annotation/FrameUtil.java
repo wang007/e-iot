@@ -20,26 +20,28 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FrameUtil {
 
     private static final Map<Class<?>, FrameDefinition> frameDefinitionMap = new ConcurrentHashMap<>();
-    private static final Map<Class<?>, Class<? extends Codec<?>>> codecTypeMap = new HashMap<>();
+    private static final Map<Class<?>, Class<? extends Codec<?>>> codecTypeMap;
     /**
      * codec map
      * key: codecName_len_byteOrder_unit_offset_offsetReverse
      * value: codec
      * e.g: {"BCDCodec_2_LITTLE_ENDIAN_100_-1_0": BCDCodec}
      */
-    private static final Map<String, Codec<?>> codecMap = new HashMap<>();
+    private static final Map<String, Codec<?>> codecMap = new ConcurrentHashMap<>();
 
     static {
-        codecTypeMap.put(BCD.class, BCDCodec.class);
-        codecTypeMap.put(BCDNumber.class, BCDNumberCodec.class);
-        codecTypeMap.put(BCDTime.class, BCDTimeCodec.class);
-        codecTypeMap.put(Integer.class, BIN4Codec.class);
-        codecTypeMap.put(Long.class, BIN8Codec.class);
-        codecTypeMap.put(ByteBufRef.class, ByteBufCodec.class);
-        codecTypeMap.put(byte[].class, BytesCodec.class);
-        codecTypeMap.put(CP56time2a.class, CP56time2aCodec.class);
-        codecTypeMap.put(Hex.class, HexCodec.class);
-        codecTypeMap.put(NumberUnit.class, NumberUnitCodec.class);
+        Map<Class<?>, Class<? extends Codec<?>>> tempMap = new HashMap<>();
+        tempMap.put(BCD.class, BCDCodec.class);
+        tempMap.put(BCDNumber.class, BCDNumberCodec.class);
+        tempMap.put(BCDTime.class, BCDTimeCodec.class);
+        tempMap.put(Integer.class, BIN4Codec.class);
+        tempMap.put(Long.class, BIN8Codec.class);
+        tempMap.put(ByteBufRef.class, ByteBufCodec.class);
+        tempMap.put(byte[].class, BytesCodec.class);
+        tempMap.put(CP56time2a.class, CP56time2aCodec.class);
+        tempMap.put(Hex.class, HexCodec.class);
+        tempMap.put(NumberUnit.class, NumberUnitCodec.class);
+        codecTypeMap = Collections.unmodifiableMap(tempMap);
     }
 
     /**
@@ -49,7 +51,7 @@ public class FrameUtil {
      */
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> clz) {
-        FrameDefinition frameDefinition = frameDefinitionMap.get(clz);
+        FrameDefinition frameDefinition = getFrameDefinition(clz);
         try {
             return (T) frameDefinition.constructor.newInstance();
         } catch (Exception e) {
