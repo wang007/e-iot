@@ -1,7 +1,6 @@
 package io.github.eiot.codec;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 import java.nio.ByteOrder;
 
@@ -10,32 +9,35 @@ import java.nio.ByteOrder;
  * <p>
  * created by wang007 on 2025/2/26
  */
-public class ByteBufCodec extends AbstractCodec<ByteBuf> {
+public class ByteBufRefCodec extends AbstractCodec<ByteBufRef> {
 
-    public ByteBufCodec(int length) {
+    public ByteBufRefCodec(int length) {
         super(length);
     }
 
-    public ByteBufCodec(int length, ByteOrder byteOrder) {
+    public ByteBufRefCodec(int length, ByteOrder byteOrder) {
         super(length, byteOrder);
     }
 
     @Override
-    public ByteBuf decode(ByteBuf byteBuf, CodecContext context) {
+    public ByteBufRef decode(ByteBuf byteBuf, CodecContext context) {
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             throw new UnsupportedOperationException("byteBuf not support BIG_ENDIAN");
         }
-        byte[] bs = new byte[length];
-        ByteBuf buffer = Unpooled.buffer();
-        byteBuf.readBytes(bs);
-        buffer.writeBytes(bs);
-        return buffer;
+        int len = length;
+        if (len == -1) {
+            len = context.get(CodecContext.DATA_LEN_KEY, -1);
+        }
+        if (len < 0) {
+            throw new IllegalArgumentException("codec length < 0");
+        }
+        return new ByteBufRef(byteBuf.readSlice(len));
     }
 
     @Override
-    public void encode(ByteBuf byteBuf, ByteBuf data, CodecContext context) {
+    public void encode(ByteBuf byteBuf, ByteBufRef data, CodecContext context) {
         if (length != -1) {
-            int readableBytes = data.readableBytes();
+            int readableBytes = data.byteBuf().readableBytes();
             if (readableBytes != length) {
                 throw new IllegalArgumentException("byteBuf length != codec length");
             }
@@ -43,6 +45,6 @@ public class ByteBufCodec extends AbstractCodec<ByteBuf> {
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             throw new UnsupportedOperationException("byteBuf not support BIG_ENDIAN");
         }
-        byteBuf.writeBytes(data);
+        byteBuf.writeBytes(data.byteBuf());
     }
 }
