@@ -170,7 +170,7 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
 
             // raw frame not set result
             if (ex == null && frame.isRaw()) {
-                ex = new ConvertChargeException(frame.terminalNo(), frame);
+                ex = new ConvertIotException(frame.terminalNo(), frame);
                 frame = null;
             }
 

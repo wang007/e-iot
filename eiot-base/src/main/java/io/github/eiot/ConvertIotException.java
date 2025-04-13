@@ -3,29 +3,29 @@ package io.github.eiot;
 /**
  * created by wang007 on 2025/3/9
  */
-public class ConvertChargeException extends ChargeException {
+public class ConvertIotException extends IotException {
 
     private final String terminalNo;
     private final Frame<?> frame;
 
-    public ConvertChargeException(String terminalNo, Frame<?> frame) {
+    public ConvertIotException(String terminalNo, Frame<?> frame) {
         this.terminalNo = terminalNo;
         this.frame = frame;
     }
 
-    public ConvertChargeException(String terminalNo, Frame<?> frame, String message) {
+    public ConvertIotException(String terminalNo, Frame<?> frame, String message) {
         super("terminalNo: " + terminalNo + " " + message);
         this.terminalNo = terminalNo;
         this.frame = frame;
     }
 
-    public ConvertChargeException(String terminalNo, Frame<?> frame, String message, Throwable cause) {
+    public ConvertIotException(String terminalNo, Frame<?> frame, String message, Throwable cause) {
         super("terminalNo: " + terminalNo + " " + message, cause);
         this.terminalNo = terminalNo;
         this.frame = frame;
     }
 
-    public ConvertChargeException(String terminalNo, Frame<?> frame, Throwable cause) {
+    public ConvertIotException(String terminalNo, Frame<?> frame, Throwable cause) {
         super(cause);
         this.terminalNo = terminalNo;
         this.frame = frame;
