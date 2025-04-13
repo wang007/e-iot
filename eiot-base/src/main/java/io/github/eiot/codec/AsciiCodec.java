@@ -38,6 +38,12 @@ public class AsciiCodec extends AbstractCodec<Ascii> {
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             ascii = new StringBuilder(ascii).reverse().toString();
         }
-        byteBuf.writeBytes(ascii.getBytes());
+        byte[] bytes = ascii.getBytes();
+        if (length != -1) {
+            if (bytes.length != length) {
+                throw new IllegalArgumentException("ascii length != codec length");
+            }
+        }
+        byteBuf.writeBytes(bytes);
     }
 }

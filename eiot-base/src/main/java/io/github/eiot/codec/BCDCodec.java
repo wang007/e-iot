@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 /**
  * BCD codec
- *
+ * <p>
  * created by wang007 on 2025/2/26
  */
 public class BCDCodec extends AbstractCodec<BCD> {
@@ -43,12 +43,12 @@ public class BCDCodec extends AbstractCodec<BCD> {
     @Override
     public void encode(ByteBuf byteBuf, BCD data, CodecContext context) {
         byte[] value = data.getBytes();
-        if (value.length % 2 != 0) {
+        if ((value.length & 1) != 0) {
             throw new IllegalArgumentException("BCD encoding, value length must be a multiple of 2");
         }
 
         if ((value.length / 2) != length) {
-            value = Arrays.copyOf(value, length * 2);
+            throw new IllegalArgumentException("bcd length != codec length");
         }
 
         byte[] bcd = new byte[length];

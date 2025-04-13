@@ -10,7 +10,7 @@ public class Ascii {
 
     private final String value;
 
-    public Ascii(String value) {
+    Ascii(String value) {
         this.value = value;
     }
 
@@ -66,5 +66,10 @@ public class Ascii {
     @Override
     public String toString() {
         return toCompleteString();
+    }
+
+    public static Ascii from(String value) {
+        // TODO value check ascii
+        return new Ascii(value);
     }
 }

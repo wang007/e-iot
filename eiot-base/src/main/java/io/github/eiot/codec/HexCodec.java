@@ -7,7 +7,7 @@ import java.nio.ByteOrder;
 
 /**
  * hex codec
- *
+ * <p>
  * created by wang007 on 2025/2/26
  */
 public class HexCodec extends AbstractCodec<Hex> {
@@ -23,7 +23,7 @@ public class HexCodec extends AbstractCodec<Hex> {
     @Override
     public Hex decode(ByteBuf byteBuf, CodecContext context) {
         byte[] bs = CodecUtil.readBytes(byteBuf, length);
-        if (byteOrder == ByteOrder.BIG_ENDIAN){
+        if (byteOrder == ByteOrder.BIG_ENDIAN) {
             CodecUtil.reverseBytes(bs);
         }
         return new Hex(bs);
@@ -31,9 +31,12 @@ public class HexCodec extends AbstractCodec<Hex> {
 
     @Override
     public void encode(ByteBuf byteBuf, Hex data, CodecContext context) {
-        if (byteOrder == ByteOrder.BIG_ENDIAN){
+        if (length != -1 && data.getBytes().length != length) {
+            throw new IllegalArgumentException("hex length != codec length");
+        }
+        if (byteOrder == ByteOrder.BIG_ENDIAN) {
             byteBuf.writeBytes(CodecUtil.reverseBytesNewOne(data.getBytes()));
-        }else {
+        } else {
             byteBuf.writeBytes(data.getBytes());
         }
     }

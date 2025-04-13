@@ -30,6 +30,9 @@ public class BytesCodec extends AbstractCodec<byte[]> {
 
     @Override
     public void encode(ByteBuf byteBuf, byte[] data, CodecContext context) {
+        if (length != -1 && data.length != length) {
+            throw new IllegalArgumentException("data length != codec length");
+        }
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             byteBuf.writeBytes(CodecUtil.reverseBytesNewOne(data));
         } else {

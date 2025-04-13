@@ -52,7 +52,7 @@ public class CodecTest {
         assertEquals(ascii.toValidString(), str);
         // encode
         ByteBuf buf1 = Unpooled.buffer();
-        asciiCodec.encode(buf1, new Ascii(str));
+        asciiCodec.encode(buf1, Ascii.from(str));
         assertArrayEquals(CodecUtil.readBytes(buf1, str.length()), str.getBytes());
 
         // BIG_ENDIAN decode
@@ -65,7 +65,7 @@ public class CodecTest {
 
         // BIG_ENDIAN encode
         ByteBuf bufBig1 = Unpooled.buffer();
-        asciiCodecBig.encode(bufBig1, new Ascii(str));
+        asciiCodecBig.encode(bufBig1, Ascii.from(str));
         assertArrayEquals(CodecUtil.readBytes(bufBig1, str.length()), reverseBytes);
     }
 
