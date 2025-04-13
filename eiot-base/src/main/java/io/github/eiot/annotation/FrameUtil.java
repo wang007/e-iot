@@ -35,8 +35,11 @@ public class FrameUtil {
         tempMap.put(BCDNumber.class, BCDNumberCodec.class);
         tempMap.put(BCDTime.class, BCDTimeCodec.class);
         tempMap.put(Integer.class, BIN4Codec.class);
+        tempMap.put(Integer.TYPE, BIN4Codec.class);
         tempMap.put(Long.class, BIN8Codec.class);
-        tempMap.put(ByteBufRef.class, ByteBufCodec.class);
+        tempMap.put(Long.TYPE, BIN8Codec.class);
+        tempMap.put(ByteBufRef.class, ByteBufRefCodec.class);
+        tempMap.put(ByteBuf.class, ByteBufCodec.class);
         tempMap.put(byte[].class, BytesCodec.class);
         tempMap.put(CP56time2a.class, CP56time2aCodec.class);
         tempMap.put(Hex.class, HexCodec.class);

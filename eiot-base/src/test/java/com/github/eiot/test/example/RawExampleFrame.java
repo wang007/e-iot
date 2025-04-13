@@ -33,7 +33,7 @@ public class RawExampleFrame extends AbstractRawFrame implements ExampleFrame<By
         HexCodec messageType = new HexCodec(1);
         BIN4Codec seqNo = new BIN4Codec(2);
         BIN4ContextCodec len = new BIN4ContextCodec(2);
-        ByteBufCodec data = new ByteBufCodec(-1);
+        ByteBufRefCodec data = new ByteBufRefCodec(-1);
 
         CODEC = new ComposeCodec(Arrays.asList(header, terminalNo, messageType, seqNo, len, data));
     }
