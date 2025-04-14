@@ -1,19 +1,15 @@
 package io.github.eiot.example;
 
 import io.github.eiot.Frame;
+import io.github.eiot.charge.ykc.DefaultYkcFrame;
 import io.github.eiot.charge.ykc.YkcChargeServer;
 import io.github.eiot.charge.ykc.YkcMessageType;
-import io.github.eiot.charge.ykc.data.YkcHeartbeatRequest;
-import io.github.eiot.charge.ykc.data.YkcHeartbeatResponse;
-import io.github.eiot.charge.ykc.data.YkcLoginRequest;
-import io.github.eiot.charge.ykc.data.YkcLoginResponse;
+import io.github.eiot.charge.ykc.data.*;
+import io.github.eiot.codec.CP56time2a;
 import io.github.eiot.route.IotRouter;
 import io.github.eiot.route.IotRoutingContext;
 import io.github.eiot.route.MessageTypeHandler;
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 
 /**
  * created by wang007 on 2025/4/11
@@ -46,8 +42,23 @@ public class YkcChargeServerExample {
                         response.setGunNo(frame.data().getGunNo());
                         response.setResult(1);
                         responseFrame.data(response).write();
-                    });
 
+                        // sync time for charge point
+                        DefaultYkcFrame<YkcSyncTimeRequest> ykcFrame = new DefaultYkcFrame<>(frame.iotConnection(), YkcMessageType.YkcSyncTimeRequest);
+                        YkcSyncTimeRequest timeRequest = ykcFrame.newData();
+                        timeRequest.setTime(CP56time2a.now());
+                        ykcFrame.data(timeRequest)
+                                .<YkcSyncTimeResponse>asRequest()
+                                .request()
+                                .onFailure(ex -> {
+                                    System.out.println("sync time for charge point failed.");
+                                    ex.printStackTrace();
+                                })
+                                .onSuccess(respFrame -> {
+                                    YkcSyncTimeResponse data = respFrame.data();
+                                    System.out.println("charge point time: " + data.getTime());
+                                });
+                    });
 
             router.route(new YkcLoginHandler());
 

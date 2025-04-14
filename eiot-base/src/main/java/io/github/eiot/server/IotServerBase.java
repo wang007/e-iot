@@ -30,7 +30,7 @@ public abstract class IotServerBase implements IotServer, Closeable, Shareable {
 
     protected final IotServerOptions options;
 
-    //private SendWriteHook sendWriteHook;
+    //private SendWriteHook outboundHook;
     private Handler<Frame<?>> frameHandler;
     private Handler<IotConnection> connectionHandler;
     private Handler<Throwable> exceptionHandler;

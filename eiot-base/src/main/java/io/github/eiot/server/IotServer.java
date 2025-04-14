@@ -119,12 +119,12 @@ public interface IotServer {
     IotServer exceptionHandler(Handler<Throwable> handler);
 
     /**
-     * Set an hook called for connection before send or write
+     * Set an hook called for connection before request or write
      *
      * @param hook hook
      * @return a reference to this, so the API can be used fluently
      */
-    //ChargeServer sendWriteHook(SendWriteHook hook);
+    //ChargeServer outboundHook(SendWriteHook hook);
 
     /**
      * @return Implementation of the charging protocol

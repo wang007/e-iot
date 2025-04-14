@@ -38,7 +38,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
     private boolean closed;
 
     protected Handler<Frame<?>> frameHandler;
-    protected SendWriteHook sendWriteHook;
+    protected OutboundHook outboundHook;
 
     private Handler<Void> endHandler;
     private Handler<Void> drainHandler;
@@ -186,8 +186,8 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
     }
 
     @Override
-    public synchronized IotConnection sendWriteHook(SendWriteHook hook) {
-        this.sendWriteHook = hook;
+    public synchronized IotConnection outboundHook(OutboundHook hook) {
+        this.outboundHook = hook;
         return this;
     }
 
@@ -206,7 +206,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
      * @param timeout      the timeout
      * @return the ops result of Future
      */
-    protected Future<RequestFrame<?, Frame<?>>> beforeSend(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
+    protected Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
         return Future.succeededFuture(requestFrame);
     }
 
@@ -215,7 +215,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
     }
 
     @Override
-    public final Future<Frame<?>> send(RequestFrame<?, Frame<?>> frame, int timeoutMs) {
+    public final Future<Frame<?>> request(RequestFrame<?, Frame<?>> frame, int timeoutMs) {
         if (timeoutMs <= 0) {
             timeoutMs = this.waitResponseTimeout;
         }
@@ -225,13 +225,13 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
         long start = System.nanoTime();
         context.emit(v -> {
             try {
-                beforeSend(frame, time0)
+                beforeRequest(frame, time0)
                         .flatMap(f -> {
-                            SendWriteHook hook;
+                            OutboundHook hook;
                             synchronized (this) {
-                                hook = this.sendWriteHook;
+                                hook = this.outboundHook;
                             }
-                            return hook == null ? Future.succeededFuture(f) : hook.beforeSend(frame);
+                            return hook == null ? Future.succeededFuture(f) : hook.beforeRequest(frame);
                         })
                         .flatMap(f -> this.write(f).map(f))
                         .onComplete(ar -> {
@@ -255,7 +255,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
                                 f.trySetResponseResult(null, e);
                             });
 
-                            f.sendResult().onComplete(ar0 -> {
+                            f.requestResult().onComplete(ar0 -> {
                                 timer.cancel();
                                 if (ar.failed()) {
                                     promise.tryFail(ar0.cause());
@@ -282,9 +282,9 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
             try {
                 beforeWrite(frame)
                         .flatMap(f -> {
-                            SendWriteHook hook;
+                            OutboundHook hook;
                             synchronized (IotConnectionBase.this) {
-                                hook = this.sendWriteHook;
+                                hook = this.outboundHook;
                             }
                             return hook == null ? Future.succeededFuture(f) : hook.beforeWrite(frame);
                         })

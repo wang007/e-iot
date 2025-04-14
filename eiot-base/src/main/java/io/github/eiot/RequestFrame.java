@@ -15,7 +15,7 @@ import java.util.concurrent.TimeoutException;
  * <p>
  * When the {@link Frame} does not require attention to the result, use {@link #write()}
  * <p>
- * When sending a frame and expecting a corresponding response frame, use {@link #send()}
+ * When sending a frame and expecting a corresponding response frame, use {@link #request()}
  * <p>
  * If there is a response frame, then the frame is a request frame
  * <p>
@@ -47,25 +47,25 @@ public interface RequestFrame<Req, ResFrame extends Frame<?>> extends Frame<Req>
      *
      * @return a future completed with the response frame
      */
-    Future<ResFrame> send();
+    Future<ResFrame> request();
 
     /**
-     * {@link #send()} but timeout can be declared
+     * {@link #request()} but timeout can be declared
      *
      * @param timeout timeout
      * @return a future completed with the response frame
      */
-    Future<ResFrame> send(int timeout);
+    Future<ResFrame> request(int timeout);
 
     /**
-     * Gets the future after calling {@link #send()}
+     * Gets the future after calling {@link #request()}
      *
      * @return a future completed with the response frame
      */
-    Future<ResFrame> sendResult();
+    Future<ResFrame> requestResult();
 
     /**
-     * set the response frame result by {@link #send()} when the response frame come back.
+     * set the response frame result by {@link #request()} when the response frame come back.
      * <p>
      * NOTE: don't called it, is internal method.
      *

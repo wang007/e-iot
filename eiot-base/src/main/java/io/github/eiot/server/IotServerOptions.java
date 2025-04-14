@@ -57,7 +57,7 @@ public class IotServerOptions extends NetServerOptions {
 
     /**
      * Whether to execute set response result.
-     * set the response frame result by {@link IotConnection#send(RequestFrame)} when the response frame come back.
+     * set the response frame result by {@link IotConnection#request(RequestFrame)} when the response frame come back.
      * <p>
      * If the set response result is not executed, it can be executed on the router.
      * NOTE: If setResponseResult is true, frameConverter must be true

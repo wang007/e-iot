@@ -28,7 +28,7 @@ public abstract class MessageTypeIotConnection extends IotConnectionBase {
     }
 
     @Override
-    protected Future<RequestFrame<?, Frame<?>>> beforeSend(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
+    protected Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
         String responseType = requestFrame.responseMessageType();
         synchronized (this) {
             Future<RequestFrame<?, Frame<?>>> future;
@@ -42,7 +42,7 @@ public abstract class MessageTypeIotConnection extends IotConnectionBase {
                 requestFrames.addPending(promise, requestFrame);
                 future = promise.future();
             }
-            requestFrame.sendResult()
+            requestFrame.requestResult()
                     .onComplete(ar -> {
                         synchronized (this) {
                             PendingRequestFrames pending = waitResults.get(responseType);

@@ -49,7 +49,7 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
 
 
     @Override
-    protected Future<RequestFrame<?, Frame<?>>> beforeSend(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
+    protected Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
         synchronized (this) {
             BooleanRef success = new BooleanRef();
             Future<RequestFrame<?, Frame<?>>> frameFuture;
@@ -90,7 +90,7 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
             }
 
             // return seq no
-            requestFrame.sendResult()
+            requestFrame.requestResult()
                     .onComplete(ar -> {
                         synchronized (this) {
                             if (!success.value) {

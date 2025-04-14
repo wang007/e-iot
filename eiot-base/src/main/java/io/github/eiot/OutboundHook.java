@@ -3,15 +3,15 @@ package io.github.eiot;
 import io.vertx.core.Future;
 
 /**
- * {@link SendWriteHook} can be used when a {@link Frame} needs to be sent or written
- *
- * When a frame needs to be sent, it goes through {@link #beforeSend(RequestFrame)} and then {@link  #beforeWrite(Frame)}.
- *
+ * {@link OutboundHook} can be used when a {@link Frame} needs to be request or written
+ * <p>
+ * When a frame needs to be request, it goes through {@link #beforeRequest(RequestFrame)} and then {@link  #beforeWrite(Frame)}.
+ * <p>
  * When a frame needs to be written, it only goes through {@link  #beforeWrite(Frame)}
- *
+ * <p>
  * created by wang007 on 2025/2/23
  */
-public interface SendWriteHook {
+public interface OutboundHook {
 
     /**
      * Called before the frame needs to be sent
@@ -19,7 +19,7 @@ public interface SendWriteHook {
      * @param frame The frame that needs to be sent
      * @return a future completed with the request frame
      */
-    default Future<RequestFrame<?, Frame<?>>> beforeSend(RequestFrame<?, Frame<?>> frame) {
+    default Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> frame) {
         return Future.succeededFuture(frame);
     }
 
@@ -35,10 +35,11 @@ public interface SendWriteHook {
 
     /**
      * TODO compose
+     *
      * @param hooks
      * @return
      */
-    static SendWriteHook compose(SendWriteHook... hooks) {
+    static OutboundHook compose(OutboundHook... hooks) {
         return null;
     }
 }

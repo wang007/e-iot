@@ -40,22 +40,22 @@ public interface IotConnection extends AttributeHolder, ReadStream<Buffer>, Writ
     SocketAddress localAddress(boolean real);
 
     /**
-     * Send the current frame and wait for the response frame.
+     * Request the current frame and wait for the response frame.
      *
      * @param frame     request frame
      * @param timeoutMs timeout
      * @return
      */
-    Future<Frame<?>> send(RequestFrame<?, Frame<?>> frame, int timeoutMs);
+    Future<Frame<?>> request(RequestFrame<?, Frame<?>> frame, int timeoutMs);
 
     /**
-     * Use default timeout send the current frame and wait for the response frame.
+     * Use default timeout request the current frame and wait for the response frame.
      *
      * @param frame request frame
      * @return
      */
-    default Future<Frame<?>> send(RequestFrame<?, Frame<?>> frame) {
-        return send(frame, 0);
+    default Future<Frame<?>> request(RequestFrame<?, Frame<?>> frame) {
+        return request(frame, 0);
     }
 
     /**
@@ -102,15 +102,15 @@ public interface IotConnection extends AttributeHolder, ReadStream<Buffer>, Writ
     IotConnection frameHandler(Handler<Frame<?>> handler);
 
     /**
-     * Set an SendWriteHook
+     * Set an OutboundHook
      *
      * @param hook the hook to set
      * @return a reference to this, so the API can be used fluently
      */
-    IotConnection sendWriteHook(SendWriteHook hook);
+    IotConnection outboundHook(OutboundHook hook);
 
     /**
-     * set the response frame result by {@link #send(RequestFrame)} when the response frame come back.
+     * set the response frame result by {@link #request(RequestFrame)} when the response frame come back.
      * <p>
      * NOTE: don't called it, is internal method.
      *

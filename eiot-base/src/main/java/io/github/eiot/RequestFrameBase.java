@@ -34,28 +34,28 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
 
     @Override
     @SuppressWarnings("unchecked")
-    public Future<ResFrame> send() {
+    public Future<ResFrame> request() {
         if (promise == null) {
-            throw new IllegalStateException("receiver frame not send.");
+            throw new IllegalStateException("receiver frame not request.");
         }
-        Future<Frame<?>> future = iotConnection().send((RequestFrame<?, Frame<?>>) this);
+        Future<Frame<?>> future = iotConnection().request((RequestFrame<?, Frame<?>>) this);
         return (Future<ResFrame>) future;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Future<ResFrame> send(int timeout) {
+    public Future<ResFrame> request(int timeout) {
         if (promise == null) {
-            throw new IllegalStateException("receiver frame not send.");
+            throw new IllegalStateException("receiver frame not request.");
         }
-        Future<Frame<?>> future = iotConnection().send((RequestFrame<?, Frame<?>>) this, timeout);
+        Future<Frame<?>> future = iotConnection().request((RequestFrame<?, Frame<?>>) this, timeout);
         return (Future<ResFrame>) future;
     }
 
     @Override
-    public Future<ResFrame> sendResult() {
+    public Future<ResFrame> requestResult() {
         if (promise == null) {
-            throw new IllegalStateException("receiver frame not send.");
+            throw new IllegalStateException("receiver frame not request.");
         }
         return promise.future();
     }
