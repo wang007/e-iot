@@ -1,4 +1,4 @@
-package io.github.eiot;
+package io.github.eiot.exception;
 
 /**
  * created by wang007 on 2025/3/9

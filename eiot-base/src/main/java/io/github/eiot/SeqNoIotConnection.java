@@ -1,5 +1,6 @@
 package io.github.eiot;
 
+import io.github.eiot.exception.ConvertIotException;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;

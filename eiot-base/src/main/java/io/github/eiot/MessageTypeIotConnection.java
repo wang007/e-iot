@@ -1,5 +1,6 @@
 package io.github.eiot;
 
+import io.github.eiot.exception.ConvertIotException;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
@@ -61,7 +62,6 @@ public abstract class MessageTypeIotConnection extends IotConnectionBase {
     }
 
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean trySetResponseResult(Frame<?> frame, Throwable ex) {
         synchronized (this) {

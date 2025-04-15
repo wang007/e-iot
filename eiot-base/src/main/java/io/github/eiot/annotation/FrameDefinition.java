@@ -14,31 +14,40 @@ import java.util.List;
  */
 public class FrameDefinition {
 
-    protected final Constructor<?> constructor;
+    /**
+     * class annotated by @{@link Frame}
+     */
+    final Class<?> frameDateClz;
 
-    protected final Frame frame;
+    final Constructor<?> constructor;
 
-    protected final List<FrameFieldDefinition> fieldDefinitions;
+    final Frame frame;
 
-    public FrameDefinition(Constructor<?> constructor, Frame frame, List<FrameFieldDefinition> fields) {
-        this.constructor = constructor;
+    final List<FrameFieldDefinition> fieldDefinitions;
+
+    FrameDefinition(Class<?> frameDateClz, Constructor<?> noArgsConstructor,  Frame frame, List<FrameFieldDefinition> fields) {
+        this.frameDateClz = frameDateClz;
+        this.constructor = noArgsConstructor;
         this.frame = frame;
         this.fieldDefinitions = fields;
     }
 
-    protected static class FrameFieldDefinition {
-        protected Field field;
+    static class FrameFieldDefinition {
+        Field field;
 
-        protected Codec codec;
+        /**
+         * if frameFieldLoop use @Frame data type, need to loop codec
+         */
+        Codec codec;
 
-        protected FrameFieldLoop frameFieldLoop;
+        FrameFieldLoop frameFieldLoop;
 
-        protected FrameField frameField;
+        FrameField frameField;
 
-        protected Class<?> listClass;
+        // protected Class<?> listClass;
 
-        protected Codec listClassCodec;
+        // protected Codec listClassCodec;
 
-        protected FrameFieldDynamics frameFieldDynamics;
+        FrameFieldDynamics frameFieldDynamics;
     }
 }

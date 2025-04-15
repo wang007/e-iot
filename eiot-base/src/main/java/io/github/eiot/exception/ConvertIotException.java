@@ -1,4 +1,6 @@
-package io.github.eiot;
+package io.github.eiot.exception;
+
+import io.github.eiot.Frame;
 
 /**
  * created by wang007 on 2025/3/9

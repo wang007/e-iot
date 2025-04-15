@@ -1,5 +1,6 @@
 package io.github.eiot;
 
+import io.github.eiot.exception.ConvertIotException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.ReferenceCounted;

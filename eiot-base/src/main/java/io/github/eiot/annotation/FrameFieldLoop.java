@@ -15,7 +15,7 @@ public @interface FrameFieldLoop {
     /**
      * loop count. if return -1, use {@link #loopByField()}
      */
-    long loopCount() default -1;
+    int loopCount() default -1;
 
     /**
      * loop by field.

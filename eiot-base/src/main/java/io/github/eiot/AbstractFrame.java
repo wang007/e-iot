@@ -108,8 +108,7 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Fr
             return this.data;
         }
         ByteBuf byteBuf = rawFrame.data();
-        V v = newData();
-        FrameUtil.decode(messageTypeEnum.dataType(), v, byteBuf);
+        V v = FrameUtil.decode(messageTypeEnum.dataType(), byteBuf);
         this.data = v;
         return v;
     }
@@ -123,9 +122,8 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Fr
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V newData() {
-        return (V) FrameUtil.newInstance(messageTypeEnum.dataType());
+        return FrameUtil.newInstance(messageTypeEnum.dataType());
     }
 
     @Override
