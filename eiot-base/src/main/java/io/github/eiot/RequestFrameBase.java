@@ -70,7 +70,7 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
 
     @Override
     public boolean isRaw() {
-        return false;
+        return frame.isRaw();
     }
 
 

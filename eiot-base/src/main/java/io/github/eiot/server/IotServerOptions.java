@@ -51,7 +51,7 @@ public class IotServerOptions extends NetServerOptions {
 
     /**
      * Whether to perform the frame conversion.
-     * If the router does not convert, it can be converted on the router
+     * If the frame does not convert, it can be converted on the router
      */
     private boolean frameConverter;
 

@@ -193,6 +193,11 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
     }
 
     @Override
+    public synchronized OutboundHook outboundHook() {
+        return outboundHook;
+    }
+
+    @Override
     public TCPMetrics<?> metrics() {
         return metrics;
     }

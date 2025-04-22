@@ -9,13 +9,33 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>eiot-base</artifactId>
+    <artifactId>eiot-ocpp</artifactId>
 
     <properties>
-        <generated.dir>${project.basedir}/src/main/generated</generated.dir>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.eiot</groupId>
+            <artifactId>eiot-base</artifactId>
+            <version>${revision}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-http-proxy</artifactId>
+            <version>4.5.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web-proxy</artifactId>
+            <version>4.5.14</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

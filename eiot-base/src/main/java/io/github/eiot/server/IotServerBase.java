@@ -45,7 +45,7 @@ public abstract class IotServerBase implements IotServer, Closeable, Shareable {
         this.vertx = (VertxInternal) vertx;
         this.options = new IotServerOptions(options);
         if (options.isSetResponseResult() && !options.isFrameConverter()) {
-            throw new IllegalArgumentException("SetResponseResult must be frameConverter = true");
+            throw new IllegalArgumentException("if SetResponseResult = true, must be frameConverter = true");
         }
     }
 
@@ -61,7 +61,7 @@ public abstract class IotServerBase implements IotServer, Closeable, Shareable {
             throw new NullPointerException("No null bind local address");
         }
         if (frameHandler == null && connectionHandler == null) {
-            throw new IllegalStateException("Set connect handler first");
+            throw new IllegalStateException("Set frame or connect handler first");
         }
 
         NetServerImpl server = (NetServerImpl) vertx.createNetServer(options);
