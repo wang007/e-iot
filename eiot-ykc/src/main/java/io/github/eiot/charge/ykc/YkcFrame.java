@@ -1,7 +1,8 @@
 package io.github.eiot.charge.ykc;
 
+import io.github.eiot.CommandDef;
 import io.github.eiot.Frame;
-import io.github.eiot.RequestFrame;
+import io.github.eiot.IotConnection;
 import io.github.eiot.codec.Hex;
 
 /**
@@ -10,6 +11,10 @@ import io.github.eiot.codec.Hex;
  * created by wang007 on 2025/2/26
  */
 public interface YkcFrame<T> extends Frame<T> {
+
+    static <T> YkcFrame<T> create(IotConnection connection, CommandDef<T> commandDef) {
+        return new DefaultYkcFrame<T>(connection, commandDef);
+    }
 
     /**
      * @return 起始标志 68H  1byte
@@ -44,7 +49,7 @@ public interface YkcFrame<T> extends Frame<T> {
     /**
      * @return 帧类型标志 1byte
      */
-    Hex rawMessageType();
+    Hex rawCommand();
 
     /**
      * @return 消息体 N byte
@@ -65,5 +70,5 @@ public interface YkcFrame<T> extends Frame<T> {
     YkcFrame<T> checkCode(int checkCode);
 
     @Override
-    <Resp> RequestFrame<T, YkcFrame<Resp>> asRequest();
+    <Resp> YkcRequestFrame<T, Resp> asRequest();
 }

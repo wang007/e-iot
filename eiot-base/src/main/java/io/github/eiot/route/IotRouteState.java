@@ -11,7 +11,7 @@ import io.vertx.core.Handler;
 class IotRouteState<T> {
 
     private final int order;
-    private final String messageType;
+    private final String command;
     private final Handler<IotRoutingContext<T>> contextHandler;
     private final Handler<IotRoutingContext<T>> failureHandler;
     private final boolean add;
@@ -24,29 +24,29 @@ class IotRouteState<T> {
         this(route, order, null, null, null, false, 0);
     }
 
-    public IotRouteState(IotRouteImpl<T> route, int order, String messageType) {
-        this(route, order, messageType, null, null, false, 0);
+    public IotRouteState(IotRouteImpl<T> route, int order, String command) {
+        this(route, order, command, null, null, false, 0);
     }
 
-    public IotRouteState(IotRouteImpl<T> route, int order, String messageType, Handler<IotRoutingContext<T>> contextHandler, Handler<IotRoutingContext<T>> failureHandler, boolean add, int matchType) {
+    public IotRouteState(IotRouteImpl<T> route, int order, String command, Handler<IotRoutingContext<T>> contextHandler, Handler<IotRoutingContext<T>> failureHandler, boolean add, int matchType) {
         this.route = route;
         this.order = order;
-        this.messageType = messageType;
+        this.command = command;
         this.contextHandler = contextHandler;
         this.failureHandler = failureHandler;
         this.add = add;
         this.matchType = matchType;
     }
 
-    public IotRouteState<T> messageType(String messageType) {
-        return new IotRouteState<>(route, order, messageType);
+    public IotRouteState<T> command(String command) {
+        return new IotRouteState<>(route, order, command);
     }
 
     public IotRouteState<T> addContextHandler(Handler<IotRoutingContext<T>> contextHandler) {
         return new IotRouteState<>(
                 route,
                 order,
-                messageType,
+                command,
                 contextHandler,
                 failureHandler,
                 add,
@@ -59,7 +59,7 @@ class IotRouteState<T> {
     }
 
     public IotRouteState<T> setOrder(int order) {
-        return new IotRouteState<>(route, order, messageType, contextHandler, failureHandler, add, matchType);
+        return new IotRouteState<>(route, order, command, contextHandler, failureHandler, add, matchType);
     }
 
     void handleContext(IotRoutingContextImpl<T> context) {
@@ -67,10 +67,10 @@ class IotRouteState<T> {
     }
 
     boolean match(Frame<?> frame) {
-        if (this.messageType == null) {
+        if (this.command == null) {
             return matchType == 0 ? !frame.isRaw() : matchType != 1 || frame.isRaw();
         }
-        boolean match = this.messageType.equals(frame.messageType());
+        boolean match = this.command.equals(frame.command());
         if (!match) {
             return false;
         }
@@ -82,7 +82,7 @@ class IotRouteState<T> {
     }
 
     public IotRouteState<T> setAdded(boolean add) {
-        return new IotRouteState<>(route, order, messageType, contextHandler, failureHandler, add, matchType);
+        return new IotRouteState<>(route, order, command, contextHandler, failureHandler, add, matchType);
     }
 
     int getOrder() {
@@ -102,7 +102,7 @@ class IotRouteState<T> {
         return new IotRouteState<>(
                 route,
                 order,
-                messageType,
+                command,
                 contextHandler,
                 handler,
                 add,
@@ -122,7 +122,7 @@ class IotRouteState<T> {
         return new IotRouteState<>(
                 route,
                 order,
-                messageType,
+                command,
                 contextHandler,
                 failureHandler,
                 add,
@@ -134,7 +134,7 @@ class IotRouteState<T> {
         return new IotRouteState<>(
                 route,
                 order,
-                messageType,
+                command,
                 contextHandler,
                 failureHandler,
                 add,

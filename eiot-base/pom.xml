@@ -13,33 +13,14 @@
 
     <properties>
         <generated.dir>${project.basedir}/src/main/generated</generated.dir>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <!--<executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <configuration>
-                            <annotationProcessorPaths>
-                                <annotationProcessorPath>
-                                    <groupId>io.vertx</groupId>
-                                    <artifactId>vertx-codegen</artifactId>
-                                    <classifier>processor</classifier>
-                                </annotationProcessorPath>
-                                <annotationProcessorPath>
-                                    <groupId>io.vertx</groupId>
-                                    <artifactId>vertx-docgen-processor</artifactId>
-                                    <classifier>processor</classifier>
-                                </annotationProcessorPath>
-                            </annotationProcessorPaths>
-                        </configuration>
-                    </execution>
-                </executions>-->
                 <configuration>
                     <annotationProcessors>
                         <annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>

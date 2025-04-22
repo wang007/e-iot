@@ -1,8 +1,8 @@
 package com.github.eiot.test.example;
 
-import io.github.eiot.IotConnectionBase;
-import io.github.eiot.client.IotClientBase;
-import io.github.eiot.client.IotClientOptions;
+import io.github.eiot.impl.IotConnectionBase;
+import io.github.eiot.impl.IotClientBase;
+import io.github.eiot.IotClientOptions;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Vertx;
 import io.vertx.core.impl.ContextInternal;
@@ -44,7 +44,7 @@ public class ExampleIotClient extends IotClientBase {
                     options.isFrameConverter(), options.isSetResponseResult(),
                     options.getWaitResponseTimeout(), protocol());
         }
-        return new ExampleMTIotConnection(context, chctx, metrics,
+        return new ExampleCommandIotConnection(context, chctx, metrics,
                 options.isFrameConverter(), options.isSetResponseResult(),
                 options.getWaitResponseTimeout(), protocol());
     }

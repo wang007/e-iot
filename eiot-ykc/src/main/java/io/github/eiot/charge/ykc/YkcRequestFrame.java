@@ -1,8 +1,7 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.MessageType;
-import io.github.eiot.RequestFrame;
-import io.github.eiot.RequestFrameBase;
+import io.github.eiot.CommandDef;
+import io.github.eiot.impl.RequestFrameBase;
 import io.github.eiot.codec.Hex;
 
 /**
@@ -20,8 +19,8 @@ public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, YkcFrame<R
     @SuppressWarnings("unchecked")
     @Override
     public YkcFrame<Resp> responseFrame() {
-        MessageType<Resp> messageType = (MessageType<Resp>) frame.messageTypeEnum().responseType();
-        DefaultYkcFrame<Resp> responseFrame = new DefaultYkcFrame<>(iotConnection(), messageType);
+        CommandDef<Resp> commandDef = (CommandDef<Resp>) frame.commandDef().responseType();
+        DefaultYkcFrame<Resp> responseFrame = new DefaultYkcFrame<>(iotConnection(), commandDef);
         responseFrame.sequenceNo(sequenceNo());
         return responseFrame;
     }
@@ -48,8 +47,8 @@ public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, YkcFrame<R
     }
 
     @Override
-    public Hex rawMessageType() {
-        return ykcFrame.rawMessageType();
+    public Hex rawCommand() {
+        return ykcFrame.rawCommand();
     }
 
     @Override
@@ -65,7 +64,7 @@ public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, YkcFrame<R
 
     @SuppressWarnings("unchecked")
     @Override
-    public RequestFrame<Req, YkcFrame<Resp>> asRequest() {
+    public YkcRequestFrame<Req, Resp> asRequest() {
         return this;
     }
 

@@ -37,8 +37,8 @@ class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
     }
 
     @Override
-    public String messageType() {
-        return frame.messageType();
+    public String command() {
+        return frame.command();
     }
 
     @Override
@@ -130,7 +130,6 @@ class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
         return (Frame<T>) frame;
     }
 
-    @Override
     public synchronized IotRoutingContext<T> replaceFrame(Frame<?> frame) {
         this.frame = frame;
         return this;

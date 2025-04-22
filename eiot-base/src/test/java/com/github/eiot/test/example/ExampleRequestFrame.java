@@ -3,6 +3,7 @@ package com.github.eiot.test.example;
 import io.github.eiot.*;
 import io.github.eiot.codec.BCD;
 import io.github.eiot.codec.Hex;
+import io.github.eiot.impl.RequestFrameBase;
 
 /**
  * created by wang007 on 2025/4/12
@@ -25,7 +26,7 @@ public class ExampleRequestFrame<Req, Resp> extends RequestFrameBase<Req, Exampl
     @SuppressWarnings("unchecked")
     @Override
     public ExampleFrame<Resp> responseFrame() {
-        MessageType<Resp> messageType = (MessageType<Resp>) frame.messageTypeEnum().responseType();
+        CommandDef<Resp> messageType = (CommandDef<Resp>) frame.commandDef().responseType();
         DefaultExampleFrame<Resp> responseFrame = new DefaultExampleFrame<Resp>(iotConnection(), messageType);
         responseFrame.sequenceNo(sequenceNo());
         return responseFrame;

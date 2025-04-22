@@ -110,6 +110,12 @@ public interface IotConnection extends AttributeHolder, ReadStream<Buffer>, Writ
     IotConnection outboundHook(OutboundHook hook);
 
     /**
+     *
+     * @return return an outboundHook
+     */
+    OutboundHook outboundHook();
+
+    /**
      * set the response frame result by {@link #request(RequestFrame)} when the response frame come back.
      * <p>
      * NOTE: don't called it, is internal method.

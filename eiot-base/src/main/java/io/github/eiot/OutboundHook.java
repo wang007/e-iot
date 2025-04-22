@@ -1,5 +1,6 @@
 package io.github.eiot;
 
+import io.github.eiot.impl.CompositeOutboundHook;
 import io.vertx.core.Future;
 
 /**
@@ -34,12 +35,18 @@ public interface OutboundHook {
     }
 
     /**
-     * TODO compose
+     * Return a composite OutboundHook
      *
-     * @param hooks
-     * @return
+     * @param hooks hook list
+     * @return return a OutboundHook include multiple OutboundHook
      */
     static OutboundHook compose(OutboundHook... hooks) {
-        return null;
+        if (hooks == null) {
+            return null;
+        }
+        if (hooks.length == 1) {
+            return hooks[0];
+        }
+        return new CompositeOutboundHook(hooks);
     }
 }

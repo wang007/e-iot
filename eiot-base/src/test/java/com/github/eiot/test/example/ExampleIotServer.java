@@ -1,9 +1,9 @@
 package com.github.eiot.test.example;
 
 import io.github.eiot.FrameCodecOptions;
-import io.github.eiot.IotConnectionBase;
-import io.github.eiot.server.IotServerBase;
-import io.github.eiot.server.IotServerOptions;
+import io.github.eiot.impl.IotConnectionBase;
+import io.github.eiot.impl.IotServerBase;
+import io.github.eiot.IotServerOptions;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Vertx;
 import io.vertx.core.impl.ContextInternal;
@@ -62,7 +62,7 @@ public class ExampleIotServer extends IotServerBase {
                     options.isFrameConverter(), options.isSetResponseResult(),
                     options.getWaitResponseTimeout(), protocol());
         }
-        return new ExampleMTIotConnection(context, chctx, metrics,
+        return new ExampleCommandIotConnection(context, chctx, metrics,
                 options.isFrameConverter(), options.isSetResponseResult(),
                 options.getWaitResponseTimeout(), protocol());
     }

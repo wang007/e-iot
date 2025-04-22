@@ -18,14 +18,9 @@ import io.vertx.core.Future;
 public interface Frame<T> extends AttributeHolder {
 
     /**
-     * @return message type
+     * @return command
      */
-    String messageType();
-
-    /**
-     * @return return null if {@link #messageType()} not match {@link MessageType}
-     */
-    //MessageTypeEnum messageTypeEnum();
+    String command();
 
     /**
      * terminalNo corresponds to a unique number for each connection
@@ -113,4 +108,17 @@ public interface Frame<T> extends AttributeHolder {
      *
      */
     <Resp> RequestFrame<T, ? extends Frame<Resp>> asRequest() throws IllegalStateException;
+
+    /**
+     * like {@link #asRequest()} but declare the type through parameters
+     *
+     * @param responseType response type of the current request
+     * @param <Resp> response type of the current request
+     * @return the request frame
+     * @throws IllegalStateException
+     */
+    default <Resp> RequestFrame<T, ? extends Frame<Resp>> asRequest(Class<Resp> responseType) throws IllegalStateException {
+        return this.<Resp>asRequest();
+    }
+
 }

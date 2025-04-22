@@ -1,6 +1,6 @@
 package io.github.eiot.route;
 
-import io.github.eiot.MessageType;
+import io.github.eiot.CommandDef;
 import io.vertx.core.Handler;
 
 /**
@@ -11,21 +11,21 @@ import io.vertx.core.Handler;
 public interface IotRoute<Req> {
 
     /**
-     * set match by message type
+     * set match by command
      *
-     * @param messageType the message type
+     * @param command the command
      * @return this
      */
-    IotRoute<Req> messageType(String messageType);
+    IotRoute<Req> command(String command);
 
     /**
-     * {@link #messageType(String)}, but use {@link MessageType#messageType()}
+     * {@link #command(String)}, but use {@link CommandDef#command()}
      *
-     * @param messageTypeEnum the messageType enum
+     * @param commandDef the command
      * @return this
      */
-    default IotRoute<Req> messageTypeEnum(MessageType<Req> messageTypeEnum) {
-        return messageType(messageTypeEnum.messageType());
+    default IotRoute<Req> command(CommandDef<Req> commandDef) {
+        return command(commandDef.command());
     }
 
     /**
@@ -85,7 +85,7 @@ public interface IotRoute<Req> {
      *
      * @return a reference to this, so the API can be used fluently
      */
-    IotRoute<Req> alsoMatchRaw();
+    IotRoute<Req> matchRaw();
 
     /**
      * only match raw and not match concrete frame
@@ -95,5 +95,7 @@ public interface IotRoute<Req> {
      * @return a reference to this, so the API can be used fluently
      */
     IotRoute<Req> onlyMatchRaw();
+
+
 
 }
