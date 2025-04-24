@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * created by wang007 on 2025/3/14
  */
-public abstract class AbstractRawFrame implements Frame<ByteBuf> {
+public abstract class AbstractRawFrame<T> implements Frame<T> {
 
     private final Map<String, Object> attributes = new ConcurrentHashMap<>(4, 1.0f);
 
@@ -29,7 +29,7 @@ public abstract class AbstractRawFrame implements Frame<ByteBuf> {
     // control call genByteBuf()
     private boolean dirty;
 
-    private ByteBuf data;
+    private T data;
 
     public AbstractRawFrame(IotConnection connection, Side side, String messageType) {
         this.connection = connection;
@@ -48,7 +48,7 @@ public abstract class AbstractRawFrame implements Frame<ByteBuf> {
     }
 
     @Override
-    public final ByteBuf data() {
+    public final T data() {
         if (this.data != null) {
             return this.data;
         }
@@ -56,17 +56,17 @@ public abstract class AbstractRawFrame implements Frame<ByteBuf> {
         return data;
     }
 
-    protected abstract ByteBuf decodeData();
+    protected abstract T decodeData();
 
     @Override
-    public final Frame<ByteBuf> data(ByteBuf t) {
+    public Frame<T> data(T t) {
         ensureWriteable(true);
         encodeData(t);
         this.data = t;
         return this;
     }
 
-    protected abstract void encodeData(ByteBuf t);
+    protected abstract void encodeData(T t);
 
 
     @Override

@@ -64,7 +64,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
         pending = new InboundBuffer<>(context);
         pending.drainHandler(v -> doResume());
         pending.handler(this::handleMsg);
-        pending.exceptionHandler(exceptionHandler());
+        pending.exceptionHandler(context::reportException);
     }
 
     private void handleMsg(Object msg) {

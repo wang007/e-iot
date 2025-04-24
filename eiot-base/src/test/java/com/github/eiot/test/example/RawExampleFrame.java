@@ -21,7 +21,7 @@ import java.util.List;
  * <p>
  * created by wang007 on 2025/4/12
  */
-public class RawExampleFrame extends AbstractRawFrame implements ExampleFrame<ByteBuf> {
+public class RawExampleFrame extends AbstractRawFrame<ByteBuf> implements ExampleFrame<ByteBuf> {
 
     private static final ComposeCodec CODEC;
 
