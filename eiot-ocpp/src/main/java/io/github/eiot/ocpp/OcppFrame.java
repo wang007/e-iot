@@ -112,11 +112,24 @@ public interface OcppFrame<T> extends Frame<T> {
 
     /**
      * like {@link #newErrorFrame(OcppError, String, JsonObject)}
+     *
+     * @param errorCode        the error code
+     * @param errorDescription the errorDescription
+     * @return new error frame
      */
-    OcppFrame<Void> newErrorFrame(OcppError errorCode, String errorDescription);
+    default OcppFrame<Void> newErrorFrame(OcppError errorCode, String errorDescription) {
+        return newErrorFrame(errorCode, errorDescription, null);
+    }
 
-
-    OcppFrame<Void> newErrorFrame(OcppError errorCode);
+    /**
+     * like {@link #newErrorFrame(OcppError, String, JsonObject)}
+     *
+     * @param errorCode the error code
+     * @return new error frame
+     */
+    default OcppFrame<Void> newErrorFrame(OcppError errorCode) {
+        return newErrorFrame(errorCode, null);
+    }
 
 
     /**
@@ -129,18 +142,32 @@ public interface OcppFrame<T> extends Frame<T> {
      * <p>
      * NOTE: only support {@link OcppVersion#OCPP2_1} or later
      *
+     * @param errorCode        the error code
+     * @param errorDescription the errorDescription
+     * @param errorDetails     the errorDetails
      * @return new result error frame
      * @throws UnsupportedOperationException if not support
      */
-    OcppFrame<Void> newResulErrorFrame(OcppError ocppError, String errorDescription, JsonObject errorDetails) throws UnsupportedOperationException;
+    OcppFrame<Void> newResulErrorFrame(OcppError errorCode, String errorDescription, JsonObject errorDetails) throws UnsupportedOperationException;
 
     /**
      * like {@link #newResulErrorFrame(OcppError, String, JsonObject)}
+     *
+     * @param errorCode        the error code
+     * @param errorDescription the errorDescription
+     * @return new result error frame
      */
-    OcppFrame<Void> newResulErrorFrame(OcppError ocppError, String errorDescription) throws UnsupportedOperationException;
+    default OcppFrame<Void> newResulErrorFrame(OcppError errorCode, String errorDescription) throws UnsupportedOperationException {
+        return newResulErrorFrame(errorCode, errorDescription, null);
+    }
 
     /**
      * like {@link #newResulErrorFrame(OcppError, String, JsonObject)}
+     *
+     * @param errorCode the error code
+     * @return new result error frame
      */
-    OcppFrame<Void> newResulErrorFrame(OcppError ocppError) throws UnsupportedOperationException;
+    default OcppFrame<Void> newResulErrorFrame(OcppError errorCode) throws UnsupportedOperationException {
+        return newResulErrorFrame(errorCode, null);
+    }
 }
