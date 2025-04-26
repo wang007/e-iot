@@ -1,6 +1,8 @@
 package io.github.eiot.ocpp;
 
 import io.github.eiot.*;
+import io.github.eiot.ocpp.exception.OcppErrorCodeMissException;
+import io.github.eiot.ocpp.exception.OcppProtocolUnsupportedException;
 import io.github.eiot.ocpp.impl.ErrorOcppFrame;
 import io.github.eiot.ocpp.impl.OcppConnectionImpl;
 import io.netty.buffer.ByteBuf;
@@ -112,11 +114,25 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
                 }
             case CALLERROR:
                 int size = array.size();
-
-
+                OcppError errorCode = null;
+                if (size > 2) {
+                    String errorCodeStr = array.getString(2);
+                    errorCode = OcppError.match(errorCodeStr);
+                    if (errorCode == null) {
+                        throw new OcppErrorCodeMissException("errorCode: " + errorCodeStr + " not match");
+                    }
+                }
+                String errorDescription = null;
+                if (size > 3) {
+                    errorDescription = array.getString(3);
+                }
+                JsonObject errorDetails = null;
+                if (size > 4) {
+                    errorDetails = array.getJsonObject(4);
+                }
+                return new RawOcppFrame(connection, Side.RECEIVER, messageTypeId, messageId, null, null,
+                        errorCode, errorDescription, errorDetails);
         }
-
-
         return null;
     }
 
@@ -175,9 +191,31 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
 
     @Override
     public String toRawString() {
-        // TODO
-        return null;
+        return toRawString(data);
     }
+
+    public String toRawString(Object data) {
+        List<Object> list = new ArrayList<>();
+        list.add(messageTypeId.value);
+        list.add(messageId);
+        switch (messageTypeId) {
+            case SEND:
+            case CALL:
+                list.add(messageType);
+            case CALLRESULT:
+                list.add(data == null ? EmptyJson : data);
+                break;
+            case CALLRESULTERROR:
+            case CALLERROR:
+                list.add(errorCode.value);
+                list.add(errorDescription != null ? errorDescription : "");
+                list.add(errorDetails != null ? errorDetails : EmptyJson);
+        }
+        // TODO
+        return list.toString();
+    }
+
+
 
     @Override
     public JsonObject newData() {

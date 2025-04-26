@@ -1,6 +1,7 @@
 package io.github.eiot.ocpp;
 
 import io.github.eiot.Frame;
+import io.github.eiot.ocpp.exception.OcppProtocolUnsupportedException;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 

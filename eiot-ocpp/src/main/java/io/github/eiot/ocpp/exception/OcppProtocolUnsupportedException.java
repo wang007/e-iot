@@ -1,4 +1,4 @@
-package io.github.eiot.ocpp;
+package io.github.eiot.ocpp.exception;
 
 import io.github.eiot.exception.IotException;
 
