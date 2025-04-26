@@ -19,6 +19,8 @@ import io.vertx.core.net.SocketAddress;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * created by wang007 on 2025/4/19
@@ -27,10 +29,11 @@ public class OcppConnectionImpl implements OcppConnection {
 
     private final Promise<Void> closedPromise = Promise.promise();
     private final Map<String, Object> attributes = new ConcurrentHashMap<>();
+    private final AtomicLong messageIdGenerator;
+
     final VertxInternal vertx;
     final WebSocketBase webSocket;
     final String terminalNo;
-
 
     private int waitResponseTimeout;
     private boolean frameConverter;
@@ -50,10 +53,16 @@ public class OcppConnectionImpl implements OcppConnection {
             // close hook.
             closedPromise.complete(null);
         });
+        messageIdGenerator = new AtomicLong(ThreadLocalRandom.current().nextLong(50));
     }
 
     void configCompleted() {
 
+    }
+
+    public String nextMessageId() {
+        long messageId = messageIdGenerator.getAndIncrement();
+        return Long.toString(messageId);
     }
 
     public void setWaitResponseTimeout(int waitResponseTimeout) {

@@ -19,22 +19,30 @@ public enum MessageTypeId {
 
     /**
      * Request message, i.e. messages ending in "Request"
+     *
+     * format: [<MessageTypeId>, "<MessageId>", "<Action>", {<Payload>}]
      */
     CALL(2),
 
     /**
      * Response message, i.e. message ending in "Response"
+     *
+     * format: [<MessageTypeId>, "<MessageId>", {<Payload>}]
      */
     CALLRESULT(3),
 
     /**
      * Error response to a request message
+     *
+     * format: [<MessageTypeId>, "<MessageId>", "<errorCode>", "<errorDescription>", {<errorDetails>}]
      */
     CALLERROR(4),
 
     /**
      * (2.1) Error response to a response message
      * NOTE: only support ocpp2.1 or later
+     *
+     * format: [<MessageTypeId>, "<MessageId>", "<errorCode>", "<errorDescription>", {<errorDetails>}]
      */
     CALLRESULTERROR(5),
 
@@ -42,6 +50,8 @@ public enum MessageTypeId {
      * (2.1) Unconfirmed message without response, i.e. messages not ending in
      * "Request" or "Response"
      * NOTE: only support ocpp2.1 or later
+     *
+     * format: [<MessageTypeId>, "<MessageId>", "<Action>", {<Payload>}]
      */
     SEND(6),
     ;

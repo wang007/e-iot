@@ -1,5 +1,9 @@
 package io.github.eiot.ocpp;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * ocpp error
  *
@@ -79,10 +83,15 @@ public enum OcppError {
     MessageTypeNotSupported("MessageTypeNotSupported"),
     ;
 
-
     public final String value;
 
     OcppError(String value) {
         this.value = value;
+    }
+
+    private static final Map<String, OcppError> errors = Arrays.stream(OcppError.values()).collect(Collectors.toMap(e -> e.value, e -> e));
+
+    public static OcppError match(String errorCode) {
+        return errors.get(errorCode);
     }
 }
