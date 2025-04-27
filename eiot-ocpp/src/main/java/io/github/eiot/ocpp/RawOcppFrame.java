@@ -5,6 +5,7 @@ import io.github.eiot.ocpp.exception.OcppErrorCodeMissException;
 import io.github.eiot.ocpp.exception.OcppProtocolUnsupportedException;
 import io.github.eiot.ocpp.impl.ErrorOcppFrame;
 import io.github.eiot.ocpp.impl.OcppConnectionImpl;
+import io.github.eiot.ocpp.json.Json;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.vertx.core.Future;
@@ -211,8 +212,7 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
                 list.add(errorDescription != null ? errorDescription : "");
                 list.add(errorDetails != null ? errorDetails : EmptyJson);
         }
-        // TODO
-        return list.toString();
+        return Json.toJson(list);
     }
 
 
@@ -229,7 +229,7 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
 
     @Override
     public <Resp> RequestFrame<JsonObject, OcppFrame<Resp>> asRequest() throws IllegalStateException {
-        return null;
+        throw new IllegalStateException("raw frame not support");
     }
 
     @Override

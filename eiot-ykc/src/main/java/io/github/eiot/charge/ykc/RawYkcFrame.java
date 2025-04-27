@@ -16,7 +16,7 @@ import java.util.List;
  * <p>
  * created by wang007 on 2025/3/15
  */
-public class RawYkcFrame extends AbstractRawFrame<ByteBuf> implements YkcFrame<ByteBuf> {
+public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
 
     private static final ComposeCodec YKC_CODEC;
 
