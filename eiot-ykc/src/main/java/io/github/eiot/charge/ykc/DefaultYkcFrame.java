@@ -2,7 +2,7 @@ package io.github.eiot.charge.ykc;
 
 import io.github.eiot.AbstractFrame;
 import io.github.eiot.IotConnection;
-import io.github.eiot.MessageType;
+import io.github.eiot.CommandDef;
 import io.github.eiot.RequestFrame;
 import io.github.eiot.codec.Hex;
 import io.github.eiot.charge.ykc.data.YkcBaseData;
@@ -12,12 +12,12 @@ import io.github.eiot.charge.ykc.data.YkcBaseData;
  */
 public class DefaultYkcFrame<T> extends AbstractFrame<T, RawYkcFrame> implements YkcFrame<T> {
 
-    public DefaultYkcFrame(IotConnection connection, MessageType<T> messageTypeEnum) {
-        super(connection, messageTypeEnum);
+    public DefaultYkcFrame(IotConnection connection, CommandDef<T> commandDef) {
+        super(connection, commandDef);
     }
 
-    public DefaultYkcFrame(RawYkcFrame frame, MessageType<T> messageTypeEnum) {
-        super(frame, messageTypeEnum);
+    public DefaultYkcFrame(RawYkcFrame frame, CommandDef<T> commandDef) {
+        super(frame, commandDef);
     }
 
     @Override
@@ -58,18 +58,18 @@ public class DefaultYkcFrame<T> extends AbstractFrame<T, RawYkcFrame> implements
     }
 
     @Override
-    public Hex rawMessageType() {
-        return rawFrame().rawMessageType();
+    public Hex rawCommand() {
+        return rawFrame().rawCommand();
     }
 
     @Override
-    protected RawYkcFrame initRawFrame(IotConnection connection, String messageType) {
-        return RawYkcFrame.new4Sender(connection, messageType);
+    protected RawYkcFrame initRawFrame(IotConnection connection, String command) {
+        return RawYkcFrame.new4Sender(connection, command);
     }
 
     @Override
     public <Resp> RequestFrame<T, YkcFrame<Resp>> asRequest() {
-        if (messageTypeEnum().responseType() == null) {
+        if (commandDef().responseType() == null) {
             throw new IllegalStateException("not request type frame");
         }
         return new YkcRequestFrame<>(this);

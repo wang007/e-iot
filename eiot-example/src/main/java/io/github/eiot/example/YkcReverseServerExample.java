@@ -1,8 +1,8 @@
 package io.github.eiot.example;
 
-import io.github.eiot.charge.ykc.YkcChargeClient;
-import io.github.eiot.charge.ykc.YkcChargeServer;
-import io.github.eiot.charge.ykc.YkcMessageType;
+import io.github.eiot.charge.ykc.YkcClient;
+import io.github.eiot.charge.ykc.YkcServer;
+import io.github.eiot.charge.ykc.YkcCommand;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Promise;
@@ -25,16 +25,16 @@ public class YkcReverseServerExample {
         @Override
         public void start(Promise<Void> startPromise) {
 
-            YkcChargeClient chargeClient = YkcChargeClient.create(vertx);
+            YkcClient chargeClient = YkcClient.create(vertx);
 
-            YkcChargeServer chargeServer = YkcChargeServer.create(vertx);
+            YkcServer chargeServer = YkcServer.create(vertx);
             chargeServer.connectionHandler(conn -> {
                 conn.frameHandler(frame -> {
                     // pause first
                     conn.pause();
 
                     // first frame must be login frame
-                    if (!frame.messageType().equals(YkcMessageType.YkcLoginRequest.messageType())) {
+                    if (!frame.command().equals(YkcCommand.YkcLoginRequest.command())) {
                         // drop it!
                         return;
                     }

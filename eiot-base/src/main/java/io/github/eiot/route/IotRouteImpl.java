@@ -16,17 +16,17 @@ class IotRouteImpl<T> implements IotRoute<T> {
         this.routeState = new IotRouteState<>(this, order);
     }
 
-    public IotRouteImpl(IotRouterImpl router, String messageType, int order) {
+    public IotRouteImpl(IotRouterImpl router, String command, int order) {
         this.router = router;
-        this.routeState = new IotRouteState<>(this, order, messageType);
+        this.routeState = new IotRouteState<>(this, order, command);
     }
 
     @Override
-    public synchronized IotRoute<T> messageType(String messageType) {
+    public synchronized IotRoute<T> command(String command) {
         if (routeState.isAdded()) {
-            throw new IllegalStateException("Can't change messageType after route is active");
+            throw new IllegalStateException("Can't change command after route is active");
         }
-        routeState = routeState.messageType(messageType);
+        routeState = routeState.command(command);
         return this;
     }
 

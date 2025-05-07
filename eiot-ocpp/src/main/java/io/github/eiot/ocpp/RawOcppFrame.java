@@ -31,7 +31,7 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
     private final Map<String, Object> attributes = new ConcurrentHashMap<>(4, 1.0f);
     private final OcppConnection connection;
     private final Side side;
-    private final String messageType;
+    private final String command;
 
     private MessageTypeId messageTypeId;
     private String messageId;
@@ -42,13 +42,13 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
 
     RawOcppFrame(OcppConnection connection, Side side,
                  MessageTypeId messageTypeId, String messageId,
-                 String messageType, JsonObject data,
+                 String command, JsonObject data,
                  OcppError errorCode, String errorDescription, JsonObject errorDetails) {
         this.connection = connection;
         this.side = side;
         this.messageTypeId = messageTypeId;
         this.messageId = messageId;
-        this.messageType = messageType;
+        this.command = command;
         this.data = data;
         this.errorCode = errorCode;
         this.errorDescription = errorDescription;
@@ -57,8 +57,8 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
 
     RawOcppFrame(OcppConnection connection, Side side,
                  MessageTypeId messageTypeId, String messageId,
-                 String messageType, JsonObject data) {
-        this(connection, side, messageTypeId, messageId, messageType, data, null, null, null);
+                 String command, JsonObject data) {
+        this(connection, side, messageTypeId, messageId, command, data, null, null, null);
     }
 
     public static RawOcppFrame new4ErrorResultFrame(OcppConnection connection, String messageId,
@@ -75,10 +75,10 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
                 errorCode, errorDescription, errorDetails);
     }
 
-    public static RawOcppFrame new4Sender(OcppConnection connection, String messageType, OcppFrame<?> receiver) {
+    public static RawOcppFrame new4Sender(OcppConnection connection, String command, OcppFrame<?> receiver) {
         // not response frame
         if (receiver == null) {
-            return new RawOcppFrame(connection, Side.SENDER, MessageTypeId.CALL, ((OcppConnectionImpl) connection).nextMessageId(), messageType, null);
+            return new RawOcppFrame(connection, Side.SENDER, MessageTypeId.CALL, ((OcppConnectionImpl) connection).nextMessageId(), command, null);
         }
         // for new response frame
         String messageId = receiver.messageId();
@@ -145,8 +145,8 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
 
 
     @Override
-    public String messageType() {
-        return messageType;
+    public String command() {
+        return command;
     }
 
     @Override
@@ -202,7 +202,7 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
         switch (messageTypeId) {
             case SEND:
             case CALL:
-                list.add(messageType);
+                list.add(command);
             case CALLRESULT:
                 list.add(data == null ? EmptyJson : data);
                 break;

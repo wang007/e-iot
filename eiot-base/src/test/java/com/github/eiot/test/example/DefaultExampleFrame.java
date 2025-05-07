@@ -9,17 +9,17 @@ import io.github.eiot.codec.Hex;
  */
 public class DefaultExampleFrame<T> extends AbstractFrame<T, RawExampleFrame> implements ExampleFrame<T> {
 
-    public DefaultExampleFrame(IotConnection connection, MessageType<T> messageTypeEnum) {
-        super(connection, messageTypeEnum);
+    public DefaultExampleFrame(IotConnection connection, CommandDef<T> commandDef) {
+        super(connection, commandDef);
     }
 
-    public DefaultExampleFrame(RawExampleFrame frame, MessageType<T> messageTypeEnum) {
-        super(frame, messageTypeEnum);
+    public DefaultExampleFrame(RawExampleFrame frame, CommandDef<T> commandDef) {
+        super(frame, commandDef);
     }
 
     @Override
-    protected RawExampleFrame initRawFrame(IotConnection connection, String messageType) {
-        return RawExampleFrame.new4Sender(connection, messageType);
+    protected RawExampleFrame initRawFrame(IotConnection connection, String command) {
+        return RawExampleFrame.new4Sender(connection, command);
     }
 
     @Override

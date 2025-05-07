@@ -1,7 +1,7 @@
 package io.github.eiot.route;
 
 import io.github.eiot.Frame;
-import io.github.eiot.MessageType;
+import io.github.eiot.CommandDef;
 import io.github.eiot.server.IotServer;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -28,33 +28,33 @@ public interface IotRouter extends Handler<Frame<?>> {
     <Req> IotRoute<Req> route();
 
     /**
-     * Add a route with matches the specified message type and handler
+     * Add a route with matches the specified command and handler
      *
-     * @param messageTypeHandler the handler
+     * @param commandHandler the handler
      * @return the route
      */
-    default <Req> IotRoute<Req> route(MessageTypeHandler<Req> messageTypeHandler) {
-        IotRoute<Req> r = route(messageTypeHandler.messageType());
-        return r.handler(messageTypeHandler);
+    default <Req> IotRoute<Req> route(CommandHandler<Req> commandHandler) {
+        IotRoute<Req> r = route(commandHandler.command());
+        return r.handler(commandHandler);
     }
 
     /**
-     * like {@link #route(String)} but use {@link MessageType#messageType()}
+     * like {@link #route(String)} but use {@link CommandDef#command()}
      *
-     * @param messageType the message type
+     * @param commandDef the commandDef
      * @return the route
      */
-    default <Req> IotRoute<Req> route(MessageType<Req> messageType) {
-        return route(messageType.messageType());
+    default <Req> IotRoute<Req> route(CommandDef<Req> commandDef) {
+        return route(commandDef.command());
     }
 
     /**
-     * Add a route with matches the specified message type.
+     * Add a route with matches the specified command.
      *
-     * @param messageType the message type
-     * @return the message type
+     * @param command the command
+     * @return this
      */
-    <Req> IotRoute<Req> route(String messageType);
+    <Req> IotRoute<Req> route(String command);
 
     /**
      * Specify an handler to handle an error.

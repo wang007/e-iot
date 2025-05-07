@@ -29,20 +29,20 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
         BIN4ContextCodec len = new BIN4ContextCodec(2);
         BIN4Codec seqNo = new BIN4Codec(2);
         BIN4Codec cryptType = new BIN4Codec(1);
-        HexCodec messageType = new HexCodec(1);
+        HexCodec command = new HexCodec(1);
         ByteBufRefCodec data = new ByteBufRefCodec(-1);
         BIN4Codec checkCode = new BIN4Codec(2);
-        YKC_CODEC = new ComposeCodec(Arrays.asList(start, len, seqNo, cryptType, messageType, data, checkCode));
+        YKC_CODEC = new ComposeCodec(Arrays.asList(start, len, seqNo, cryptType, command, data, checkCode));
     }
 
     public static RawYkcFrame new4Receiver(IotConnection connection, ByteBuf byteBuf) {
         List<Object> fields = YKC_CODEC.decode(byteBuf.slice(), new DefaultCodecContext());
-        Hex messageType = (Hex) fields.get(4);
-        return new RawYkcFrame(connection, messageType.toString(), fields, byteBuf);
+        Hex command = (Hex) fields.get(4);
+        return new RawYkcFrame(connection, command.toString(), fields, byteBuf);
     }
 
-    public static RawYkcFrame new4Sender(IotConnection connection, String messageType) {
-        return new RawYkcFrame(connection, messageType);
+    public static RawYkcFrame new4Sender(IotConnection connection, String command) {
+        return new RawYkcFrame(connection, command);
     }
 
     private final int sumCheckCode;
@@ -54,8 +54,8 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
     /**
      * 用于 {@link Side#RECEIVER} 接收场景
      */
-    RawYkcFrame(IotConnection connection, String messageType, List<Object> fields, ByteBuf byteBuf) {
-        super(connection, Side.RECEIVER, messageType);
+    RawYkcFrame(IotConnection connection, String command, List<Object> fields, ByteBuf byteBuf) {
+        super(connection, Side.RECEIVER, command);
         this.fields = fields;
         this.bytebuf = byteBuf;
 
@@ -77,20 +77,20 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
     /**
      * 用于 {@link Side#SENDER} 发送出去的 frame
      */
-    RawYkcFrame(IotConnection connection, String messageType) {
-        super(connection, Side.SENDER, messageType);
+    RawYkcFrame(IotConnection connection, String command) {
+        super(connection, Side.SENDER, command);
         List<Object> fields = new ArrayList<>(7);
-        initFields(fields, messageType);
+        initFields(fields, command);
         this.fields = fields;
         sumCheckCode = -1;
     }
 
-    private void initFields(List<Object> fields, String messageType) {
+    private void initFields(List<Object> fields, String command) {
         fields.add(START_VALUE); // start 0x68
         fields.add(0);  // len
         fields.add(0); // first set seq no = 0
         fields.add(0); // cryptType always 0
-        fields.add(Hex.from(messageType)); // messageType
+        fields.add(Hex.from(command)); // command
         fields.add(EMPTY_DATA); // first set empty
         fields.add(-1);     // first set -1 checkCode
     }
@@ -143,7 +143,7 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
     }
 
     @Override
-    public Hex rawMessageType() {
+    public Hex rawCommand() {
         return (Hex) fields.get(4);
     }
 
@@ -210,7 +210,7 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
         BYCRC crc = new BYCRC();
         calcCheckCode(CodecUtil.numberToBytes(sequenceNo(), 2, ByteOrder.LITTLE_ENDIAN), crc);
         calcCheckCode(new byte[]{(byte) cryptType()}, crc);
-        calcCheckCode(rawMessageType().getBytes(), crc);
+        calcCheckCode(rawCommand().getBytes(), crc);
         calcCheckCode(data(), crc);
         int crc0;
         crc0 = ((crc.hi & 0x00ff) << 8) | (crc.lo & 0x00ff) & 0xffff;

@@ -18,14 +18,9 @@ import io.vertx.core.Future;
 public interface Frame<T> extends AttributeHolder {
 
     /**
-     * @return message type
+     * @return command
      */
-    String messageType();
-
-    /**
-     * @return return null if {@link #messageType()} not match {@link MessageType}
-     */
-    //MessageTypeEnum messageTypeEnum();
+    String command();
 
     /**
      * terminalNo corresponds to a unique number for each connection

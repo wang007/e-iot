@@ -60,10 +60,10 @@ public class IotClientOptions extends NetClientOptions {
 
     /**
      * Normally, seq no is used to match response, but since some devices do not implement seq no well,
-     * message type matching is used
+     * command matching is used
      * <p>
      * match by seq no: {@link SeqNoIotConnection}
-     * match by message type: {@link MessageTypeIotConnection}
+     * match by command: {@link CommandIotConnection}
      */
     private boolean seqNoMatchFirst;
 

@@ -23,7 +23,7 @@ public abstract class AbstractRawFrame implements Frame<ByteBuf> {
 
     protected final IotConnection connection;
     protected final Side side;
-    protected final String messageType;
+    protected final String command;
 
     private ByteBuf frameByteBuf;
     // control call genByteBuf()
@@ -31,10 +31,10 @@ public abstract class AbstractRawFrame implements Frame<ByteBuf> {
 
     private ByteBuf data;
 
-    public AbstractRawFrame(IotConnection connection, Side side, String messageType) {
+    public AbstractRawFrame(IotConnection connection, Side side, String command) {
         this.connection = connection;
         this.side = side;
-        this.messageType = messageType;
+        this.command = command;
     }
 
     @Override
@@ -43,8 +43,8 @@ public abstract class AbstractRawFrame implements Frame<ByteBuf> {
     }
 
     @Override
-    public String messageType() {
-        return messageType;
+    public String command() {
+        return command;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package io.github.eiot.charge.ykc;
 
 import io.github.eiot.IotConnectionBase;
-import io.github.eiot.client.IotClient;
 import io.github.eiot.client.IotClientBase;
 import io.github.eiot.client.IotClientOptions;
 import io.netty.channel.ChannelHandlerContext;
@@ -14,37 +13,37 @@ import io.vertx.core.spi.metrics.TCPMetrics;
 /**
  * created by wang007 on 2025/3/18
  */
-public class YkcChargeClient extends IotClientBase {
+public class YkcClient extends IotClientBase {
 
     public static IotClientOptions newOptions() {
         return new IotClientOptions()
-                .setFrameCodecOptions(YkcChargeServer.FRAME_CODEC_OPTIONS)
-                .setProtocol(YkcChargeServer.PROTOCOL);
+                .setFrameCodecOptions(YkcServer.FRAME_CODEC_OPTIONS)
+                .setProtocol(YkcServer.PROTOCOL);
     }
 
     public static IotClientOptions newOptions(JsonObject jsonObject) {
         return new IotClientOptions(jsonObject);
     }
 
-    public static YkcChargeClient create(Vertx vertx, IotClientOptions options) {
-        return new YkcChargeClient((VertxInternal) vertx, options);
+    public static YkcClient create(Vertx vertx, IotClientOptions options) {
+        return new YkcClient((VertxInternal) vertx, options);
     }
 
-    public static YkcChargeClient create(Vertx vertx) {
+    public static YkcClient create(Vertx vertx) {
         return create(vertx, newOptions());
     }
 
-    YkcChargeClient(VertxInternal vertxInternal, IotClientOptions options) {
+    YkcClient(VertxInternal vertxInternal, IotClientOptions options) {
         super(vertxInternal, options);
     }
 
     @Override
     protected IotConnectionBase newIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, IotClientOptions options) {
         if (options.isSeqNoMatchFirst()) {
-            return new YkcChargeConnection(context, chctx, metrics,
+            return new YkcConnection(context, chctx, metrics,
                     options.isFrameConverter(), options.isSetResponseResult(), options.getWaitResponseTimeout(), options.getProtocol());
         }
-        return new YkcMTChargeConnection(context, chctx, metrics,
+        return new YkcCommandConnection(context, chctx, metrics,
                 options.isFrameConverter(), options.isSetResponseResult(), options.getWaitResponseTimeout(), options.getProtocol());
     }
 }

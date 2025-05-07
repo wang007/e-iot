@@ -24,12 +24,12 @@ import java.util.concurrent.TimeoutException;
 public interface RequestFrame<Req, ResFrame extends Frame<?>> extends Frame<Req> {
 
     /**
-     * The message type of the response frame.
-     * eg: LoginRequestFrame message type -> loginResponseFrame message type
+     * The command of the response frame.
+     * eg: LoginRequestFrame command -> loginResponseFrame command
      *
-     * @return The message type of the response frame
+     * @return The command of the response frame
      */
-    String responseMessageType();
+    String responseCommand();
 
     /**
      * Create the corresponding response frame instance

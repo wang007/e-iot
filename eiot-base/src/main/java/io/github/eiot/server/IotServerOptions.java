@@ -2,7 +2,7 @@ package io.github.eiot.server;
 
 import io.github.eiot.IotConnection;
 import io.github.eiot.FrameCodecOptions;
-import io.github.eiot.MessageTypeIotConnection;
+import io.github.eiot.CommandIotConnection;
 import io.github.eiot.RequestFrame;
 import io.github.eiot.SeqNoIotConnection;
 import io.vertx.codegen.annotations.DataObject;
@@ -66,10 +66,10 @@ public class IotServerOptions extends NetServerOptions {
 
     /**
      * Normally, seq no is used to match response, but since some devices do not implement seq no well,
-     * message type matching is used
+     * command matching is used
      *
      * match by seq no: {@link SeqNoIotConnection}
-     * match by message type: {@link MessageTypeIotConnection}
+     * match by command: {@link CommandIotConnection}
      */
     private boolean seqNoMatchFirst;
 

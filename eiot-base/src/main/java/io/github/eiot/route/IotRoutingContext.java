@@ -19,9 +19,9 @@ import io.vertx.core.Vertx;
 public interface IotRoutingContext<Req> extends AttributeHolder {
 
     /**
-     * @return the  message type of current frame
+     * @return the command of current frame
      */
-    String messageType();
+    String command();
 
     /**
      * route to next ChargeRoute or Handler

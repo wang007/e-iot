@@ -7,12 +7,12 @@ import io.vertx.core.Handler;
  * <p>
  * created by wang007 on 2025/3/20
  */
-public interface MessageTypeHandler<T> extends Handler<IotRoutingContext<T>> {
+public interface CommandHandler<T> extends Handler<IotRoutingContext<T>> {
 
     /**
-     * @return provide message type to match.
+     * @return provide command to match.
      */
-    String messageType();
+    String command();
 
     @Override
     void handle(IotRoutingContext<T> ctx);

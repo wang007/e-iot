@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 /**
  * created by wang007 on 2025/3/21
  */
-interface YkcChargeConnectionBase extends IotConnection {
+interface YkcConnectionBase extends IotConnection {
 
     Logger logger = LoggerFactory.getLogger(SeqNoIotConnection.class);
 
@@ -29,9 +29,9 @@ interface YkcChargeConnectionBase extends IotConnection {
 
     default Frame<?> convertRawFrame(ByteBuf byteBuf) {
         RawYkcFrame rawYkcFrame = RawYkcFrame.new4Receiver(this, byteBuf);
-        if (YkcMessageType.YkcLoginRequest.messageType().equals(rawYkcFrame.messageType())) {
+        if (YkcCommand.YkcLoginRequest.command().equals(rawYkcFrame.command())) {
             try {
-                DefaultYkcFrame<YkcLoginRequest> ykcFrame = new DefaultYkcFrame<>(rawYkcFrame, YkcMessageType.YkcLoginRequest);
+                DefaultYkcFrame<YkcLoginRequest> ykcFrame = new DefaultYkcFrame<>(rawYkcFrame, YkcCommand.YkcLoginRequest);
                 String terminalNo = ykcFrame
                         .data()
                         .getTerminalNo()

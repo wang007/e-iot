@@ -62,7 +62,7 @@ public class ExampleIotServer extends IotServerBase {
                     options.isFrameConverter(), options.isSetResponseResult(),
                     options.getWaitResponseTimeout(), protocol());
         }
-        return new ExampleMTIotConnection(context, chctx, metrics,
+        return new ExampleCommandIotConnection(context, chctx, metrics,
                 options.isFrameConverter(), options.isSetResponseResult(),
                 options.getWaitResponseTimeout(), protocol());
     }

@@ -32,7 +32,7 @@ public interface IotClient {
     Future<IotConnection> connect(SocketAddress remoteAddress);
 
     /**
-     * Close the client and all created ChargeConnection
+     * Close the client and all created iot Connection
      *
      * @return returns a Future of the asynchronous result
      */

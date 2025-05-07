@@ -10,7 +10,7 @@ import io.github.eiot.codec.Hex;
  * format:
  * 2 byte type: Hex, header: AAF5
  * 6 byte type: BCD, terminalNo
- * 1 byte messageType
+ * 1 byte command
  * 2 byte seqNo
  * 2 byte len
  * N byte data.

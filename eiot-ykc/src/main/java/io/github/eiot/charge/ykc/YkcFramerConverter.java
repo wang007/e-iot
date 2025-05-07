@@ -3,10 +3,7 @@ package io.github.eiot.charge.ykc;
 
 import io.github.eiot.Frame;
 import io.github.eiot.FrameConverter;
-import io.github.eiot.MessageType;
-import io.github.eiot.SeqNoIotConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.eiot.CommandDef;
 
 
 /**
@@ -22,7 +19,7 @@ public class YkcFramerConverter extends FrameConverter {
     }
 
     @Override
-    public Frame<?> convert(Frame<?> frame, MessageType<?> messageType) {
-        return new DefaultYkcFrame<>((RawYkcFrame) frame, messageType);
+    public Frame<?> convert(Frame<?> frame, CommandDef<?> commandDef) {
+        return new DefaultYkcFrame<>((RawYkcFrame) frame, commandDef);
     }
 }

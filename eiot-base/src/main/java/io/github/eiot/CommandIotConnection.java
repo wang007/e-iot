@@ -13,24 +13,24 @@ import java.util.Map;
 import java.util.Queue;
 
 /**
- * A charge connection implementation matches the response frame corresponding to the request frame based on message type
+ * A charge connection implementation matches the response frame corresponding to the request frame based on command
  * <p>
  * Because some devices do not really implement seq no rules,
- * use {@link MessageTypeIotConnection} instead of {@link SeqNoIotConnection}
+ * use {@link CommandIotConnection} instead of {@link SeqNoIotConnection}
  * <p>
  * created by wang007 on 2025/3/13
  */
-public abstract class MessageTypeIotConnection extends IotConnectionBase {
+public abstract class CommandIotConnection extends IotConnectionBase {
 
     private final Map<String, PendingRequestFrames> waitResults = new HashMap<>();
 
-    protected MessageTypeIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
+    protected CommandIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
         super(context, chctx, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
     }
 
     @Override
     protected Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
-        String responseType = requestFrame.responseMessageType();
+        String responseType = requestFrame.responseCommand();
         synchronized (this) {
             Future<RequestFrame<?, Frame<?>>> future;
             PendingRequestFrames requestFrames = waitResults.get(responseType);
@@ -65,8 +65,8 @@ public abstract class MessageTypeIotConnection extends IotConnectionBase {
     @Override
     public boolean trySetResponseResult(Frame<?> frame, Throwable ex) {
         synchronized (this) {
-            String messageType = frame.messageType();
-            PendingRequestFrames requestFrames = waitResults.get(messageType);
+            String command = frame.command();
+            PendingRequestFrames requestFrames = waitResults.get(command);
             if (requestFrames == null) {
                 return false;
             }

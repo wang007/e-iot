@@ -31,8 +31,8 @@ public class ErrorOcppFrame implements OcppFrame<Void> {
     }
 
     @Override
-    public String messageType() {
-        return rawFrame.messageType();
+    public String command() {
+        return rawFrame.command();
     }
 
     @Override

@@ -28,9 +28,9 @@ class IotRouterImpl implements IotRouter {
     }
 
     @Override
-    public synchronized <T> IotRoute<T> route(String messageType) {
+    public synchronized <T> IotRoute<T> route(String command) {
         routerState = routerState.incrementOrderSequence();
-        return new IotRouteImpl<>(this, messageType, routerState.orderSequence());
+        return new IotRouteImpl<>(this, command, routerState.orderSequence());
     }
 
     @Override

@@ -10,15 +10,13 @@ import io.vertx.core.impl.ContextInternal;
 import io.vertx.core.spi.metrics.TCPMetrics;
 
 /**
- * 基于 message type 匹配 response frame
- * <p>
  * created by wang007 on 2025/3/16
  */
-public class YkcChargeConnection extends SeqNoIotConnection implements YkcChargeConnectionBase {
+public class YkcConnection extends SeqNoIotConnection implements YkcConnectionBase {
 
 
-    protected YkcChargeConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,
-                                  boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
+    protected YkcConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,
+                            boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
         super(context, chctx, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
     }
 
@@ -36,16 +34,16 @@ public class YkcChargeConnection extends SeqNoIotConnection implements YkcCharge
 
     @Override
     public Future<Frame<?>> beforeWrite(Frame<?> frame) {
-        return YkcChargeConnectionBase.super.beforeWrite(frame);
+        return YkcConnectionBase.super.beforeWrite(frame);
     }
 
     @Override
     public Frame<?> convertRawFrame(ByteBuf byteBuf) {
-        return YkcChargeConnectionBase.super.convertRawFrame(byteBuf);
+        return YkcConnectionBase.super.convertRawFrame(byteBuf);
     }
 
     @Override
     public Frame<?> convertConcreteFrame(Frame<?> rawFrame) {
-        return YkcChargeConnectionBase.super.convertConcreteFrame(rawFrame);
+        return YkcConnectionBase.super.convertConcreteFrame(rawFrame);
     }
 }

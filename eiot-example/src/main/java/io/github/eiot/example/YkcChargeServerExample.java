@@ -2,13 +2,13 @@ package io.github.eiot.example;
 
 import io.github.eiot.Frame;
 import io.github.eiot.charge.ykc.DefaultYkcFrame;
-import io.github.eiot.charge.ykc.YkcChargeServer;
-import io.github.eiot.charge.ykc.YkcMessageType;
+import io.github.eiot.charge.ykc.YkcServer;
+import io.github.eiot.charge.ykc.YkcCommand;
 import io.github.eiot.charge.ykc.data.*;
 import io.github.eiot.codec.CP56time2a;
 import io.github.eiot.route.IotRouter;
 import io.github.eiot.route.IotRoutingContext;
-import io.github.eiot.route.MessageTypeHandler;
+import io.github.eiot.route.CommandHandler;
 import io.vertx.core.*;
 
 /**
@@ -27,11 +27,11 @@ public class YkcChargeServerExample {
 
         @Override
         public void start(Promise<Void> startPromise) throws Exception {
-            YkcChargeServer chargeServer = YkcChargeServer.create(vertx);
+            YkcServer chargeServer = YkcServer.create(vertx);
             IotRouter router = IotRouter.router(vertx);
 
             // heartbeat handler
-            router.route(YkcMessageType.YkcHeartbeatRequest)
+            router.route(YkcCommand.YkcHeartbeatRequest)
                     .handler(ctx -> {
                         Frame<YkcHeartbeatRequest> frame = ctx.frame();
                         System.out.println("heartbeat. gunNo: " + frame.data().getGunNo());
@@ -44,7 +44,7 @@ public class YkcChargeServerExample {
                         responseFrame.data(response).write();
 
                         // sync time for charge point
-                        DefaultYkcFrame<YkcSyncTimeRequest> ykcFrame = new DefaultYkcFrame<>(frame.iotConnection(), YkcMessageType.YkcSyncTimeRequest);
+                        DefaultYkcFrame<YkcSyncTimeRequest> ykcFrame = new DefaultYkcFrame<>(frame.iotConnection(), YkcCommand.YkcSyncTimeRequest);
                         YkcSyncTimeRequest timeRequest = ykcFrame.newData();
                         timeRequest.setTime(CP56time2a.now());
                         ykcFrame.data(timeRequest)
@@ -79,11 +79,11 @@ public class YkcChargeServerExample {
         /**
          * login handler
          */
-        static class YkcLoginHandler implements MessageTypeHandler<YkcLoginRequest> {
+        static class YkcLoginHandler implements CommandHandler<YkcLoginRequest> {
 
             @Override
-            public String messageType() {
-                return YkcMessageType.YkcLoginRequest.messageType();
+            public String command() {
+                return YkcCommand.YkcLoginRequest.command();
             }
 
             @Override

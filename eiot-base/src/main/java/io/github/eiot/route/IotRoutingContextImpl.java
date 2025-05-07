@@ -37,8 +37,8 @@ class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
     }
 
     @Override
-    public String messageType() {
-        return frame.messageType();
+    public String command() {
+        return frame.command();
     }
 
     @Override

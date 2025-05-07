@@ -25,7 +25,7 @@ public class ExampleRequestFrame<Req, Resp> extends RequestFrameBase<Req, Exampl
     @SuppressWarnings("unchecked")
     @Override
     public ExampleFrame<Resp> responseFrame() {
-        MessageType<Resp> messageType = (MessageType<Resp>) frame.messageTypeEnum().responseType();
+        CommandDef<Resp> messageType = (CommandDef<Resp>) frame.commandDef().responseType();
         DefaultExampleFrame<Resp> responseFrame = new DefaultExampleFrame<Resp>(iotConnection(), messageType);
         responseFrame.sequenceNo(sequenceNo());
         return responseFrame;

@@ -14,7 +14,7 @@ import java.util.List;
  * format:
  * 2 byte type: Hex, header: AAF5
  * 6 byte type: BCD, terminalNo
- * 1 byte messageType
+ * 1 byte command
  * 2 byte seqNo
  * 2 byte len
  * N byte data.
@@ -30,12 +30,12 @@ public class RawExampleFrame extends AbstractRawFrame implements ExampleFrame<By
     static {
         HexCodec header = new HexCodec(2);
         BCDCodec terminalNo = new BCDCodec(6);
-        HexCodec messageType = new HexCodec(1);
+        HexCodec command = new HexCodec(1);
         BIN4Codec seqNo = new BIN4Codec(2);
         BIN4ContextCodec len = new BIN4ContextCodec(2);
         ByteBufRefCodec data = new ByteBufRefCodec(-1);
 
-        CODEC = new ComposeCodec(Arrays.asList(header, terminalNo, messageType, seqNo, len, data));
+        CODEC = new ComposeCodec(Arrays.asList(header, terminalNo, command, seqNo, len, data));
     }
 
     private final List<Object> fields;
@@ -43,20 +43,20 @@ public class RawExampleFrame extends AbstractRawFrame implements ExampleFrame<By
 
     public static RawExampleFrame new4Receiver(IotConnection connection, ByteBuf byteBuf) {
         List<Object> fields = CODEC.decode(byteBuf.slice(), new DefaultCodecContext());
-        Hex messageType = (Hex) fields.get(2);
-        return new RawExampleFrame(connection, messageType.toString(), fields, byteBuf);
+        Hex command = (Hex) fields.get(2);
+        return new RawExampleFrame(connection, command.toString(), fields, byteBuf);
     }
 
-    public static RawExampleFrame new4Sender(IotConnection connection, String messageType) {
-        return new RawExampleFrame(connection, messageType);
+    public static RawExampleFrame new4Sender(IotConnection connection, String command) {
+        return new RawExampleFrame(connection, command);
     }
 
 
     /**
      * use for receiver
      */
-    RawExampleFrame(IotConnection connection, String messageType, List<Object> fields, ByteBuf byteBuf) {
-        super(connection, Side.RECEIVER, messageType);
+    RawExampleFrame(IotConnection connection, String command, List<Object> fields, ByteBuf byteBuf) {
+        super(connection, Side.RECEIVER, command);
         this.fields = fields;
         this.bytebuf = byteBuf;
     }
@@ -64,27 +64,27 @@ public class RawExampleFrame extends AbstractRawFrame implements ExampleFrame<By
     /**
      * 用于 {@link Side#SENDER} 发送出去的 frame
      */
-    RawExampleFrame(IotConnection connection, String messageType) {
-        this(connection, messageType, connection.get(IotConnection.TERMINAL_NO_KEY));
+    RawExampleFrame(IotConnection connection, String command) {
+        this(connection, command, connection.get(IotConnection.TERMINAL_NO_KEY));
     }
 
     /**
      * 用于 {@link Side#SENDER} 发送出去的 frame
      */
-    RawExampleFrame(IotConnection connection, String messageType, String terminalNo) {
-        super(connection, Side.SENDER, messageType);
+    RawExampleFrame(IotConnection connection, String command, String terminalNo) {
+        super(connection, Side.SENDER, command);
         List<Object> fields = new ArrayList<>(6);
-        initFields(fields, messageType, terminalNo);
+        initFields(fields, command, terminalNo);
         this.fields = fields;
     }
 
-    private void initFields(List<Object> fields, String messageType, String terminalNo) {
+    private void initFields(List<Object> fields, String command, String terminalNo) {
         if (terminalNo.length() != 12) {
             throw new IllegalArgumentException("terminalNo must be 12");
         }
         fields.add(HEADER_VALUE); // header AAF5
         fields.add(BCD.from(terminalNo));  // terminalNo
-        fields.add(Hex.from(messageType)); // messageType
+        fields.add(Hex.from(command)); // command
         fields.add(0); // seqNo
         fields.add(0); // len
         fields.add(ByteBufRef.EMPTY); //  data

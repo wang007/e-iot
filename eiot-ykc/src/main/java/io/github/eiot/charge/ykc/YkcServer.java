@@ -2,7 +2,6 @@ package io.github.eiot.charge.ykc;
 
 import io.github.eiot.IotConnectionBase;
 import io.github.eiot.FrameCodecOptions;
-import io.github.eiot.server.IotServer;
 import io.github.eiot.server.IotServerBase;
 import io.github.eiot.server.IotServerOptions;
 import io.netty.channel.ChannelHandlerContext;
@@ -18,7 +17,7 @@ import java.nio.ByteOrder;
  * <p>
  * created by wang007 on 2025/3/17
  */
-public class YkcChargeServer extends IotServerBase {
+public class YkcServer extends IotServerBase {
 
     static final FrameCodecOptions FRAME_CODEC_OPTIONS = new FrameCodecOptions()
             .setByteOrder(ByteOrder.LITTLE_ENDIAN)
@@ -44,12 +43,12 @@ public class YkcChargeServer extends IotServerBase {
     }
 
 
-    public static YkcChargeServer create(Vertx vertx) {
-        return new YkcChargeServer(vertx, newOptions());
+    public static YkcServer create(Vertx vertx) {
+        return new YkcServer(vertx, newOptions());
     }
 
-    public static YkcChargeServer create(Vertx vertx, IotServerOptions options) {
-        return new YkcChargeServer(vertx, options);
+    public static YkcServer create(Vertx vertx, IotServerOptions options) {
+        return new YkcServer(vertx, options);
     }
 
 
@@ -59,17 +58,17 @@ public class YkcChargeServer extends IotServerBase {
      * @param vertx   the vertx
      * @param options the options
      */
-    YkcChargeServer(Vertx vertx, IotServerOptions options) {
+    YkcServer(Vertx vertx, IotServerOptions options) {
         super(vertx, options);
     }
 
     @Override
     protected IotConnectionBase newIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, IotServerOptions options) {
         if (options.isSeqNoMatchFirst()) {
-            return new YkcChargeConnection(context, chctx, metrics,
+            return new YkcConnection(context, chctx, metrics,
                     options.isFrameConverter(), options.isSetResponseResult(), options.getWaitResponseTimeout(), options.getProtocol());
         }
-        return new YkcMTChargeConnection(context, chctx, metrics,
+        return new YkcCommandConnection(context, chctx, metrics,
                 options.isFrameConverter(), options.isSetResponseResult(), options.getWaitResponseTimeout(), options.getProtocol());
     }
 

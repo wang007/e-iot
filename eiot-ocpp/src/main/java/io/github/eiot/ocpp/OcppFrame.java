@@ -36,7 +36,7 @@ public interface OcppFrame<T> extends Frame<T> {
      * @return ocpp message action
      */
     default String action() {
-        return messageType();
+        return command();
     }
 
     /**

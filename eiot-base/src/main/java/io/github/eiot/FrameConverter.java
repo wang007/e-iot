@@ -27,11 +27,11 @@ public abstract class FrameConverter implements Function<Frame<?>, Frame<?>> {
         if (!frame.isRaw()) {
             return frame;
         }
-        String messageType = frame.messageType();
-        MessageType<?> match = MessageType.match(frame.iotConnection().protocol(), messageType);
+        String command = frame.command();
+        CommandDef<?> match = CommandDef.match(frame.iotConnection().protocol(), command);
         if (match == null) {
             if (logger.isDebugEnabled()) {
-                logger.debug("terminalNo: {} messageType: {} not found messageTypeEnum.", frame.terminalNo(), frame.messageType());
+                logger.debug("terminalNo: {} command: {} not found commandRef.", frame.terminalNo(), frame.command());
             }
             return frame;
         }
@@ -40,8 +40,8 @@ public abstract class FrameConverter implements Function<Frame<?>, Frame<?>> {
 
     /**
      * @param frame       the raw frame
-     * @param messageType match message type
+     * @param commandDef match commandRef
      * @return the concrete frame
      */
-    protected abstract Frame<?> convert(Frame<?> frame, MessageType<?> messageType);
+    protected abstract Frame<?> convert(Frame<?> frame, CommandDef<?> commandDef);
 }

@@ -162,7 +162,7 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
             if (waitFrame == null) {
                 return false;
             }
-            if (!waitFrame.responseMessageType().equals(frame.messageType())) {
+            if (!waitFrame.responseCommand().equals(frame.command())) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("terminalNo: " + frame.terminalNo() + "try set response result failed, message type not match. seqNo: " + seqNo);
                 }

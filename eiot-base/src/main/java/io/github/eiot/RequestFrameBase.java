@@ -16,7 +16,7 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
     protected final AbstractFrame<Req, ? extends Frame<?>> frame;
 
     public RequestFrameBase(AbstractFrame<Req, ? extends Frame<?>> frame) {
-        if (frame.messageTypeEnum().responseType() == null) {
+        if (frame.commandDef().responseType() == null) {
             throw new IllegalStateException("Current frame is not request type");
         }
         promise = frame.side() == Side.SENDER ? Promise.promise() : null;
@@ -28,8 +28,8 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
     }
 
     @Override
-    public String responseMessageType() {
-        return frame.messageTypeEnum().responseType().messageType();
+    public String responseCommand() {
+        return frame.commandDef().responseType().command();
     }
 
     @Override
@@ -80,8 +80,8 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
     }
 
     @Override
-    public String messageType() {
-        return frame.messageType();
+    public String command() {
+        return frame.command();
     }
 
     @Override

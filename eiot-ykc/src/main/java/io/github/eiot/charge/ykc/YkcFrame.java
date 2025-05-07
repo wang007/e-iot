@@ -44,7 +44,7 @@ public interface YkcFrame<T> extends Frame<T> {
     /**
      * @return 帧类型标志 1byte
      */
-    Hex rawMessageType();
+    Hex rawCommand();
 
     /**
      * @return 消息体 N byte

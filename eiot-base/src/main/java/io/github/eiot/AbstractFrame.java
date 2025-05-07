@@ -17,37 +17,37 @@ import java.util.Map;
 public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Frame<V> {
 
     private final F rawFrame;
-    private final MessageType<V> messageTypeEnum;
+    private final CommandDef<V> commandDef;
 
     private V data;
 
     /**
      * use for {@link Side#SENDER} write.
      *
-     * @param connection      the connection
-     * @param messageTypeEnum the messageType
+     * @param connection the connection
+     * @param commandDef the command
      */
-    public AbstractFrame(IotConnection connection, MessageType<V> messageTypeEnum) {
-        rawFrame = initRawFrame(connection, messageTypeEnum.messageType());
-        this.messageTypeEnum = messageTypeEnum;
+    public AbstractFrame(IotConnection connection, CommandDef<V> commandDef) {
+        rawFrame = initRawFrame(connection, commandDef.command());
+        this.commandDef = commandDef;
     }
 
-    public AbstractFrame(F frame, MessageType<V> messageTypeEnum) {
+    public AbstractFrame(F frame, CommandDef<V> commandDef) {
         this.rawFrame = frame;
-        this.messageTypeEnum = messageTypeEnum;
+        this.commandDef = commandDef;
     }
 
     /**
      * init raw frame for {@link Side#SENDER}
      *
-     * @param connection  the connection
-     * @param messageType the messageType
+     * @param connection the connection
+     * @param command    the command
      * @return
      */
-    protected abstract F initRawFrame(IotConnection connection, String messageType);
+    protected abstract F initRawFrame(IotConnection connection, String command);
 
-    public MessageType<V> messageTypeEnum() {
-        return this.messageTypeEnum;
+    public CommandDef<V> commandDef() {
+        return this.commandDef;
     }
 
     /**
@@ -63,8 +63,8 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Fr
     }
 
     @Override
-    public String messageType() {
-        return rawFrame().messageType();
+    public String command() {
+        return rawFrame().command();
     }
 
     @Override
@@ -108,14 +108,14 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Fr
             return this.data;
         }
         ByteBuf byteBuf = rawFrame.data();
-        V v = FrameUtil.decode(messageTypeEnum.dataType(), byteBuf);
+        V v = FrameUtil.decode(commandDef.dataType(), byteBuf);
         this.data = v;
         return v;
     }
 
     @Override
     public Frame<V> data(V v) {
-        ByteBuf byteBuf = FrameUtil.encode(messageTypeEnum().dataType(), v);
+        ByteBuf byteBuf = FrameUtil.encode(commandDef().dataType(), v);
         rawFrame.data(byteBuf);
         this.data = v;
         return this;
@@ -123,7 +123,7 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Fr
 
     @Override
     public V newData() {
-        return FrameUtil.newInstance(messageTypeEnum.dataType());
+        return FrameUtil.newInstance(commandDef.dataType());
     }
 
     @Override
