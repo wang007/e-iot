@@ -13,6 +13,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.WebSocketBase;
+import io.vertx.core.impl.ContextInternal;
 import io.vertx.core.impl.VertxInternal;
 import io.vertx.core.impl.future.PromiseInternal;
 import io.vertx.core.net.SocketAddress;
@@ -34,6 +35,7 @@ public class OcppConnectionImpl implements OcppConnection {
     final VertxInternal vertx;
     final WebSocketBase webSocket;
     final String terminalNo;
+    final ContextInternal context;
 
     private int waitResponseTimeout;
     private boolean frameConverter;
@@ -49,6 +51,7 @@ public class OcppConnectionImpl implements OcppConnection {
         this.vertx = vertx;
         this.webSocket = webSocket;
         this.terminalNo = terminalNo;
+        this.context = vertx.getOrCreateContext().unwrap();
         webSocket.closeHandler(v -> {
             // close hook.
             closedPromise.complete(null);
@@ -116,6 +119,9 @@ public class OcppConnectionImpl implements OcppConnection {
      * @return the ops result of Future
      */
     protected Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
+        if (outboundHook != null) {
+            return outboundHook.beforeRequest(requestFrame);
+        }
         return Future.succeededFuture(requestFrame);
     }
 
@@ -127,6 +133,8 @@ public class OcppConnectionImpl implements OcppConnection {
         int time0 = timeoutMs;
         // use caller context.
         PromiseInternal<Frame<?>> promise = this.vertx.promise();
+
+
 
         return null;
     }
