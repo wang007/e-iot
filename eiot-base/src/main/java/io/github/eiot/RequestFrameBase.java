@@ -13,9 +13,9 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
 
     private final Promise<ResFrame> promise;
 
-    protected final AbstractFrame<Req, ? extends Frame<?>> frame;
+    protected final CommandDefFrame<Req> frame;
 
-    public RequestFrameBase(AbstractFrame<Req, ? extends Frame<?>> frame) {
+    public RequestFrameBase(CommandDefFrame<Req> frame) {
         if (frame.commandDef().responseType() == null) {
             throw new IllegalStateException("Current frame is not request type");
         }

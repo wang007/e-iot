@@ -40,12 +40,6 @@ public enum OcppVersion {
         return this.supportResultError;
     }
 
-    public boolean supportError(OcppError error) {
-        // TODO
-        return true;
-    }
-
-
     public static OcppVersion match(String protocol) {
         if (protocol == null) {
             return null;

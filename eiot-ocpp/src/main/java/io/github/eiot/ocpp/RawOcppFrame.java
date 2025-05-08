@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RawOcppFrame implements OcppFrame<JsonObject> {
 
-    static final JsonObject EmptyJson = new JsonObject(Collections.emptyMap());
+    private static final JsonObject EmptyJson = new JsonObject(Collections.emptyMap());
 
 
     private final Map<String, Object> attributes = new ConcurrentHashMap<>(4, 1.0f);

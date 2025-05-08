@@ -14,7 +14,7 @@ import java.util.Map;
  * <p>
  * created by wang007 on 2025/3/15
  */
-public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Frame<V> {
+public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements CommandDefFrame<V> {
 
     private final F rawFrame;
     private final CommandDef<V> commandDef;
@@ -46,6 +46,7 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Fr
      */
     protected abstract F initRawFrame(IotConnection connection, String command);
 
+    @Override
     public CommandDef<V> commandDef() {
         return this.commandDef;
     }

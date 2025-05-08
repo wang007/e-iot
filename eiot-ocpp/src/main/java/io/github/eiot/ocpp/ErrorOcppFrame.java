@@ -87,7 +87,7 @@ public class ErrorOcppFrame implements OcppFrame<Void> {
     }
 
     @Override
-    public <Resp> RequestFrame<Void, ? extends Frame<Resp>> asRequest() throws IllegalStateException {
+    public <Resp> RequestFrame<Void, OcppFrame<Resp>> asRequest() throws IllegalStateException {
         throw new IllegalStateException("error frame not support request");
     }
 

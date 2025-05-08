@@ -1,20 +1,20 @@
 package io.github.eiot.ocpp;
 
-import io.github.eiot.AbstractFrame;
-import io.github.eiot.Frame;
+import io.github.eiot.CommandDef;
 import io.github.eiot.RequestFrameBase;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 
 /**
- *
- *
  * created by wang007 on 2025/4/22
  */
 public class OcppRequestFrame<Req, Resp> extends RequestFrameBase<Req, OcppFrame<Resp>> implements OcppFrame<Req> {
 
-    public OcppRequestFrame(AbstractFrame<Req, ? extends Frame<?>> frame) {
+    private final DefaultOcppFrame<Req> ocppFrame;
+
+    public OcppRequestFrame(DefaultOcppFrame<Req> frame) {
         super(frame);
+        this.ocppFrame = frame;
     }
 
     @SuppressWarnings("unchecked")
@@ -25,78 +25,59 @@ public class OcppRequestFrame<Req, Resp> extends RequestFrameBase<Req, OcppFrame
 
     @Override
     public OcppRequestFrame<Req, Resp> data(Req req) {
-
-
+        ocppFrame.data(req);
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public OcppFrame<Resp> responseFrame() {
-        return null;
+        CommandDef<Resp> commandDef = (CommandDef<Resp>) ocppFrame.commandDef().responseType();
+        return new DefaultOcppFrame<>(ocppFrame.iotConnection(), commandDef);
     }
 
     @Override
     public MessageTypeId messageTypeId() {
-        return null;
+        return ocppFrame.messageTypeId();
     }
 
     @Override
     public String messageId() {
-        return null;
+        return ocppFrame.messageId();
     }
 
     @Override
     public Future<Void> send() {
-        return null;
+        return ocppFrame.send();
     }
 
     @Override
     public boolean failed() {
-        return false;
+        return ocppFrame.failed();
     }
 
     @Override
     public OcppError errorCode() {
-        return null;
+        return ocppFrame.errorCode();
     }
 
     @Override
     public String errorDescription() {
-        return null;
+        return ocppFrame.errorDescription();
     }
 
     @Override
     public JsonObject errorDetails() {
-        return null;
+        return ocppFrame.errorDetails();
     }
 
     @Override
     public OcppFrame<Void> newErrorFrame(OcppError errorCode, String errorDescription, JsonObject errorDetails) {
-        return null;
-    }
-
-    @Override
-    public OcppFrame<Void> newErrorFrame(OcppError errorCode, String errorDescription) {
-        return null;
-    }
-
-    @Override
-    public OcppFrame<Void> newErrorFrame(OcppError errorCode) {
-        return null;
+        return ocppFrame.newErrorFrame(errorCode, errorDescription, errorDetails);
     }
 
     @Override
     public OcppFrame<Void> newResulErrorFrame(OcppError ocppError, String errorDescription, JsonObject errorDetails) throws UnsupportedOperationException {
-        return null;
-    }
-
-    @Override
-    public OcppFrame<Void> newResulErrorFrame(OcppError ocppError, String errorDescription) throws UnsupportedOperationException {
-        return null;
-    }
-
-    @Override
-    public OcppFrame<Void> newResulErrorFrame(OcppError ocppError) throws UnsupportedOperationException {
-        return null;
+        return ocppFrame.newResulErrorFrame(ocppError, errorDescription, errorDetails);
     }
 }

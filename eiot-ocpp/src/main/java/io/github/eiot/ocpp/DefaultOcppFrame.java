@@ -14,7 +14,7 @@ import java.util.Map;
  * <p>
  * created by wang007 on 2025/5/8
  */
-public class DefaultOcppFrame<T> implements OcppFrame<T> {
+public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
 
     private final OcppConnection connection;
     private final CommandDef<T> commandDef;
@@ -34,6 +34,10 @@ public class DefaultOcppFrame<T> implements OcppFrame<T> {
         this.rawFrame = rawFrame;
     }
 
+    @Override
+    public CommandDef<T> commandDef() {
+        return commandDef;
+    }
 
     @Override
     public Map<String, Object> attributes() {
@@ -102,11 +106,7 @@ public class DefaultOcppFrame<T> implements OcppFrame<T> {
         if (rawFrame.side() == Side.RECEIVER) {
             return rawFrame.toRawString();
         }
-        Object value = this.data;
-        if (value == null) {
-            value = RawOcppFrame.EmptyJson;
-        }
-        return rawFrame.toRawString(value);
+        return rawFrame.toRawString(this.data);
     }
 
     @Override
@@ -120,9 +120,11 @@ public class DefaultOcppFrame<T> implements OcppFrame<T> {
     }
 
     @Override
-    public <Resp> RequestFrame<T, ? extends Frame<Resp>> asRequest() throws IllegalStateException {
-        // TODO
-        return null;
+    public <Resp> RequestFrame<T, OcppFrame<Resp>> asRequest() throws IllegalStateException {
+        if (commandDef().responseType() == null) {
+            throw new IllegalStateException("not request type frame");
+        }
+        return new OcppRequestFrame<>(this);
     }
 
     @Override
@@ -170,11 +172,11 @@ public class DefaultOcppFrame<T> implements OcppFrame<T> {
 
     @Override
     public OcppFrame<Void> newErrorFrame(OcppError errorCode, String errorDescription, JsonObject errorDetails) {
-        return null;
+        return rawFrame.newErrorFrame(errorCode, errorDescription, errorDetails);
     }
 
     @Override
     public OcppFrame<Void> newResulErrorFrame(OcppError errorCode, String errorDescription, JsonObject errorDetails) throws UnsupportedOperationException {
-        return null;
+        return rawFrame.newResulErrorFrame(errorCode, errorDescription, errorDetails);
     }
 }

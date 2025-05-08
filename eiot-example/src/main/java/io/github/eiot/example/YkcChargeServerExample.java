@@ -1,14 +1,15 @@
 package io.github.eiot.example;
 
+import io.github.eiot.CommandDef;
 import io.github.eiot.Frame;
 import io.github.eiot.charge.ykc.DefaultYkcFrame;
 import io.github.eiot.charge.ykc.YkcServer;
 import io.github.eiot.charge.ykc.YkcCommand;
 import io.github.eiot.charge.ykc.data.*;
 import io.github.eiot.codec.CP56time2a;
+import io.github.eiot.route.CommandDefHandler;
 import io.github.eiot.route.IotRouter;
 import io.github.eiot.route.IotRoutingContext;
-import io.github.eiot.route.CommandHandler;
 import io.vertx.core.*;
 
 /**
@@ -79,11 +80,11 @@ public class YkcChargeServerExample {
         /**
          * login handler
          */
-        static class YkcLoginHandler implements CommandHandler<YkcLoginRequest> {
+        static class YkcLoginHandler implements CommandDefHandler<YkcLoginRequest> {
 
             @Override
-            public String command() {
-                return YkcCommand.YkcLoginRequest.command();
+            public CommandDef<YkcLoginRequest> commandDef() {
+                return YkcCommand.YkcLoginRequest;
             }
 
             @Override
@@ -99,7 +100,6 @@ public class YkcChargeServerExample {
                 Frame<YkcLoginResponse> responseFrame = frame.<YkcLoginResponse>asRequest().responseFrame();
                 YkcLoginResponse loginResponse = responseFrame.newData();
                 loginResponse.setResult(1);
-                loginResponse.setTerminalNo(data.getTerminalNo());
                 responseFrame
                         .data(loginResponse)
                         .write()

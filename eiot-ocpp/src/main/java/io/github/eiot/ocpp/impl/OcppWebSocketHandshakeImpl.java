@@ -66,7 +66,6 @@ public class OcppWebSocketHandshakeImpl implements OcppWebSocketHandshake {
     public Future<OcppConnection> accept(String terminalNo) {
         return webSocketHandshake.accept()
                 .map(ws -> {
-
                     OcppConnectionImpl ocppConnection = new OcppConnectionImpl(vertx, ws, terminalNo);
                     afterAcceptConsumer.accept(ocppConnection);
                     return ocppConnection;
