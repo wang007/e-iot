@@ -1,13 +1,9 @@
-package io.github.eiot.ocpp.impl;
+package io.github.eiot.ocpp;
 
 import io.github.eiot.Frame;
 import io.github.eiot.IotConnection;
 import io.github.eiot.RequestFrame;
 import io.github.eiot.Side;
-import io.github.eiot.ocpp.MessageTypeId;
-import io.github.eiot.ocpp.OcppError;
-import io.github.eiot.ocpp.OcppFrame;
-import io.github.eiot.ocpp.RawOcppFrame;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;

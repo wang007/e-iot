@@ -3,7 +3,6 @@ package io.github.eiot.ocpp;
 import io.github.eiot.*;
 import io.github.eiot.ocpp.exception.OcppErrorCodeMissException;
 import io.github.eiot.ocpp.exception.OcppProtocolUnsupportedException;
-import io.github.eiot.ocpp.impl.ErrorOcppFrame;
 import io.github.eiot.ocpp.impl.OcppConnectionImpl;
 import io.github.eiot.ocpp.json.Json;
 import io.netty.buffer.ByteBuf;
@@ -25,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RawOcppFrame implements OcppFrame<JsonObject> {
 
-    private static final JsonObject EmptyJson = new JsonObject(Collections.emptyMap());
+    static final JsonObject EmptyJson = new JsonObject(Collections.emptyMap());
 
 
     private final Map<String, Object> attributes = new ConcurrentHashMap<>(4, 1.0f);
@@ -256,8 +255,8 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
         return side == Side.SENDER;
     }
 
-    @Override
-    public Future<Void> send() {
+
+    protected void checkSendAndSwitch() {
         if (isReceiver()) {
             throw new IllegalStateException("receiver frame not support to send");
         }
@@ -268,6 +267,11 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
             throw new IllegalStateException("messageTypeId: " + messageTypeId.name() + " not support to send");
         }
         messageTypeId = MessageTypeId.SEND; // maybe current CALL
+    }
+
+    @Override
+    public Future<Void> send() {
+        checkSendAndSwitch();
         return connection.write(this);
     }
 

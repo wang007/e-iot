@@ -31,7 +31,7 @@ public abstract class FrameConverter implements Function<Frame<?>, Frame<?>> {
         CommandDef<?> match = CommandDef.match(frame.iotConnection().protocol(), command);
         if (match == null) {
             if (logger.isDebugEnabled()) {
-                logger.debug("terminalNo: {} command: {} not found commandRef.", frame.terminalNo(), frame.command());
+                logger.debug("terminalNo: {} command: {} not found commandDef.", frame.terminalNo(), frame.command());
             }
             return frame;
         }
@@ -40,7 +40,7 @@ public abstract class FrameConverter implements Function<Frame<?>, Frame<?>> {
 
     /**
      * @param frame       the raw frame
-     * @param commandDef match commandRef
+     * @param commandDef match commandDef
      * @return the concrete frame
      */
     protected abstract Frame<?> convert(Frame<?> frame, CommandDef<?> commandDef);

@@ -107,6 +107,10 @@ public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements Fr
         if (this.data != null) {
             return this.data;
         }
+        // sender without data
+        if (rawFrame.isSender()) {
+            return null;
+        }
         ByteBuf byteBuf = rawFrame.data();
         V v = FrameUtil.decode(commandDef.dataType(), byteBuf);
         this.data = v;
