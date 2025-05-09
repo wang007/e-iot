@@ -4,19 +4,22 @@ import io.github.eiot.Frame;
 import io.github.eiot.IotConnection;
 import io.github.eiot.OutboundHook;
 import io.github.eiot.RequestFrame;
-import io.github.eiot.ocpp.OcppConnection;
-import io.github.eiot.ocpp.OcppVersion;
+import io.github.eiot.exception.ConvertIotException;
+import io.github.eiot.impl.OutboundIotConnectionInternal;
+import io.github.eiot.ocpp.*;
+import io.github.eiot.utils.StringUtil;
 import io.vertx.codegen.annotations.Nullable;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.Promise;
+import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.WebSocketBase;
+import io.vertx.core.http.WebSocketFrameType;
+import io.vertx.core.http.impl.ws.WebSocketFrameImpl;
 import io.vertx.core.impl.ContextInternal;
 import io.vertx.core.impl.VertxInternal;
 import io.vertx.core.impl.future.PromiseInternal;
 import io.vertx.core.net.SocketAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +29,9 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * created by wang007 on 2025/4/19
  */
-public class OcppConnectionImpl implements OcppConnection {
+public class OcppConnectionImpl implements OcppConnection, OutboundIotConnectionInternal {
+
+    private static final Logger logger = LoggerFactory.getLogger(OcppConnectionImpl.class);
 
     private final Promise<Void> closedPromise = Promise.promise();
     private final Map<String, Object> attributes = new ConcurrentHashMap<>();
@@ -42,9 +47,13 @@ public class OcppConnectionImpl implements OcppConnection {
     private boolean setResponseResult;
     private OcppVersion ocppVersion;
 
-    private Handler<Frame<?>> frameHandler;
     private Handler<Throwable> exceptionHandler;
+    private Handler<Frame<?>> frameHandler;
+    private Handler<Buffer> bufferHandler;
+
     private OutboundHook outboundHook;
+
+    private final Map<String, RequestFrame<?, Frame<?>>> waitingResults = new ConcurrentHashMap<>(8, 1.0f);
 
 
     public OcppConnectionImpl(VertxInternal vertx, WebSocketBase webSocket, String terminalNo) {
@@ -60,7 +69,81 @@ public class OcppConnectionImpl implements OcppConnection {
     }
 
     void configCompleted() {
+        // aggregate TEXT websocket frame and CONTINUATION websocket frame
+        webSocket.textMessageHandler(json -> {
+            Handler<Frame<?>> frameHandler;
+            Handler<Buffer> bufferHandler;
+            Handler<Throwable> exceptionHandler;
 
+            boolean frameConvert;
+            boolean setResponseResult;
+
+            synchronized (this) {
+                frameHandler = this.frameHandler;
+                bufferHandler = this.bufferHandler;
+                exceptionHandler = this.exceptionHandler;
+                frameConvert = this.frameConverter;
+                setResponseResult = this.setResponseResult;
+            }
+            if (frameHandler != null) {
+                context.dispatch(json, v -> {
+                    Frame<?> frame;
+                    try {
+                        frame = RawOcppFrame.new4Receiver(this, v);
+                    } catch (Throwable e) {
+                        Throwable ex;
+                        if (e instanceof ConvertIotException) {
+                            ex = e;
+                        } else {
+                            ex = new ConvertIotException(terminalNo, null, "ocpp convert raw frame failed", e);
+                        }
+                        if (exceptionHandler != null) {
+                            exceptionHandler.handle(ex);
+                        }
+                        return;
+                    }
+
+                    // maybe later version not support.
+                    if (frame == null) {
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("terminalNo: {} convert failed, maybe later version and not support messageTypeId, data: {}", terminalNo, v);
+                        } else {
+                            logger.warn("terminalNo: {} convert failed, maybe later version and not support messageTypeId.", terminalNo);
+                        }
+                        return;
+                    }
+
+                    if (frameConvert) {
+                        try {
+                            frame = OcppFrameConverter.INSTANCE.apply(frame);
+                        } catch (Throwable e) {
+                            Throwable ex;
+                            if (e instanceof ConvertIotException) {
+                                ex = e;
+                            } else {
+                                ex = new ConvertIotException(terminalNo, frame, "ocpp convert concrete frame failed", e);
+                            }
+                            if (trySetResponseResult(frame, ex)) {
+                                return;
+                            }
+                            if (exceptionHandler != null) {
+                                exceptionHandler.handle(ex);
+                            }
+                            return;
+                        }
+                    }
+
+                    if (setResponseResult && trySetResponseResult(frame, null)) {
+                        return;
+                    }
+                    frameHandler.handle(frame);
+                });
+            }
+
+            if (bufferHandler != null) {
+                context.dispatch(json, v -> bufferHandler.handle(Buffer.buffer(v)));
+            }
+        });
     }
 
     public String nextMessageId() {
@@ -113,15 +196,53 @@ public class OcppConnectionImpl implements OcppConnection {
         return websocket().localAddress();
     }
 
-    /**
-     * @param requestFrame the requestFrame
-     * @param timeout      the timeout
-     * @return the ops result of Future
-     */
-    protected Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
-        if (outboundHook != null) {
-            return outboundHook.beforeRequest(requestFrame);
+    @Override
+    public Vertx vertx() {
+        return vertx;
+    }
+
+    @Override
+    public ContextInternal context() {
+        return context;
+    }
+
+    @Override
+    public boolean trySetResponseResult(Frame<?> frame, Throwable ex) {
+        OcppFrame<?> ocppFrame = (OcppFrame<?>) frame;
+        MessageTypeId messageTypeId = ocppFrame.messageTypeId();
+        if (messageTypeId == null) {
+            return false;
         }
+        if (messageTypeId != MessageTypeId.CALLRESULT && messageTypeId != MessageTypeId.CALLERROR) {
+            return false;
+        }
+        String messageId = ocppFrame.messageId();
+        if (StringUtil.isEmpty(messageId)) {
+            return false;
+        }
+        RequestFrame<?, Frame<?>> waiting = waitingResults.remove(messageId);
+        if (waiting == null) {
+            return false;
+        }
+        // raw frame not set result
+        if (ex == null && frame.isRaw()) {
+            ex = new ConvertIotException(frame.terminalNo(), frame);
+            frame = null;
+        }
+        return waiting.trySetResponseResult(frame, ex);
+    }
+
+    @Override
+    public Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
+        OcppFrame<?> ocppFrame = (OcppFrame<?>) requestFrame;
+        String messageId = ocppFrame.messageId();
+        if (StringUtil.isEmpty(messageId)) {
+            return Future.failedFuture("request frame not exist message id");
+        }
+        waitingResults.put(messageId, requestFrame);
+        requestFrame
+                .requestResult()
+                .onComplete(ar -> waitingResults.remove(messageId)); // eg: no response, remove it!
         return Future.succeededFuture(requestFrame);
     }
 
@@ -130,15 +251,25 @@ public class OcppConnectionImpl implements OcppConnection {
         if (timeoutMs <= 0) {
             timeoutMs = this.waitResponseTimeout;
         }
-        int time0 = timeoutMs;
         // use caller context.
         PromiseInternal<Frame<?>> promise = this.vertx.promise();
+        request(frame, timeoutMs, promise);
         return promise.future();
     }
 
     @Override
     public Future<Void> write(Frame<?> frame) {
-        return null;
+        // use caller context.
+        PromiseInternal<Void> promise = this.vertx.promise();
+        write(frame, promise);
+        return promise.future();
+    }
+
+    @Override
+    public void writeOutInternal(Frame<?> frame, PromiseInternal<Void> promise) {
+        String json = frame.toRawString();
+        Future<Void> future = webSocket.writeTextMessage(json);
+        future.onComplete(promise);
     }
 
     @Override
@@ -155,18 +286,20 @@ public class OcppConnectionImpl implements OcppConnection {
 
     @Override
     public Future<Void> write(Buffer data) {
-
-        return null;
+        // Reduce the overhead of replication
+        WebSocketFrameImpl frame = new WebSocketFrameImpl(WebSocketFrameType.TEXT, data.getByteBuf(), true);
+        return webSocket.writeFrame(frame);
     }
 
     @Override
     public void write(Buffer data, Handler<AsyncResult<Void>> handler) {
-
+        Future<Void> future = write(data);
+        future.onComplete(handler);
     }
 
     @Override
     public void end(Handler<AsyncResult<Void>> handler) {
-
+        webSocket.end(handler);
     }
 
     @Override
@@ -182,8 +315,8 @@ public class OcppConnectionImpl implements OcppConnection {
 
     @Override
     public OcppConnection drainHandler(@Nullable Handler<Void> handler) {
-         webSocket.drainHandler(handler);
-         return this;
+        webSocket.drainHandler(handler);
+        return this;
     }
 
     // WriteStream end
@@ -192,9 +325,9 @@ public class OcppConnectionImpl implements OcppConnection {
     // ReadStream start
 
     @Override
-    public OcppConnection handler(@Nullable Handler<Buffer> handler) {
-        // TODO handler text message frame as buffer
-        return null;
+    public synchronized OcppConnection handler(@Nullable Handler<Buffer> handler) {
+        this.bufferHandler = handler;
+        return this;
     }
 
     @Override
@@ -226,6 +359,7 @@ public class OcppConnectionImpl implements OcppConnection {
     @Override
     public synchronized IotConnection exceptionHandler(Handler<Throwable> handler) {
         this.exceptionHandler = handler;
+        this.webSocket.exceptionHandler(handler);
         return this;
     }
 
@@ -248,14 +382,7 @@ public class OcppConnectionImpl implements OcppConnection {
 
     @Override
     public boolean isClosed() {
-        webSocket.isClosed();
-        return false;
-    }
-
-
-    @Override
-    public boolean trySetResponseResult(Frame<?> frame, Throwable ex) {
-        return false;
+        return webSocket.isClosed();
     }
 
     @Override
@@ -273,7 +400,7 @@ public class OcppConnectionImpl implements OcppConnection {
         return ocppVersion;
     }
 
-    @Override
+
     public WebSocketBase websocket() {
         return webSocket;
     }

@@ -154,6 +154,9 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
     @SuppressWarnings("unchecked")
     @Override
     public boolean trySetResponseResult(Frame<?> frame, Throwable ex) {
+        if (frame == null) {
+            return false;
+        }
         int seqNo = getSeqNo(frame);
         if (seqNo <= 1) {
             return false;

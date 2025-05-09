@@ -1,6 +1,10 @@
 package io.github.eiot.ocpp;
 
 import io.github.eiot.IotConnection;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.WebSocketBase;
 
 /**
@@ -24,8 +28,21 @@ public interface OcppConnection extends IotConnection {
      *
      * @return Return the underlying websocket.
      */
-    WebSocketBase websocket();
+    //WebSocketBase websocket();
 
+    /**
+     *
+     * @param utf8TextData must be utf-8 bytes
+     * @param handler the handler
+     */
+    @Override
+    void write(Buffer utf8TextData, Handler<AsyncResult<Void>> handler);
 
-
+    /**
+     *
+     * @param utf8TextData must be utf-8 bytes
+     * @return the handler
+     */
+    @Override
+    Future<Void> write(Buffer utf8TextData);
 }

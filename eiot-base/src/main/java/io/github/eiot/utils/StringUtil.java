@@ -5,6 +5,12 @@ package io.github.eiot.utils;
  */
 public class StringUtil {
 
+    public static boolean isEmpty(String str) {
+        if (str == null) {
+            return true;
+        }
+        return str.isEmpty();
+    }
 
     public static String leftPad(String str, int len, char c) {
         return pad0(str, len, c, true);

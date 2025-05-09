@@ -1,6 +1,8 @@
 package io.github.eiot.ocpp;
 
+import io.github.eiot.CommandDef;
 import io.github.eiot.Frame;
+import io.github.eiot.IotConnection;
 import io.github.eiot.RequestFrame;
 import io.github.eiot.ocpp.exception.OcppProtocolUnsupportedException;
 import io.vertx.core.Future;
@@ -12,6 +14,10 @@ import io.vertx.core.json.JsonObject;
  * created by wang007 on 2025/2/26
  */
 public interface OcppFrame<T> extends Frame<T> {
+
+    static <T> OcppFrame<T> create(IotConnection connection, CommandDef<T> commandDef) {
+        return new DefaultOcppFrame<T>(connection, commandDef);
+    }
 
     /**
      * @return @return the ocpp version

@@ -66,6 +66,9 @@ public abstract class MatchCommandIotConnection extends IotConnectionBase {
 
     @Override
     public boolean trySetResponseResult(Frame<?> frame, Throwable ex) {
+        if (frame == null) {
+            return false;
+        }
         synchronized (this) {
             String command = frame.command();
             PendingRequestFrames requestFrames = waitResults.get(command);

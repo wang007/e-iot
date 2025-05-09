@@ -117,9 +117,6 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
                     } else {
                         ex = new ConvertIotException(terminalNo, null, "convert raw frame failed", e);
                     }
-                    if (setResponseResult && trySetResponseResult(null, ex)) {
-                        return;
-                    }
                     if (exceptionHandler != null) {
                         exceptionHandler.handle(ex);
                     }
@@ -137,7 +134,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
                             String terminalNo = frame.terminalNo();
                             ex = new ConvertIotException(terminalNo, frame, "convert concrete frame failed", e);
                         }
-                        if (setResponseResult && trySetResponseResult(null, ex)) {
+                        if (trySetResponseResult(frame, ex)) {
                             return;
                         }
                         if (exceptionHandler != null) {
