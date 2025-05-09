@@ -25,7 +25,7 @@ import java.util.concurrent.TimeoutException;
  * <p>
  * created by wang007 on 2025/3/2
  */
-public abstract class IotConnectionBase extends ConnectionBase implements IotConnection {
+public abstract class IotConnectionBase extends ConnectionBase implements OutboundIotConnectionInternal {
 
     private final Map<String, Object> map;
 
@@ -66,6 +66,16 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
         pending.drainHandler(v -> doResume());
         pending.handler(this::handleMsg);
         pending.exceptionHandler(context::reportException);
+    }
+
+    @Override
+    public Vertx vertx() {
+        return vertx;
+    }
+
+    @Override
+    public ContextInternal context() {
+        return context;
     }
 
     private void handleMsg(Object msg) {
@@ -208,19 +218,6 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
         return protocol;
     }
 
-    /**
-     * @param requestFrame the requestFrame
-     * @param timeout      the timeout
-     * @return the ops result of Future
-     */
-    protected Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
-        return Future.succeededFuture(requestFrame);
-    }
-
-    protected Future<Frame<?>> beforeWrite(Frame<?> frame) {
-        return Future.succeededFuture(frame);
-    }
-
     @Override
     public final Future<Frame<?>> request(RequestFrame<?, Frame<?>> frame, int timeoutMs) {
         if (timeoutMs <= 0) {
@@ -229,54 +226,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
         int time0 = timeoutMs;
         // use caller context.
         PromiseInternal<Frame<?>> promise = this.vertx.promise();
-        long start = System.nanoTime();
-        context.emit(v -> {
-            try {
-                beforeRequest(frame, time0)
-                        .flatMap(f -> {
-                            OutboundHook hook;
-                            synchronized (this) {
-                                hook = this.outboundHook;
-                            }
-                            return hook == null ? Future.succeededFuture(f) : hook.beforeRequest(f);
-                        })
-                        .flatMap(f -> this.write(f).map(f))
-                        .onComplete(ar -> {
-                            if (ar.failed()) {
-                                promise.fail(ar.cause());
-                                frame.trySetResponseResult(null, ar.cause());
-                                return;
-                            }
-                            RequestFrame<?, ?> f = ar.result();
-                            int time = (int) (time0 - TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start));
-                            if (time <= 0) {
-                                Throwable e = new TimeoutException("already timeout before wait result frame");
-                                promise.fail(e);
-                                f.trySetResponseResult(null, ar.cause());
-                                return;
-                            }
-                            Timer timer = vertx.timer(time, TimeUnit.MILLISECONDS);
-                            timer.onComplete(ar0 -> {
-                                Throwable e = new TimeoutException("wait result frame timeout");
-                                promise.tryFail(e);
-                                f.trySetResponseResult(null, e);
-                            });
-
-                            f.requestResult().onComplete(ar0 -> {
-                                timer.cancel();
-                                if (ar.failed()) {
-                                    promise.tryFail(ar0.cause());
-                                } else {
-                                    Frame<?> result = ar0.result();
-                                    promise.tryComplete(result);
-                                }
-                            });
-                        });
-            } catch (Throwable e) {
-                promise.fail(e);
-                frame.trySetResponseResult(null, e);
-            }
-        });
+        request(frame, time0, promise);
         return promise.future();
     }
 
@@ -285,35 +235,15 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
     public final Future<Void> write(Frame<?> frame) {
         // use caller context.
         PromiseInternal<Void> promise = this.vertx.promise();
-        context.emit(v -> {
-            try {
-                beforeWrite(frame)
-                        .flatMap(f -> {
-                            OutboundHook hook;
-                            synchronized (IotConnectionBase.this) {
-                                hook = this.outboundHook;
-                            }
-                            return hook == null ? Future.succeededFuture(f) : hook.beforeWrite(frame);
-                        })
-                        .onComplete(ar -> {
-                            if (ar.failed()) {
-                                promise.fail(ar.cause());
-                                return;
-                            }
-                            try {
-                                ByteBuf byteBuf = ar.result().toByteBuf();
-                                writeToChannel(byteBuf, promise);
-                            } catch (Throwable e) {
-                                promise.fail(e);
-                            }
-                        });
-            } catch (Throwable e) {
-                promise.fail(e);
-            }
-        });
+        write(frame, promise);
         return promise.future();
     }
 
+    @Override
+    public void writeOutInternal(Frame<?> frame, PromiseInternal<Void> promise) {
+        ByteBuf byteBuf = frame.toByteBuf();
+        writeToChannel(byteBuf, promise);
+    }
 
     @Override
     protected void handleClosed() {

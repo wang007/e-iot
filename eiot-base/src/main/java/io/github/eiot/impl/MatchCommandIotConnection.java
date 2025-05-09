@@ -18,20 +18,20 @@ import java.util.Queue;
  * A charge connection implementation matches the response frame corresponding to the request frame based on command
  * <p>
  * Because some devices do not really implement seq no rules,
- * use {@link CommandIotConnection} instead of {@link SeqNoIotConnection}
+ * use {@link MatchCommandIotConnection} instead of {@link SeqNoIotConnection}
  * <p>
  * created by wang007 on 2025/3/13
  */
-public abstract class CommandIotConnection extends IotConnectionBase {
+public abstract class MatchCommandIotConnection extends IotConnectionBase {
 
     private final Map<String, PendingRequestFrames> waitResults = new HashMap<>();
 
-    protected CommandIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
+    protected MatchCommandIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
         super(context, chctx, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
     }
 
     @Override
-    protected Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
+    public Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
         String responseType = requestFrame.responseCommand();
         synchronized (this) {
             Future<RequestFrame<?, Frame<?>>> future;

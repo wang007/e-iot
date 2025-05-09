@@ -1,7 +1,7 @@
 package io.github.eiot;
 
 import io.github.eiot.client.IotClientOptionsConverter;
-import io.github.eiot.impl.CommandIotConnection;
+import io.github.eiot.impl.MatchCommandIotConnection;
 import io.github.eiot.impl.SeqNoIotConnection;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.codegen.json.annotations.JsonGen;
@@ -65,7 +65,7 @@ public class IotClientOptions extends NetClientOptions {
      * command matching is used
      * <p>
      * match by seq no: {@link SeqNoIotConnection}
-     * match by command: {@link CommandIotConnection}
+     * match by command: {@link MatchCommandIotConnection}
      */
     private boolean seqNoMatchFirst;
 

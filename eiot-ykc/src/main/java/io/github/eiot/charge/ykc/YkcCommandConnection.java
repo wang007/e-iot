@@ -1,6 +1,6 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.impl.CommandIotConnection;
+import io.github.eiot.impl.MatchCommandIotConnection;
 import io.github.eiot.Frame;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -13,7 +13,7 @@ import io.vertx.core.spi.metrics.TCPMetrics;
  *
  * created by wang007 on 2025/3/17
  */
-public class YkcCommandConnection extends CommandIotConnection implements YkcConnectionBase {
+public class YkcCommandConnection extends MatchCommandIotConnection implements YkcConnectionBase {
 
     protected YkcCommandConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics, boolean frameConverter, boolean setResponseResult, int waitResponseTimeout, String protocol) {
         super(context, chctx, metrics, frameConverter, setResponseResult, waitResponseTimeout, protocol);
