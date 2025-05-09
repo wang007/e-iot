@@ -1,17 +1,21 @@
-package io.github.eiot.client;
+package io.github.eiot;
 
-import io.github.eiot.*;
+import io.github.eiot.impl.CommandIotConnection;
+import io.github.eiot.impl.SeqNoIotConnection;
+import io.github.eiot.server.IotServerOptionsConverter;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.codegen.json.annotations.JsonGen;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.net.NetClientOptions;
+import io.vertx.core.net.NetServerOptions;
 
 /**
- * created by wang007 on 2025/2/24
+ * Options for configuring a {@link IotServer}.
+ * <p>
+ * created by wang007 on 2025/2/23
  */
 @DataObject
 @JsonGen(publicConverter = false)
-public class IotClientOptions extends NetClientOptions {
+public class IotServerOptions extends NetServerOptions {
 
     /**
      * The default wait response frame times out. unit: millis
@@ -45,7 +49,7 @@ public class IotClientOptions extends NetClientOptions {
 
     /**
      * Whether to perform the frame conversion.
-     * If the router does not convert, it can be converted on the router
+     * If the frame does not convert, it can be converted on the router
      */
     private boolean frameConverter;
 
@@ -61,23 +65,24 @@ public class IotClientOptions extends NetClientOptions {
     /**
      * Normally, seq no is used to match response, but since some devices do not implement seq no well,
      * command matching is used
-     * <p>
+     *
      * match by seq no: {@link SeqNoIotConnection}
      * match by command: {@link CommandIotConnection}
      */
     private boolean seqNoMatchFirst;
+
 
     /**
      * protocol
      */
     private String protocol;
 
-    public IotClientOptions() {
+    public IotServerOptions() {
         super();
         init();
     }
 
-    public IotClientOptions(IotClientOptions others) {
+    public IotServerOptions(IotServerOptions others) {
         super(others);
         this.frameCodecOptions = others.frameCodecOptions;
         this.waitResponseTimeout = others.waitResponseTimeout;
@@ -85,13 +90,12 @@ public class IotClientOptions extends NetClientOptions {
         this.setResponseResult = others.setResponseResult;
         this.protocol = others.protocol;
         this.seqNoMatchFirst = others.seqNoMatchFirst;
-        setRegisterWriteHandler(false);
     }
 
-    public IotClientOptions(JsonObject jsonObject) {
+    public IotServerOptions(JsonObject jsonObject) {
         super(jsonObject);
         init();
-        IotClientOptionsConverter.fromJson(jsonObject, this);
+        IotServerOptionsConverter.fromJson(jsonObject, this);
     }
 
 
@@ -100,14 +104,13 @@ public class IotClientOptions extends NetClientOptions {
         frameConverter = DEFAULT_FRAME_CONVERTER;
         setResponseResult = DEFAULT_SET_RESPONSE_RESULT;
         seqNoMatchFirst = DEFAULT_SEQNO_MATCH_FIRST;
-        setRegisterWriteHandler(false);
     }
 
     public FrameCodecOptions getFrameCodecOptions() {
         return frameCodecOptions;
     }
 
-    public IotClientOptions setFrameCodecOptions(FrameCodecOptions frameCodecOptions) {
+    public IotServerOptions setFrameCodecOptions(FrameCodecOptions frameCodecOptions) {
         this.frameCodecOptions = frameCodecOptions;
         return this;
     }
@@ -116,7 +119,7 @@ public class IotClientOptions extends NetClientOptions {
         return waitResponseTimeout;
     }
 
-    public IotClientOptions setWaitResponseTimeout(int waitResponseTimeout) {
+    public IotServerOptions setWaitResponseTimeout(int waitResponseTimeout) {
         this.waitResponseTimeout = waitResponseTimeout;
         return this;
     }
@@ -125,7 +128,7 @@ public class IotClientOptions extends NetClientOptions {
         return frameConverter;
     }
 
-    public IotClientOptions setFrameConverter(boolean frameConverter) {
+    public IotServerOptions setFrameConverter(boolean frameConverter) {
         this.frameConverter = frameConverter;
         return this;
     }
@@ -134,7 +137,7 @@ public class IotClientOptions extends NetClientOptions {
         return setResponseResult;
     }
 
-    public IotClientOptions setSetResponseResult(boolean setResponseResult) {
+    public IotServerOptions setSetResponseResult(boolean setResponseResult) {
         this.setResponseResult = setResponseResult;
         return this;
     }
@@ -143,7 +146,7 @@ public class IotClientOptions extends NetClientOptions {
         return seqNoMatchFirst;
     }
 
-    public IotClientOptions setSeqNoMatchFirst(boolean seqNoMatchFirst) {
+    public IotServerOptions setSeqNoMatchFirst(boolean seqNoMatchFirst) {
         this.seqNoMatchFirst = seqNoMatchFirst;
         return this;
     }
@@ -152,7 +155,7 @@ public class IotClientOptions extends NetClientOptions {
         return protocol;
     }
 
-    public IotClientOptions setProtocol(String protocol) {
+    public IotServerOptions setProtocol(String protocol) {
         this.protocol = protocol;
         return this;
     }

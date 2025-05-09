@@ -2,7 +2,7 @@ package io.github.eiot.route;
 
 import io.github.eiot.Frame;
 import io.github.eiot.CommandDef;
-import io.github.eiot.server.IotServer;
+import io.github.eiot.IotServer;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 

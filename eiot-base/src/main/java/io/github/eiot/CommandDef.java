@@ -1,5 +1,7 @@
 package io.github.eiot;
 
+import io.github.eiot.impl.CommandDefImpl;
+
 /**
  * command define
  *

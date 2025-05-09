@@ -2,7 +2,7 @@ package io.github.eiot.charge.ykc;
 
 import io.github.eiot.Frame;
 import io.github.eiot.RequestFrame;
-import io.github.eiot.SeqNoIotConnection;
+import io.github.eiot.impl.SeqNoIotConnection;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Future;

@@ -1,5 +1,6 @@
 package io.github.eiot;
 
+import io.github.eiot.impl.CompositeOutboundHook;
 import io.vertx.core.Future;
 
 /**

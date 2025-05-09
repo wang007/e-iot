@@ -133,10 +133,7 @@ public class OcppConnectionImpl implements OcppConnection {
         int time0 = timeoutMs;
         // use caller context.
         PromiseInternal<Frame<?>> promise = this.vertx.promise();
-
-
-
-        return null;
+        return promise.future();
     }
 
     @Override

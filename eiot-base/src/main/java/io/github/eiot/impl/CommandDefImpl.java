@@ -1,4 +1,6 @@
-package io.github.eiot;
+package io.github.eiot.impl;
+
+import io.github.eiot.CommandDef;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -6,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * created by wang007 on 2025/4/10
  */
-class CommandDefImpl<Req> implements CommandDef<Req> {
+public class CommandDefImpl<Req> implements CommandDef<Req> {
 
     /**
      * protocol -> <command, commandDef>

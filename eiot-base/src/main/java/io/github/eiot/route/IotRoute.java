@@ -85,7 +85,7 @@ public interface IotRoute<Req> {
      *
      * @return a reference to this, so the API can be used fluently
      */
-    IotRoute<Req> alsoMatchRaw();
+    IotRoute<Req> matchRaw();
 
     /**
      * only match raw and not match concrete frame
@@ -95,5 +95,7 @@ public interface IotRoute<Req> {
      * @return a reference to this, so the API can be used fluently
      */
     IotRoute<Req> onlyMatchRaw();
+
+
 
 }

@@ -1,5 +1,8 @@
-package io.github.eiot;
+package io.github.eiot.impl;
 
+import io.github.eiot.Frame;
+import io.github.eiot.OutboundHook;
+import io.github.eiot.RequestFrame;
 import io.vertx.core.Future;
 
 import java.util.ArrayList;
@@ -8,7 +11,7 @@ import java.util.List;
 /**
  * created by wang007 on 2025/5/8
  */
-class CompositeOutboundHook implements OutboundHook {
+public class CompositeOutboundHook implements OutboundHook {
 
     private static final String BEFORE_REQ_IDX_KEY = "__before_r_idx";
 
@@ -16,7 +19,7 @@ class CompositeOutboundHook implements OutboundHook {
 
     private final List<OutboundHook> hooks;
 
-    CompositeOutboundHook(OutboundHook[] hooks) {
+    public CompositeOutboundHook(OutboundHook[] hooks) {
         List<OutboundHook> list = new ArrayList<>(hooks.length);
         for (OutboundHook hook : hooks) {
             if (hook instanceof CompositeOutboundHook) {

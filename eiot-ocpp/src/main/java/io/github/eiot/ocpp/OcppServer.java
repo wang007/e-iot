@@ -2,7 +2,7 @@ package io.github.eiot.ocpp;
 
 import io.github.eiot.Frame;
 import io.github.eiot.IotConnection;
-import io.github.eiot.server.IotServer;
+import io.github.eiot.IotServer;
 import io.vertx.core.Handler;
 
 /**

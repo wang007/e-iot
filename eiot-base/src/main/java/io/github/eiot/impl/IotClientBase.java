@@ -1,8 +1,6 @@
-package io.github.eiot.client;
+package io.github.eiot.impl;
 
-import io.github.eiot.IotConnection;
-import io.github.eiot.IotConnectionBase;
-import io.github.eiot.FrameCodecOptions;
+import io.github.eiot.*;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;

@@ -2,6 +2,9 @@ package io.github.eiot.charge.ykc;
 
 import io.github.eiot.*;
 import io.github.eiot.charge.ykc.data.YkcLoginRequest;
+import io.github.eiot.impl.AbstractFrame;
+import io.github.eiot.impl.RequestFrameBase;
+import io.github.eiot.impl.SeqNoIotConnection;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
 import org.slf4j.Logger;

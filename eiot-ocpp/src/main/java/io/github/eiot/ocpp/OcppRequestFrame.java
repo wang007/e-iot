@@ -1,7 +1,7 @@
 package io.github.eiot.ocpp;
 
 import io.github.eiot.CommandDef;
-import io.github.eiot.RequestFrameBase;
+import io.github.eiot.impl.RequestFrameBase;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 

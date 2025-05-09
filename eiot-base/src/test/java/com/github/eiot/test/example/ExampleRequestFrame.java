@@ -3,6 +3,7 @@ package com.github.eiot.test.example;
 import io.github.eiot.*;
 import io.github.eiot.codec.BCD;
 import io.github.eiot.codec.Hex;
+import io.github.eiot.impl.RequestFrameBase;
 
 /**
  * created by wang007 on 2025/4/12

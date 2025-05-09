@@ -2,6 +2,7 @@ package io.github.eiot.charge.ykc;
 
 import io.github.eiot.*;
 import io.github.eiot.codec.*;
+import io.github.eiot.impl.AbstractRawFrame;
 import io.github.eiot.utils.CodecUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

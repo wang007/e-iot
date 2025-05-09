@@ -2,7 +2,7 @@ package io.github.eiot.charge.ykc;
 
 import io.github.eiot.CommandDef;
 import io.github.eiot.RequestFrame;
-import io.github.eiot.RequestFrameBase;
+import io.github.eiot.impl.RequestFrameBase;
 import io.github.eiot.codec.Hex;
 
 /**

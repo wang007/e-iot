@@ -2,6 +2,7 @@ package io.github.eiot.ocpp;
 
 import io.github.eiot.*;
 import io.github.eiot.annotation.FrameUtil;
+import io.github.eiot.impl.CommandDefFrame;
 import io.github.eiot.ocpp.json.Json;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;

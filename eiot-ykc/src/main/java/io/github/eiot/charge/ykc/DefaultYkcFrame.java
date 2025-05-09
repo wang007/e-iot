@@ -1,6 +1,6 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.AbstractFrame;
+import io.github.eiot.impl.AbstractFrame;
 import io.github.eiot.IotConnection;
 import io.github.eiot.CommandDef;
 import io.github.eiot.RequestFrame;

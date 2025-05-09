@@ -1,7 +1,5 @@
-package io.github.eiot.server;
+package io.github.eiot;
 
-import io.github.eiot.IotConnection;
-import io.github.eiot.Frame;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.net.SocketAddress;

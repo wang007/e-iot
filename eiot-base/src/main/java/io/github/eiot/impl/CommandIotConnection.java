@@ -1,5 +1,7 @@
-package io.github.eiot;
+package io.github.eiot.impl;
 
+import io.github.eiot.Frame;
+import io.github.eiot.RequestFrame;
 import io.github.eiot.exception.ConvertIotException;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Future;

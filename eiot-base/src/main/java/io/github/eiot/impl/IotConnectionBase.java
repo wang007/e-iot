@@ -1,5 +1,6 @@
-package io.github.eiot;
+package io.github.eiot.impl;
 
+import io.github.eiot.*;
 import io.github.eiot.exception.ConvertIotException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -237,7 +238,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements IotCon
                             synchronized (this) {
                                 hook = this.outboundHook;
                             }
-                            return hook == null ? Future.succeededFuture(f) : hook.beforeRequest(frame);
+                            return hook == null ? Future.succeededFuture(f) : hook.beforeRequest(f);
                         })
                         .flatMap(f -> this.write(f).map(f))
                         .onComplete(ar -> {

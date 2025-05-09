@@ -1,5 +1,9 @@
-package io.github.eiot;
+package io.github.eiot.impl;
 
+import io.github.eiot.Frame;
+import io.github.eiot.IotConnection;
+import io.github.eiot.RequestFrame;
+import io.github.eiot.Side;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;

@@ -70,7 +70,7 @@ class IotRouteImpl<T> implements IotRoute<T> {
     }
 
     @Override
-    public synchronized IotRoute<T> alsoMatchRaw() {
+    public synchronized IotRoute<T> matchRaw() {
         routeState = routeState.alsoMatchRaw(true);
         return this;
     }
