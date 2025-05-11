@@ -6,7 +6,7 @@ import io.vertx.core.net.SocketAddress;
 import io.vertx.core.net.impl.SocketAddressImpl;
 
 /**
- * A charge server.
+ * An Iot server.
  * <p>
  * You receive {@link Frame} by providing a {@link #frameHandler()}. As Frame arrive on the server the handler
  * will be called with the Frame.

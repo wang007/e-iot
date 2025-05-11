@@ -1,6 +1,5 @@
 package io.github.eiot;
 
-import io.github.eiot.IotConnection;
 import io.vertx.core.Future;
 import io.vertx.core.net.SocketAddress;
 

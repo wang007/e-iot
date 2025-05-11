@@ -30,12 +30,16 @@ public class OcppServerImpl implements OcppServer {
     private Handler<Throwable> exceptionHandler;
     private Handler<OcppWebSocketHandshake> handshakeHandler;
 
-    public OcppServerImpl(Vertx vertx, OcppServerOptions options) {
+    // for wrap
+    public OcppServerImpl(Vertx vertx, HttpServer httpServer, OcppServerOptions options) {
         this.vertx = (VertxInternal) vertx;
         this.options = convertOptions(options);
-        HttpServerImpl httpServer = (HttpServerImpl) vertx.createHttpServer(options);
         configHttpServer(httpServer);
-        this.httpServer = httpServer;
+        this.httpServer = (HttpServerImpl) httpServer;
+    }
+
+    public OcppServerImpl(Vertx vertx, OcppServerOptions options) {
+        this(vertx, vertx.createHttpServer(options), options);
     }
 
     private OcppServerOptions convertOptions(OcppServerOptions options) {
@@ -83,7 +87,6 @@ public class OcppServerImpl implements OcppServer {
             conn.configCompleted();
         };
     }
-
 
 
     @Override
