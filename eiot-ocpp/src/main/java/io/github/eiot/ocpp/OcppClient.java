@@ -47,9 +47,12 @@ public interface OcppClient {
      * @param requestURI the relative URI
      * @return a {@code Future} of the asynchronous result
      */
-    default Future<OcppConnection> connect(int port, String host, String requestURI) {
+    default Future<OcppConnection> connect(int port, String host, String requestURI, String terminalNo) {
         OcppConnectOptions options = new OcppConnectOptions();
-        options.setPort(port).setHost(host).setURI(requestURI);
+        options.setTerminalNo(terminalNo)
+                .setPort(port)
+                .setHost(host)
+                .setURI(requestURI);
         return connect(options);
     }
 
@@ -60,9 +63,11 @@ public interface OcppClient {
      * @param requestURI the relative URI
      * @return a {@code Future} of the asynchronous result
      */
-    default Future<OcppConnection> connect(String host, String requestURI) {
+    default Future<OcppConnection> connect(String host, String requestURI, String terminalNo) {
         OcppConnectOptions options = new OcppConnectOptions();
-        options.setHost(host).setURI(requestURI);
+        options.setTerminalNo(terminalNo)
+                .setHost(host)
+                .setURI(requestURI);
         return connect(options);
     }
 
@@ -72,9 +77,10 @@ public interface OcppClient {
      * @param requestURI the relative URI
      * @return a {@code Future} of the asynchronous result
      */
-    default Future<OcppConnection> connect(String requestURI) {
+    default Future<OcppConnection> connect(String requestURI, String terminalNo) {
         OcppConnectOptions options = new OcppConnectOptions();
-        options.setURI(requestURI);
+        options.setTerminalNo(terminalNo)
+                .setURI(requestURI);
         return connect(options);
     }
 

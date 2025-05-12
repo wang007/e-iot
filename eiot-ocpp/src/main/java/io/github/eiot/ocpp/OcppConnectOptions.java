@@ -17,6 +17,11 @@ public class OcppConnectOptions extends WebSocketConnectOptions {
      */
     private List<OcppVersion> ocppVersions;
 
+    /**
+     * terminalNo
+     */
+    private String terminalNo;
+
     public List<OcppVersion> getOcppVersions() {
         return Collections.unmodifiableList(ocppVersions);
     }
@@ -36,5 +41,12 @@ public class OcppConnectOptions extends WebSocketConnectOptions {
         return this;
     }
 
+    public String getTerminalNo() {
+        return terminalNo;
+    }
 
+    public OcppConnectOptions setTerminalNo(String terminalNo) {
+        this.terminalNo = terminalNo;
+        return this;
+    }
 }

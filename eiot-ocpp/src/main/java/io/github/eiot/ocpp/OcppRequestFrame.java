@@ -10,6 +10,8 @@ import io.vertx.core.json.JsonObject;
  */
 public class OcppRequestFrame<Req, Resp> extends RequestFrameBase<Req, OcppFrame<Resp>> implements OcppFrame<Req> {
 
+    public static final String REQUEST_FRAME_COMMAND_KEY = "__request_command";
+
     private final DefaultOcppFrame<Req> ocppFrame;
 
     public OcppRequestFrame(DefaultOcppFrame<Req> frame) {

@@ -113,6 +113,14 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
                         return;
                     }
 
+                    OcppFrame<?> ocppFrame = (OcppFrame<?>) frame;
+                    if (ocppFrame.messageTypeId() == MessageTypeId.CALLRESULT) {
+                        RequestFrame<?, Frame<?>> requestFrame = waitingResults.get(ocppFrame.messageId());
+                        if (requestFrame != null) {
+                            ocppFrame.put(OcppRequestFrame.REQUEST_FRAME_COMMAND_KEY, requestFrame.command());
+                        }
+                    }
+
                     if (frameConvert) {
                         try {
                             frame = OcppFrameConverter.INSTANCE.apply(frame);

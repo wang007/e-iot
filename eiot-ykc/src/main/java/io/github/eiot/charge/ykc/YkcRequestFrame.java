@@ -1,7 +1,6 @@
 package io.github.eiot.charge.ykc;
 
 import io.github.eiot.CommandDef;
-import io.github.eiot.RequestFrame;
 import io.github.eiot.impl.RequestFrameBase;
 import io.github.eiot.codec.Hex;
 
@@ -65,7 +64,7 @@ public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, YkcFrame<R
 
     @SuppressWarnings("unchecked")
     @Override
-    public RequestFrame<Req, YkcFrame<Resp>> asRequest() {
+    public YkcRequestFrame<Req, Resp> asRequest() {
         return this;
     }
 

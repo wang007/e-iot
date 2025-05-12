@@ -75,10 +75,11 @@ public class OcppServerImpl implements OcppServer {
             OcppVersion ocppVersion = OcppVersion.match(protocol);
             if (ocppVersion == null) {
                 conn.websocket().close((short) 1002); // 1002: protocol error
-                throw new IllegalArgumentException("terminalNo: " + conn.terminalNo() + "not match ocpp version by subProtocol: " + protocol);
+                throw new IllegalStateException("terminalNo: " + conn.terminalNo() + "not match ocpp version by subProtocol: " + protocol);
             }
             conn.setFrameConverter(options.isFrameConverter());
             conn.setSetResponseResult(options.isSetResponseResult());
+            conn.setWaitResponseTimeout(options.getWaitResponseTimeout());
             conn.setOcppVersion(ocppVersion);
 
             conn.exceptionHandler(exceptionHandler);
