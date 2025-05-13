@@ -7,7 +7,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.WebSocketClient;
 import io.vertx.core.impl.VertxInternal;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +27,7 @@ public class OcppClientImpl implements OcppClient {
     public OcppClientImpl(Vertx vertx, WebSocketClient webSocketClient, OcppClientOptions options) {
         this.vertx  = (VertxInternal) vertx;
         this.webSocketClient = webSocketClient;
-        this.options = options;
+        this.options = new OcppClientOptions(options);
     }
 
 
@@ -46,14 +45,14 @@ public class OcppClientImpl implements OcppClient {
         }
         List<String> subProtocols = ocppVersions.stream().map(v -> v.versionName).collect(Collectors.toList());
         options.setSubProtocols(subProtocols);
-        webSocketClient.connect(options)
+        return webSocketClient.connect(options)
                 .map(ws -> {
                     String terminalNo = options.getTerminalNo();
                     String protocol = ws.subProtocol();
                     OcppVersion ocppVersion = OcppVersion.match(protocol);
                     if (ocppVersion == null) {
                         ws.close((short) 1002); // 1002: protocol error
-                        return new IllegalStateException("terminalNo: " + terminalNo + "not match ocpp version by subProtocol: " + protocol);
+                        throw  new IllegalStateException("terminalNo: " + terminalNo + "not match ocpp version by subProtocol: " + protocol);
                     }
                     OcppConnectionImpl connection = new OcppConnectionImpl(vertx, ws, options.getTerminalNo());
                     connection.setFrameConverter(this.options.isFrameConverter());
@@ -64,13 +63,10 @@ public class OcppClientImpl implements OcppClient {
 
                     return connection;
                 });
-
-
-        return null;
     }
 
     @Override
     public Future<Void> close() {
-        return null;
+        return webSocketClient.close();
     }
 }

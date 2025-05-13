@@ -45,6 +45,7 @@ public interface OcppClient {
      * @param port       the port
      * @param host       the host
      * @param requestURI the relative URI
+     * @param terminalNo the terminalNo
      * @return a {@code Future} of the asynchronous result
      */
     default Future<OcppConnection> connect(int port, String host, String requestURI, String terminalNo) {
@@ -61,6 +62,7 @@ public interface OcppClient {
      *
      * @param host       the host
      * @param requestURI the relative URI
+     * @param terminalNo the terminalNo
      * @return a {@code Future} of the asynchronous result
      */
     default Future<OcppConnection> connect(String host, String requestURI, String terminalNo) {
@@ -75,6 +77,7 @@ public interface OcppClient {
      * Connect an Ocpp WebSocket to the default client port, default client host and specified, relative request URI.
      *
      * @param requestURI the relative URI
+     * @param terminalNo the terminalNo
      * @return a {@code Future} of the asynchronous result
      */
     default Future<OcppConnection> connect(String requestURI, String terminalNo) {
@@ -86,7 +89,6 @@ public interface OcppClient {
 
     /**
      * Connect an Ocpp WebSocket with the specified options.
-     *
      * @param options the request options
      */
     Future<OcppConnection> connect(OcppConnectOptions options);

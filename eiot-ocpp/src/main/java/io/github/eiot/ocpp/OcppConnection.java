@@ -25,21 +25,23 @@ public interface OcppConnection extends IotConnection {
     OcppVersion ocppVersion();
 
     /**
+     * Return the underlying websocket.
+     * <p>
+     * NOTE: websocket not supported to set {@link WebSocketBase#textMessageHandler(Handler)}
+     * and {@link WebSocketBase#closeHandler(Handler)}
      *
      * @return Return the underlying websocket.
      */
-    //WebSocketBase websocket();
+    WebSocketBase websocket();
 
     /**
-     *
      * @param utf8TextData must be utf-8 bytes
-     * @param handler the handler
+     * @param handler      the handler
      */
     @Override
     void write(Buffer utf8TextData, Handler<AsyncResult<Void>> handler);
 
     /**
-     *
      * @param utf8TextData must be utf-8 bytes
      * @return the handler
      */

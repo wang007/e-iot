@@ -65,6 +65,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
             // close hook.
             closedPromise.complete(null);
         });
+        attributes.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
         messageIdGenerator = new AtomicLong(ThreadLocalRandom.current().nextLong(50));
     }
 
@@ -408,9 +409,8 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
         return ocppVersion;
     }
 
-
+    @Override
     public WebSocketBase websocket() {
-        return webSocket;
+        return new OcppWebSocketWrapper(webSocket);
     }
-
 }
