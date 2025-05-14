@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -55,6 +56,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
 
     private final Map<String, RequestFrame<?, Frame<?>>> waitingResults = new ConcurrentHashMap<>(8, 1.0f);
 
+    private final Map<String, Promise<ErrorOcppFrame>> writeResultAwaitErrors;
 
     public OcppConnectionImpl(VertxInternal vertx, WebSocketBase webSocket, String terminalNo,
                               int waitResponseTimeout, boolean frameConverter, boolean setResponseResult, OcppVersion ocppVersion) {
@@ -67,6 +69,12 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
         this.frameConverter = frameConverter;
         this.setResponseResult = setResponseResult;
         this.ocppVersion = ocppVersion;
+
+        if (ocppVersion.supportResultError()) {
+            writeResultAwaitErrors = new ConcurrentHashMap<>(4, 1.0f);
+        } else {
+            writeResultAwaitErrors = null;
+        }
 
         webSocket.closeHandler(v -> {
             // close hook.
@@ -207,21 +215,39 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
         if (messageTypeId == null) {
             return false;
         }
-        if (messageTypeId != MessageTypeId.CALLRESULT && messageTypeId != MessageTypeId.CALLERROR) {
+        if (messageTypeId != MessageTypeId.CALLRESULT
+                && messageTypeId != MessageTypeId.CALLERROR
+                && messageTypeId != MessageTypeId.CALLRESULTERROR) {
             return false;
         }
         String messageId = ocppFrame.messageId();
         if (StringUtil.isEmpty(messageId)) {
             return false;
         }
+
+
+        if (messageTypeId == MessageTypeId.CALLRESULTERROR && writeResultAwaitErrors != null) {
+            Promise<ErrorOcppFrame> promise = writeResultAwaitErrors.remove(messageId);
+            if (promise == null) {
+                return false;
+            }
+            // match
+            ErrorOcppFrame errorOcppFrame = frame.isRaw() ? new ErrorOcppFrame((RawOcppFrame) frame) : (ErrorOcppFrame) frame;
+            return ex != null ? promise.tryFail(ex) : promise.tryComplete(errorOcppFrame);
+        }
+
         RequestFrame<?, Frame<?>> waiting = waitingResults.remove(messageId);
         if (waiting == null) {
             return false;
         }
         // raw frame not set result
         if (ex == null && frame.isRaw()) {
-            ex = new ConvertIotException(frame.terminalNo(), frame);
-            frame = null;
+            if (messageTypeId == MessageTypeId.CALLERROR) {
+                frame = new ErrorOcppFrame((RawOcppFrame) frame);
+            } else {
+                ex = new ConvertIotException(frame.terminalNo(), frame);
+                frame = null;
+            }
         }
         return waiting.trySetResponseResult(frame, ex);
     }
@@ -250,6 +276,49 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
         request(frame, timeoutMs, promise);
         return promise.future();
     }
+
+
+    public Future<ErrorOcppFrame> writeResultAwaitError(OcppFrame<?> frame, int timeoutMs) {
+        MessageTypeId messageTypeId = frame.messageTypeId();
+        if (messageTypeId != MessageTypeId.CALLRESULT) {
+            return Future.failedFuture(new IllegalArgumentException("write result frame must be CALLRESULT frame"));
+        }
+        if (writeResultAwaitErrors == null) {
+            return Future.failedFuture(new IllegalStateException(ocppVersion.versionName + " not support to write CALLRESULTERROR"));
+        }
+
+        if (timeoutMs <= 0) {
+            timeoutMs = this.waitResponseTimeout;
+        }
+        // use caller context.
+        PromiseInternal<ErrorOcppFrame> promise = this.vertx.promise();
+        Future<Void> writeFuture = write(frame);
+
+        String messageId = frame.messageId();
+        writeResultAwaitErrors.put(messageId, promise);
+
+        writeFuture.onComplete(ar -> {
+            // ignore succeed
+            if (ar.failed()) {
+                writeResultAwaitErrors.remove(messageId);
+                promise.tryFail(ar.cause());
+            }
+        });
+        // not failed and await error result
+        if (!writeFuture.failed()) {
+            Timer timer = this.vertx.timer(timeoutMs, TimeUnit.MILLISECONDS);
+            timer.onComplete(ar -> {
+                Promise<ErrorOcppFrame> p = writeResultAwaitErrors.remove(messageId);
+                // timeout and promise not null, the peer not response call result error
+                if (p != null) {
+                    p.tryComplete(null);
+                }
+            });
+        }
+
+        return promise.future();
+    }
+
 
     @Override
     public Future<Void> write(Frame<?> frame) {

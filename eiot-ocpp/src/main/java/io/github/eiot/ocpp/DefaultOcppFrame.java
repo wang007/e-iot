@@ -3,11 +3,14 @@ package io.github.eiot.ocpp;
 import io.github.eiot.*;
 import io.github.eiot.annotation.FrameUtil;
 import io.github.eiot.impl.CommandDefFrame;
+import io.github.eiot.ocpp.impl.OcppConnectionImpl;
 import io.github.eiot.ocpp.json.Json;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -99,7 +102,7 @@ public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
 
     @Override
     public ByteBuf toByteBuf() {
-        return null;
+        return Unpooled.wrappedBuffer(toRawString().getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
@@ -117,7 +120,7 @@ public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
 
     @Override
     public boolean isRaw() {
-        return true;
+        return false;
     }
 
     @Override
@@ -183,8 +186,8 @@ public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
 
     @Override
     public Future<ErrorOcppFrame> writeResultAwaitError(int timeoutMs) {
-        // TODO
-        return null;
+        OcppConnectionImpl connection = (OcppConnectionImpl) this.connection;
+        return connection.writeResultAwaitError(this, timeoutMs);
     }
 
 

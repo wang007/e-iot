@@ -9,7 +9,7 @@ public enum OcppVersion {
 
     OCPP2_0_1("ocpp2.0.1", false, false),
 
-    OCPP2_1("ocpp2.1", false, false),
+    OCPP2_1("ocpp2.1", true, true),
     ;
     public final String versionName;
 

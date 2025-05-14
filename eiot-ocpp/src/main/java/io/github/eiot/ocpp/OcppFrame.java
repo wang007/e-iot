@@ -79,6 +79,8 @@ public interface OcppFrame<T> extends Frame<T> {
 
     /**
      * Write {@link MessageTypeId#CALLRESULT} frame and await {@link MessageTypeId#CALLRESULTERROR} frame response.
+     * If ignore {@link MessageTypeId#CALLRESULT} frame result, just use it {@link #write()} instead of.
+     *
      * <p>
      * When the peer receives a {@link MessageTypeId#CALLRESULT} frame and processes it, it may return a {@link MessageTypeId#CALLRESULTERROR} frame or not.
      * <p>

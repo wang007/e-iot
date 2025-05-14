@@ -1,8 +1,6 @@
 package io.github.eiot.ocpp;
 
-import io.github.eiot.Frame;
 import io.github.eiot.IotConnection;
-import io.github.eiot.RequestFrame;
 import io.github.eiot.Side;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
@@ -139,5 +137,10 @@ public class ErrorOcppFrame implements OcppFrame<Void> {
     @Override
     public OcppFrame<Void> newResulErrorFrame(OcppError errorCode, String errorDescription, JsonObject errorDetails) throws UnsupportedOperationException {
         return rawFrame.newResulErrorFrame(errorCode, errorDescription, errorDetails);
+    }
+
+    @Override
+    public Future<ErrorOcppFrame> writeResultAwaitError(int timeoutMs) {
+        throw new IllegalStateException("error ocpp frame not allow write as result");
     }
 }
