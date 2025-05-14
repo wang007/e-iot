@@ -78,6 +78,32 @@ public interface OcppFrame<T> extends Frame<T> {
     Future<Void> send();
 
     /**
+     * Write {@link MessageTypeId#CALLRESULT} frame and await {@link MessageTypeId#CALLRESULTERROR} frame response.
+     * <p>
+     * When the peer receives a {@link MessageTypeId#CALLRESULT} frame and processes it, it may return a {@link MessageTypeId#CALLRESULTERROR} frame or not.
+     * <p>
+     * When the peer returns {@link MessageTypeId#CALLRESULTERROR} frame, future result will return {@link MessageTypeId#CALLRESULTERROR} frame.
+     * <p>
+     * When the peer does not return, the local waiting for the result of the call result error will time out. At this time, the future result will return null,
+     * indicating that the peer has not returned the call Result error frame or the response has timed out
+     * <p>
+     * NOTE: only supoort ocpp2.1 or later
+     *
+     * @return the future
+     */
+    default Future<ErrorOcppFrame> writeResultAwaitError() {
+        return writeResultAwaitError(0);
+    }
+
+    /**
+     * {@link #writeResultAwaitError()} but timeout can be declared
+     *
+     * @param timeoutMs the timeout ms
+     * @return the future
+     */
+    Future<ErrorOcppFrame> writeResultAwaitError(int timeoutMs);
+
+    /**
      * the current frame is error frame or result error frame.
      * see {@link MessageTypeId#CALLERROR} and {@link MessageTypeId#CALLRESULTERROR}
      *

@@ -1,7 +1,6 @@
 package io.github.eiot.ocpp.impl;
 
-import io.github.eiot.ocpp.OcppConnection;
-import io.github.eiot.ocpp.OcppWebSocketHandshake;
+import io.github.eiot.ocpp.*;
 import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.ServerWebSocketHandshake;
@@ -24,12 +23,15 @@ public class OcppWebSocketHandshakeImpl implements OcppWebSocketHandshake {
 
     private final ServerWebSocketHandshake webSocketHandshake;
 
-    private final Consumer<OcppConnectionImpl> afterAcceptConsumer;
+    private final OcppServerOptions options;
 
-    public OcppWebSocketHandshakeImpl(VertxInternal vertx, ServerWebSocketHandshake webSocketHandshake, Consumer<OcppConnectionImpl> afterAcceptConsumer) {
+    private final OcppServerImpl ocppServer;
+
+    public OcppWebSocketHandshakeImpl(VertxInternal vertx, ServerWebSocketHandshake webSocketHandshake, OcppServerOptions options, OcppServerImpl ocppServer) {
         this.vertx = vertx;
         this.webSocketHandshake = webSocketHandshake;
-        this.afterAcceptConsumer = afterAcceptConsumer;
+        this.options = options;
+        this.ocppServer = ocppServer;
     }
 
     @Override
@@ -66,9 +68,21 @@ public class OcppWebSocketHandshakeImpl implements OcppWebSocketHandshake {
     public Future<OcppConnection> accept(String terminalNo) {
         return webSocketHandshake.accept()
                 .map(ws -> {
-                    OcppConnectionImpl ocppConnection = new OcppConnectionImpl(vertx, ws, terminalNo);
-                    afterAcceptConsumer.accept(ocppConnection);
-                    return ocppConnection;
+                    String protocol = ws.subProtocol();
+                    OcppVersion ocppVersion = OcppVersion.match(protocol);
+                    if (ocppVersion == null) {
+                        ws.close((short) 1002); // 1002: protocol error
+                        throw new IllegalStateException("terminalNo: " + terminalNo + "not match ocpp version by subProtocol: " + protocol);
+                    }
+                    OcppConnectionImpl conn = new OcppConnectionImpl(vertx, ws, terminalNo,
+                            this.options.getWaitResponseTimeout(),
+                            this.options.isFrameConverter(),
+                            this.options.isSetResponseResult(),
+                            ocppVersion);
+                    ocppServer.configOcppConnection(conn);
+                    conn.configCompleted();
+
+                    return conn;
                 });
     }
 

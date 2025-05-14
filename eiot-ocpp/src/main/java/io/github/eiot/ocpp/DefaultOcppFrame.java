@@ -180,4 +180,12 @@ public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
     public OcppFrame<Void> newResulErrorFrame(OcppError errorCode, String errorDescription, JsonObject errorDetails) throws UnsupportedOperationException {
         return rawFrame.newResulErrorFrame(errorCode, errorDescription, errorDetails);
     }
+
+    @Override
+    public Future<ErrorOcppFrame> writeResultAwaitError(int timeoutMs) {
+        // TODO
+        return null;
+    }
+
+
 }

@@ -63,32 +63,15 @@ public class OcppServerImpl implements OcppServer {
         });
         server.webSocketHandshakeHandler(wsHandshake -> {
             Handler<OcppWebSocketHandshake> handshakeHandler = this.handshakeHandler;
-            OcppWebSocketHandshakeImpl ocppWebSocketHandshake = new OcppWebSocketHandshakeImpl(vertx, wsHandshake, configOcppConnection());
+            OcppWebSocketHandshakeImpl ocppWebSocketHandshake = new OcppWebSocketHandshakeImpl(vertx, wsHandshake, this.options, this);
             handshakeHandler.handle(ocppWebSocketHandshake);
         });
     }
 
-
-    private Consumer<OcppConnectionImpl> configOcppConnection() {
-        return conn -> {
-            String protocol = conn.websocket().subProtocol();
-            OcppVersion ocppVersion = OcppVersion.match(protocol);
-            if (ocppVersion == null) {
-                conn.websocket().close((short) 1002); // 1002: protocol error
-                throw new IllegalStateException("terminalNo: " + conn.terminalNo() + "not match ocpp version by subProtocol: " + protocol);
-            }
-            conn.setFrameConverter(options.isFrameConverter());
-            conn.setSetResponseResult(options.isSetResponseResult());
-            conn.setWaitResponseTimeout(options.getWaitResponseTimeout());
-            conn.setOcppVersion(ocppVersion);
-
-            conn.exceptionHandler(exceptionHandler);
-            conn.frameHandler(frameHandler);
-
-            conn.configCompleted();
-        };
+    void configOcppConnection(OcppConnectionImpl connection) {
+        connection.frameHandler(this.frameHandler);
+        connection.exceptionHandler(this.exceptionHandler);
     }
-
 
     @Override
     public Future<IotServer> listen() {

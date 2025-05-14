@@ -315,4 +315,9 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
         RawOcppFrame rawOcppFrame = new4ErrorResultFrame(connection, messageId, errorCode, errorDescription, errorDetails);
         return new ErrorOcppFrame(rawOcppFrame);
     }
+
+    @Override
+    public Future<ErrorOcppFrame> writeResultAwaitError(int timeoutMs) {
+        throw new UnsupportedOperationException("raw ocpp frame not support, use it " + DefaultOcppFrame.class.getSimpleName());
+    }
 }

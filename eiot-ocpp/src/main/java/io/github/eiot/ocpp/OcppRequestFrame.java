@@ -82,4 +82,9 @@ public class OcppRequestFrame<Req, Resp> extends RequestFrameBase<Req, OcppFrame
     public OcppFrame<Void> newResulErrorFrame(OcppError ocppError, String errorDescription, JsonObject errorDetails) throws UnsupportedOperationException {
         return ocppFrame.newResulErrorFrame(ocppError, errorDescription, errorDetails);
     }
+
+    @Override
+    public Future<ErrorOcppFrame> writeResultAwaitError(int timeoutMs) {
+        return ocppFrame.writeResultAwaitError(timeoutMs);
+    }
 }

@@ -25,7 +25,7 @@ public class OcppClientImpl implements OcppClient {
 
     // for wrap
     public OcppClientImpl(Vertx vertx, WebSocketClient webSocketClient, OcppClientOptions options) {
-        this.vertx  = (VertxInternal) vertx;
+        this.vertx = (VertxInternal) vertx;
         this.webSocketClient = webSocketClient;
         this.options = new OcppClientOptions(options);
     }
@@ -52,15 +52,14 @@ public class OcppClientImpl implements OcppClient {
                     OcppVersion ocppVersion = OcppVersion.match(protocol);
                     if (ocppVersion == null) {
                         ws.close((short) 1002); // 1002: protocol error
-                        throw  new IllegalStateException("terminalNo: " + terminalNo + "not match ocpp version by subProtocol: " + protocol);
+                        throw new IllegalStateException("terminalNo: " + terminalNo + "not match ocpp version by subProtocol: " + protocol);
                     }
-                    OcppConnectionImpl connection = new OcppConnectionImpl(vertx, ws, options.getTerminalNo());
-                    connection.setFrameConverter(this.options.isFrameConverter());
-                    connection.setSetResponseResult(this.options.isSetResponseResult());
-                    connection.setWaitResponseTimeout(this.options.getWaitResponseTimeout());
-                    connection.setOcppVersion(ocppVersion);
+                    OcppConnectionImpl connection = new OcppConnectionImpl(vertx, ws, options.getTerminalNo(),
+                            this.options.getWaitResponseTimeout(),
+                            this.options.isFrameConverter(),
+                            this.options.isSetResponseResult(),
+                            ocppVersion);
                     connection.configCompleted();
-
                     return connection;
                 });
     }

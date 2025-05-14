@@ -42,10 +42,10 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
     final String terminalNo;
     final ContextInternal context;
 
-    private int waitResponseTimeout;
-    private boolean frameConverter;
-    private boolean setResponseResult;
-    private OcppVersion ocppVersion;
+    private final int waitResponseTimeout;
+    private final boolean frameConverter;
+    private final boolean setResponseResult;
+    private final OcppVersion ocppVersion;
 
     private Handler<Throwable> exceptionHandler;
     private Handler<Frame<?>> frameHandler;
@@ -56,11 +56,18 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
     private final Map<String, RequestFrame<?, Frame<?>>> waitingResults = new ConcurrentHashMap<>(8, 1.0f);
 
 
-    public OcppConnectionImpl(VertxInternal vertx, WebSocketBase webSocket, String terminalNo) {
+    public OcppConnectionImpl(VertxInternal vertx, WebSocketBase webSocket, String terminalNo,
+                              int waitResponseTimeout, boolean frameConverter, boolean setResponseResult, OcppVersion ocppVersion) {
+        this.context = vertx.getOrCreateContext().unwrap();
         this.vertx = vertx;
         this.webSocket = webSocket;
         this.terminalNo = terminalNo;
-        this.context = vertx.getOrCreateContext().unwrap();
+
+        this.waitResponseTimeout = waitResponseTimeout;
+        this.frameConverter = frameConverter;
+        this.setResponseResult = setResponseResult;
+        this.ocppVersion = ocppVersion;
+
         webSocket.closeHandler(v -> {
             // close hook.
             closedPromise.complete(null);
@@ -76,15 +83,13 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
             Handler<Buffer> bufferHandler;
             Handler<Throwable> exceptionHandler;
 
-            boolean frameConvert;
-            boolean setResponseResult;
+            boolean frameConvert = this.frameConverter;
+            boolean setResponseResult = this.setResponseResult;
 
             synchronized (this) {
                 frameHandler = this.frameHandler;
                 bufferHandler = this.bufferHandler;
                 exceptionHandler = this.exceptionHandler;
-                frameConvert = this.frameConverter;
-                setResponseResult = this.setResponseResult;
             }
             if (frameHandler != null) {
                 context.dispatch(json, v -> {
@@ -158,26 +163,6 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
     public String nextMessageId() {
         long messageId = messageIdGenerator.getAndIncrement();
         return Long.toString(messageId);
-    }
-
-    public void setWaitResponseTimeout(int waitResponseTimeout) {
-        this.waitResponseTimeout = waitResponseTimeout;
-    }
-
-    public void setFrameConverter(boolean frameConverter) {
-        this.frameConverter = frameConverter;
-    }
-
-    public void setSetResponseResult(boolean setResponseResult) {
-        this.setResponseResult = setResponseResult;
-    }
-
-    public void setOcppVersion(OcppVersion ocppVersion) {
-        this.ocppVersion = ocppVersion;
-    }
-
-    public WebSocketBase getWebSocket() {
-        return webSocket;
     }
 
     @Override
