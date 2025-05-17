@@ -5,21 +5,18 @@ package io.github.eiot.ocpp;
  */
 public enum OcppVersion {
 
-    OCPP1_6J("ocpp1.6", false, false),
+    OCPP1_6J("ocpp1.6", 1),
 
-    OCPP2_0_1("ocpp2.0.1", false, false),
+    OCPP2_0_1("ocpp2.0.1", 2),
 
-    OCPP2_1("ocpp2.1", true, true),
+    OCPP2_1("ocpp2.1", 3),
     ;
     public final String versionName;
+    public final int versionLevel;
 
-    private final boolean supportSend;
-    private final boolean supportResultError;
-
-    OcppVersion(String versionName, boolean supportSend, boolean supportResultError) {
+    OcppVersion(String versionName, int versionLevel) {
         this.versionName = versionName;
-        this.supportSend = supportSend;
-        this.supportResultError = supportResultError;
+        this.versionLevel = versionLevel;
     }
 
     /**
@@ -28,7 +25,7 @@ public enum OcppVersion {
      * @return whether support write {@link MessageTypeId#SEND} frame
      */
     public boolean supportSend() {
-        return this.supportSend;
+        return this.versionLevel >= 3;
     }
 
     /**
@@ -37,7 +34,7 @@ public enum OcppVersion {
      * @return whether support write {@link MessageTypeId#CALLRESULTERROR} frame
      */
     public boolean supportResultError() {
-        return this.supportResultError;
+        return this.versionLevel >= 3;
     }
 
     public static OcppVersion match(String protocol) {

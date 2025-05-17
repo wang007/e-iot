@@ -124,11 +124,17 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
                         } else {
                             logger.warn("terminalNo: {} convert failed, maybe later version and not support messageTypeId.", terminalNo);
                         }
+                        if (ocppVersion.versionLevel >= 2) {
+                            RawOcppFrame ocppFrame = RawOcppFrame.new4ErrorFrame(this, "-1", OcppError.MessageTypeNotSupported);
+                            // ignore result.
+                            ocppFrame.write();
+                        }
                         return;
                     }
 
                     OcppFrame<?> ocppFrame = (OcppFrame<?>) frame;
                     if (ocppFrame.messageTypeId() == MessageTypeId.CALLRESULT) {
+                        // record call result type.
                         RequestFrame<?, Frame<?>> requestFrame = waitingResults.get(ocppFrame.messageId());
                         if (requestFrame != null) {
                             ocppFrame.put(OcppRequestFrame.REQUEST_FRAME_COMMAND_KEY, requestFrame.command());

@@ -22,6 +22,9 @@
         <module>eiot-ykc</module>
         <module>eiot-ocpp</module>
         <module>eiot-example</module>
+        <module>eiot-ocpp1_6-schema</module>
+        <module>eiot-ocpp2_1-schema</module>
+        <module>eiot-ocpp2_0_1-schema</module>
     </modules>
 
     <dependencies>

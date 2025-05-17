@@ -70,7 +70,7 @@ public enum OcppError {
     /**
      * Content of the call is not a valid RPC Request, for example: MessageId could not be read.
      *
-     * ONTE: only support ocpp 2.1 or later
+     * ONTE: only support ocpp 2.0.1 or later
      */
     RpcFrameworkError("RpcFrameworkError"),
 
@@ -78,7 +78,7 @@ public enum OcppError {
      * A message with an Message Type Number received that is not supported by this
      * implementation.
      *
-     * ONTE: only support ocpp 2.1 or later
+     * ONTE: only support ocpp 2.0.1 or later
      */
     MessageTypeNotSupported("MessageTypeNotSupported"),
     ;

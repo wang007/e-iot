@@ -68,6 +68,11 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
     }
 
     public static RawOcppFrame new4ErrorFrame(OcppConnection connection, String messageId,
+                                              OcppError errorCode) {
+        return new4ErrorFrame(connection, messageId, errorCode, null, null);
+    }
+
+    public static RawOcppFrame new4ErrorFrame(OcppConnection connection, String messageId,
                                               OcppError errorCode, String errorDescription, JsonObject errorDetails) {
         return new RawOcppFrame(connection, Side.SENDER, MessageTypeId.CALLERROR, messageId,
                 null, null,
