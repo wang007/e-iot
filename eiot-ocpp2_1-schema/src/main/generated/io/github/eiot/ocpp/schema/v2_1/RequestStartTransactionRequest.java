@@ -1,0 +1,301 @@
+
+package io.github.eiot.ocpp.schema.v2_1;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "evseId",
+    "groupIdToken",
+    "idToken",
+    "remoteStartId",
+    "chargingProfile",
+    "customData"
+})
+public class RequestStartTransactionRequest {
+
+    /**
+     * Number of the EVSE on which to start the transaction. EvseId SHALL be &gt; 0
+     * 
+     * 
+     */
+    @JsonProperty("evseId")
+    @JsonPropertyDescription("Number of the EVSE on which to start the transaction. EvseId SHALL be &gt; 0\r\n")
+    @DecimalMin("1")
+    private int evseId;
+    /**
+     * Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.
+     * 
+     * 
+     */
+    @JsonProperty("groupIdToken")
+    @JsonPropertyDescription("Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.\r\n")
+    @Valid
+    private IdToken groupIdToken;
+    /**
+     * Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.
+     * 
+     * (Required)
+     * 
+     */
+    @JsonProperty("idToken")
+    @JsonPropertyDescription("Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.\r\n")
+    @Valid
+    @NotNull
+    private IdToken idToken;
+    /**
+     * Id given by the server to this start request. The Charging Station will return this in the &lt;&lt;transactioneventrequest, TransactionEventRequest&gt;&gt;, letting the server know which transaction was started for this request. Use to start a transaction.
+     * 
+     * (Required)
+     * 
+     */
+    @JsonProperty("remoteStartId")
+    @JsonPropertyDescription("Id given by the server to this start request. The Charging Station will return this in the &lt;&lt;transactioneventrequest, TransactionEventRequest&gt;&gt;, letting the server know which transaction was started for this request. Use to start a transaction.\r\n")
+    @NotNull
+    private int remoteStartId;
+    /**
+     * A ChargingProfile consists of 1 to 3 ChargingSchedules with a list of ChargingSchedulePeriods, describing the amount of power or current that can be delivered per time interval.
+     * 
+     * image::images/ChargingProfile-Simple.png[]
+     * 
+     * 
+     * 
+     */
+    @JsonProperty("chargingProfile")
+    @JsonPropertyDescription("A ChargingProfile consists of 1 to 3 ChargingSchedules with a list of ChargingSchedulePeriods, describing the amount of power or current that can be delivered per time interval.\r\n\r\nimage::images/ChargingProfile-Simple.png[]\r\n\r\n")
+    @Valid
+    private ChargingProfile chargingProfile;
+    /**
+     * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
+     * 
+     */
+    @JsonProperty("customData")
+    @JsonPropertyDescription("This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.")
+    @Valid
+    private CustomData customData;
+
+    /**
+     * Number of the EVSE on which to start the transaction. EvseId SHALL be &gt; 0
+     * 
+     * 
+     */
+    @JsonProperty("evseId")
+    public int getEvseId() {
+        return evseId;
+    }
+
+    /**
+     * Number of the EVSE on which to start the transaction. EvseId SHALL be &gt; 0
+     * 
+     * 
+     */
+    @JsonProperty("evseId")
+    public void setEvseId(int evseId) {
+        this.evseId = evseId;
+    }
+
+    public RequestStartTransactionRequest withEvseId(int evseId) {
+        this.evseId = evseId;
+        return this;
+    }
+
+    /**
+     * Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.
+     * 
+     * 
+     */
+    @JsonProperty("groupIdToken")
+    public IdToken getGroupIdToken() {
+        return groupIdToken;
+    }
+
+    /**
+     * Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.
+     * 
+     * 
+     */
+    @JsonProperty("groupIdToken")
+    public void setGroupIdToken(IdToken groupIdToken) {
+        this.groupIdToken = groupIdToken;
+    }
+
+    public RequestStartTransactionRequest withGroupIdToken(IdToken groupIdToken) {
+        this.groupIdToken = groupIdToken;
+        return this;
+    }
+
+    /**
+     * Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.
+     * 
+     * (Required)
+     * 
+     */
+    @JsonProperty("idToken")
+    public IdToken getIdToken() {
+        return idToken;
+    }
+
+    /**
+     * Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.
+     * 
+     * (Required)
+     * 
+     */
+    @JsonProperty("idToken")
+    public void setIdToken(IdToken idToken) {
+        this.idToken = idToken;
+    }
+
+    public RequestStartTransactionRequest withIdToken(IdToken idToken) {
+        this.idToken = idToken;
+        return this;
+    }
+
+    /**
+     * Id given by the server to this start request. The Charging Station will return this in the &lt;&lt;transactioneventrequest, TransactionEventRequest&gt;&gt;, letting the server know which transaction was started for this request. Use to start a transaction.
+     * 
+     * (Required)
+     * 
+     */
+    @JsonProperty("remoteStartId")
+    public int getRemoteStartId() {
+        return remoteStartId;
+    }
+
+    /**
+     * Id given by the server to this start request. The Charging Station will return this in the &lt;&lt;transactioneventrequest, TransactionEventRequest&gt;&gt;, letting the server know which transaction was started for this request. Use to start a transaction.
+     * 
+     * (Required)
+     * 
+     */
+    @JsonProperty("remoteStartId")
+    public void setRemoteStartId(int remoteStartId) {
+        this.remoteStartId = remoteStartId;
+    }
+
+    public RequestStartTransactionRequest withRemoteStartId(int remoteStartId) {
+        this.remoteStartId = remoteStartId;
+        return this;
+    }
+
+    /**
+     * A ChargingProfile consists of 1 to 3 ChargingSchedules with a list of ChargingSchedulePeriods, describing the amount of power or current that can be delivered per time interval.
+     * 
+     * image::images/ChargingProfile-Simple.png[]
+     * 
+     * 
+     * 
+     */
+    @JsonProperty("chargingProfile")
+    public ChargingProfile getChargingProfile() {
+        return chargingProfile;
+    }
+
+    /**
+     * A ChargingProfile consists of 1 to 3 ChargingSchedules with a list of ChargingSchedulePeriods, describing the amount of power or current that can be delivered per time interval.
+     * 
+     * image::images/ChargingProfile-Simple.png[]
+     * 
+     * 
+     * 
+     */
+    @JsonProperty("chargingProfile")
+    public void setChargingProfile(ChargingProfile chargingProfile) {
+        this.chargingProfile = chargingProfile;
+    }
+
+    public RequestStartTransactionRequest withChargingProfile(ChargingProfile chargingProfile) {
+        this.chargingProfile = chargingProfile;
+        return this;
+    }
+
+    /**
+     * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
+     * 
+     */
+    @JsonProperty("customData")
+    public CustomData getCustomData() {
+        return customData;
+    }
+
+    /**
+     * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
+     * 
+     */
+    @JsonProperty("customData")
+    public void setCustomData(CustomData customData) {
+        this.customData = customData;
+    }
+
+    public RequestStartTransactionRequest withCustomData(CustomData customData) {
+        this.customData = customData;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(RequestStartTransactionRequest.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        sb.append("evseId");
+        sb.append('=');
+        sb.append(this.evseId);
+        sb.append(',');
+        sb.append("groupIdToken");
+        sb.append('=');
+        sb.append(((this.groupIdToken == null)?"<null>":this.groupIdToken));
+        sb.append(',');
+        sb.append("idToken");
+        sb.append('=');
+        sb.append(((this.idToken == null)?"<null>":this.idToken));
+        sb.append(',');
+        sb.append("remoteStartId");
+        sb.append('=');
+        sb.append(this.remoteStartId);
+        sb.append(',');
+        sb.append("chargingProfile");
+        sb.append('=');
+        sb.append(((this.chargingProfile == null)?"<null>":this.chargingProfile));
+        sb.append(',');
+        sb.append("customData");
+        sb.append('=');
+        sb.append(((this.customData == null)?"<null>":this.customData));
+        sb.append(',');
+        if (sb.charAt((sb.length()- 1)) == ',') {
+            sb.setCharAt((sb.length()- 1), ']');
+        } else {
+            sb.append(']');
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = ((result* 31)+ this.evseId);
+        result = ((result* 31)+ this.remoteStartId);
+        result = ((result* 31)+((this.idToken == null)? 0 :this.idToken.hashCode()));
+        result = ((result* 31)+((this.chargingProfile == null)? 0 :this.chargingProfile.hashCode()));
+        result = ((result* 31)+((this.customData == null)? 0 :this.customData.hashCode()));
+        result = ((result* 31)+((this.groupIdToken == null)? 0 :this.groupIdToken.hashCode()));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof RequestStartTransactionRequest) == false) {
+            return false;
+        }
+        RequestStartTransactionRequest rhs = ((RequestStartTransactionRequest) other);
+        return ((((((this.evseId == rhs.evseId)&&(this.remoteStartId == rhs.remoteStartId))&&((this.idToken == rhs.idToken)||((this.idToken!= null)&&this.idToken.equals(rhs.idToken))))&&((this.chargingProfile == rhs.chargingProfile)||((this.chargingProfile!= null)&&this.chargingProfile.equals(rhs.chargingProfile))))&&((this.customData == rhs.customData)||((this.customData!= null)&&this.customData.equals(rhs.customData))))&&((this.groupIdToken == rhs.groupIdToken)||((this.groupIdToken!= null)&&this.groupIdToken.equals(rhs.groupIdToken))));
+    }
+
+}

@@ -33,11 +33,11 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
     private final String command;
 
     private MessageTypeId messageTypeId;
-    private String messageId;
+    private final String messageId;
     private JsonObject data;        // payload
-    private OcppError errorCode;
-    private String errorDescription;
-    private JsonObject errorDetails;
+    private final OcppError errorCode;
+    private final String errorDescription;
+    private final JsonObject errorDetails;
 
     RawOcppFrame(OcppConnection connection, Side side,
                  MessageTypeId messageTypeId, String messageId,

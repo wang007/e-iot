@@ -1,20 +1,17 @@
 package io.github.eiot;
 
-import io.github.eiot.impl.CommandDefImpl;
+
+import io.github.eiot.impl.CommandDefProtocols;
 
 /**
- * command define
- *
+ * command definition
+ * <p>
  * created by wang007 on 2025/2/20
  */
 public interface CommandDef<Req> {
 
-    static <Req> CommandDef<Req> createAndSave(String command, Class<Req> dataType, CommandDef<?> responseType, String protocol) {
-        return CommandDefImpl.createAndSave(command, dataType, responseType, protocol);
-    }
-
-    static <Req> CommandDef<Req> match(String protocol, String messageType) {
-        return CommandDefImpl.match(protocol, messageType);
+    static CommandDef<?> match(String protocol, String command) {
+        return CommandDefProtocols.match(protocol, command);
     }
 
     /**

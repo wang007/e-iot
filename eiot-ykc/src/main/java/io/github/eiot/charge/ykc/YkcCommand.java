@@ -2,11 +2,15 @@ package io.github.eiot.charge.ykc;
 
 import io.github.eiot.CommandDef;
 import io.github.eiot.charge.ykc.data.*;
+import io.github.eiot.impl.CommandDefProtocol;
+import io.github.eiot.impl.CommandDefProtocols;
 
 /**
  * created by wang007 on 2025/3/17
  */
 public interface YkcCommand {
+
+    CommandDefProtocol COMMAND_PROTOCOL = new CommandDefProtocol(YkcServer.PROTOCOL);
 
     /**
      * 计费模型设置
@@ -143,14 +147,12 @@ public interface YkcCommand {
 
     CommandDef<YkcUpgradeRequest> YkcUpgradeRequest = createAndSave("94", YkcUpgradeRequest.class, YkcUpgradeResponse);
 
-
     static <Req> CommandDef<Req> createAndSave(String command, Class<Req> dataType, CommandDef<?> responseType) {
-        return CommandDef.createAndSave(command, dataType, responseType, YkcServer.PROTOCOL);
+        return COMMAND_PROTOCOL.createAndRegister(command, dataType, responseType);
     }
 
-
-    static <Req> CommandDef<Req> match(String command) {
-        return CommandDef.match(YkcServer.PROTOCOL, command);
+    static CommandDef<?> match(String command) {
+        return COMMAND_PROTOCOL.match(command);
     }
 
 
