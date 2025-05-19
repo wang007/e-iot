@@ -47,6 +47,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
     private final boolean frameConverter;
     private final boolean setResponseResult;
     private final OcppVersion ocppVersion;
+    private final boolean compatibleOcpp2_0_1;
 
     private Handler<Throwable> exceptionHandler;
     private Handler<Frame<?>> frameHandler;
@@ -59,7 +60,8 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
     private final Map<String, Promise<ErrorOcppFrame>> writeResultAwaitErrors;
 
     public OcppConnectionImpl(VertxInternal vertx, WebSocketBase webSocket, String terminalNo,
-                              int waitResponseTimeout, boolean frameConverter, boolean setResponseResult, OcppVersion ocppVersion) {
+                              int waitResponseTimeout, boolean frameConverter, boolean setResponseResult,
+                              OcppVersion ocppVersion, boolean compatibleOcpp2_0_1) {
         this.context = vertx.getOrCreateContext().unwrap();
         this.vertx = vertx;
         this.webSocket = webSocket;
@@ -69,6 +71,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
         this.frameConverter = frameConverter;
         this.setResponseResult = setResponseResult;
         this.ocppVersion = ocppVersion;
+        this.compatibleOcpp2_0_1 = compatibleOcpp2_0_1;
 
         if (ocppVersion.supportResultError()) {
             writeResultAwaitErrors = new ConcurrentHashMap<>(4, 1.0f);
@@ -143,7 +146,11 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
 
                     if (frameConvert) {
                         try {
-                            frame = OcppFrameConverter.INSTANCE.apply(frame);
+                            if (compatibleOcpp2_0_1) {
+                                frame = OcppFrameConverter.COMPATIBLE_OCPP2_0_1_INSTANCE.apply(frame);
+                            } else {
+                                frame = OcppFrameConverter.INSTANCE.apply(frame);
+                            }
                         } catch (Throwable e) {
                             Throwable ex;
                             if (e instanceof ConvertIotException) {

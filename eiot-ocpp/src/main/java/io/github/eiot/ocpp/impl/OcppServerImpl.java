@@ -30,6 +30,8 @@ public class OcppServerImpl implements OcppServer {
     private Handler<Throwable> exceptionHandler;
     private Handler<OcppWebSocketHandshake> handshakeHandler;
 
+    private boolean compatibleOcpp2_0_1;
+
     // for wrap
     public OcppServerImpl(Vertx vertx, HttpServer httpServer, OcppServerOptions options) {
         this.vertx = (VertxInternal) vertx;
@@ -53,9 +55,13 @@ public class OcppServerImpl implements OcppServer {
         if (options.isSetResponseResult() && !options.isFrameConverter()) {
             throw new IllegalArgumentException("if SetResponseResult = true, must be frameConverter = true");
         }
+        this.compatibleOcpp2_0_1 = ocppVersions.containsAll(OcppServerOptions.DEFAULT_OCPP_VERSIONS);
         return newOptions;
     }
 
+    public boolean isCompatibleOcpp2_0_1() {
+        return compatibleOcpp2_0_1;
+    }
 
     private void configHttpServer(HttpServer server) {
         server.webSocketHandler(ws -> {

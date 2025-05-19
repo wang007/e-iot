@@ -61,6 +61,8 @@ public class OcppServerOptions extends HttpServerOptions {
 
     /**
      * Set list of ocpp version supported by the server.
+     * If both ocpp2.1 and ocpp 2.0.1 are included simultaneously, and ocpp_2_0_1 CommandDef is not included,
+     * ocpp 2.0.1 will be supported in a compatible manner
      * NOTE: When ocpp1.x and ocpp2.x are included together, the message type matching cannot be distinguished
      */
     private List<OcppVersion> ocppVersions;

@@ -45,6 +45,9 @@ public class OcppClientImpl implements OcppClient {
         }
         List<String> subProtocols = ocppVersions.stream().map(v -> v.versionName).collect(Collectors.toList());
         options.setSubProtocols(subProtocols);
+
+        boolean compatibleOcpp2_0_1 = ocppVersions.containsAll(OcppClientOptions.DEFAULT_OCPP_VERSIONS);
+
         return webSocketClient.connect(options)
                 .map(ws -> {
                     String terminalNo = options.getTerminalNo();
@@ -58,7 +61,8 @@ public class OcppClientImpl implements OcppClient {
                             this.options.getWaitResponseTimeout(),
                             this.options.isFrameConverter(),
                             this.options.isSetResponseResult(),
-                            ocppVersion);
+                            ocppVersion,
+                            compatibleOcpp2_0_1);
                     connection.configCompleted();
                     return connection;
                 });

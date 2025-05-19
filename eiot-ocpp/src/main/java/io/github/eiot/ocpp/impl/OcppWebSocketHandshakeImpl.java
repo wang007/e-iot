@@ -78,7 +78,8 @@ public class OcppWebSocketHandshakeImpl implements OcppWebSocketHandshake {
                             this.options.getWaitResponseTimeout(),
                             this.options.isFrameConverter(),
                             this.options.isSetResponseResult(),
-                            ocppVersion);
+                            ocppVersion,
+                            ocppServer.isCompatibleOcpp2_0_1());
                     ocppServer.configOcppConnection(conn);
                     conn.configCompleted();
 
