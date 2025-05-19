@@ -1,4 +1,4 @@
-package io.github.eiot.example;
+package io.github.eiot.example.ykc;
 
 import io.github.eiot.CommandDef;
 import io.github.eiot.Frame;

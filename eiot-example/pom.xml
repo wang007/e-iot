@@ -23,6 +23,36 @@
             <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.eiot</groupId>
+            <artifactId>eiot-ocpp</artifactId>
+            <version>${revision}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.eiot</groupId>
+            <artifactId>eiot-ocpp2_1-schema</artifactId>
+            <version>${revision}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.eiot</groupId>
+            <artifactId>eiot-ocpp2_0_1-schema</artifactId>
+            <version>${revision}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.eiot</groupId>
+            <artifactId>eiot-ocpp1_6-schema</artifactId>
+            <version>${revision}</version>
+            <scope>compile</scope>
+        </dependency>
+
+
     </dependencies>
 
 </project>

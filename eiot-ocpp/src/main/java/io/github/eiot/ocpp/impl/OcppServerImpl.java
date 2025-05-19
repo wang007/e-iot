@@ -77,6 +77,11 @@ public class OcppServerImpl implements OcppServer {
     void configOcppConnection(OcppConnectionImpl connection) {
         connection.frameHandler(this.frameHandler);
         connection.exceptionHandler(this.exceptionHandler);
+
+        Handler<IotConnection> connectionHandler = connectionHandler();
+        if (connectionHandler != null) {
+            connection.context.dispatch(connection, connectionHandler);
+        }
     }
 
     @Override

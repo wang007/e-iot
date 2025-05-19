@@ -48,7 +48,7 @@ public interface IotRoutingContext<Req> extends AttributeHolder {
      * @param frame new frame
      * @return this
      */
-     IotRoutingContext<?> replaceFrame(Frame<?> frame);
+     //IotRoutingContext<?> replaceFrame(Frame<?> frame);
 
     /**
      * @return

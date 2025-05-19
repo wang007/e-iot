@@ -108,4 +108,17 @@ public interface Frame<T> extends AttributeHolder {
      *
      */
     <Resp> RequestFrame<T, ? extends Frame<Resp>> asRequest() throws IllegalStateException;
+
+    /**
+     * like {@link #asRequest()} but declare the type through parameters
+     *
+     * @param responseType response type of the current request
+     * @param <Resp> response type of the current request
+     * @return the request frame
+     * @throws IllegalStateException
+     */
+    default <Resp> RequestFrame<T, ? extends Frame<Resp>> asRequest(Class<Resp> responseType) throws IllegalStateException {
+        return this.<Resp>asRequest();
+    }
+
 }
