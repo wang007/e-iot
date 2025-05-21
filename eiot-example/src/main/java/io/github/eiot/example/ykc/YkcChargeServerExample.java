@@ -24,7 +24,7 @@ public class YkcChargeServerExample {
         vertx.deployVerticle(YkcServerVerticle.class, new DeploymentOptions());
     }
 
-    static class YkcServerVerticle extends AbstractVerticle {
+    public static class YkcServerVerticle extends AbstractVerticle {
 
         @Override
         public void start(Promise<Void> startPromise) throws Exception {
@@ -37,7 +37,7 @@ public class YkcChargeServerExample {
                         Frame<YkcHeartbeatRequest> frame = ctx.frame();
                         System.out.println("heartbeat. gunNo: " + frame.data().getGunNo());
 
-                        Frame<YkcHeartbeatResponse> responseFrame = frame.<YkcHeartbeatResponse>asRequest().responseFrame();
+                        Frame<YkcHeartbeatResponse> responseFrame = frame.asRequest(YkcHeartbeatResponse.class).responseFrame();
 
                         YkcHeartbeatResponse response = responseFrame.newData();
                         response.setGunNo(frame.data().getGunNo());
@@ -49,7 +49,7 @@ public class YkcChargeServerExample {
                         YkcSyncTimeRequest timeRequest = ykcFrame.newData();
                         timeRequest.setTime(CP56time2a.now());
                         ykcFrame.data(timeRequest)
-                                .<YkcSyncTimeResponse>asRequest()
+                                .asRequest(YkcSyncTimeResponse.class)
                                 .request()
                                 .onFailure(ex -> {
                                     System.out.println("sync time for charge point failed.");
@@ -63,7 +63,8 @@ public class YkcChargeServerExample {
 
             router.route(new YkcLoginHandler());
 
-            chargeServer.frameHandler(router).listen()
+            chargeServer.frameHandler(router)
+                    .listen()
                     .onComplete(ar -> {
                         if (ar.succeeded()) {
                             System.out.println(ar.result().protocol() + " server listening on: " + ar.result().actualPort());

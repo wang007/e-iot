@@ -19,8 +19,7 @@ public class YkcReverseServerExample {
         vertx.deployVerticle(YkcReverseServerVerticle.class, new DeploymentOptions());
     }
 
-    static class YkcReverseServerVerticle extends AbstractVerticle {
-
+    public static class YkcReverseServerVerticle extends AbstractVerticle {
 
         @Override
         public void start(Promise<Void> startPromise) {

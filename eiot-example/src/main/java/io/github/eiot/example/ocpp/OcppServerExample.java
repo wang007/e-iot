@@ -2,6 +2,7 @@ package io.github.eiot.example.ocpp;
 
 import io.github.eiot.CommandDef;
 import io.github.eiot.Frame;
+import io.github.eiot.ocpp.OcppFrame;
 import io.github.eiot.ocpp.OcppServer;
 import io.github.eiot.ocpp.schema.v2_1.*;
 import io.github.eiot.route.CommandDefHandler;
@@ -26,7 +27,7 @@ public class OcppServerExample {
         vertx.deployVerticle(OcppServerVerticle.class, new DeploymentOptions());
     }
 
-    static class OcppServerVerticle extends AbstractVerticle {
+    public static class OcppServerVerticle extends AbstractVerticle {
 
         @Override
         public void start(Promise<Void> startPromise) throws Exception {
@@ -39,20 +40,38 @@ public class OcppServerExample {
 
             router.route(Ocpp2_1Command.BootNotificationRequest)
                     .handler(ctx -> {
-                            Frame<BootNotificationRequest> requestFrame = ctx.frame();
-                            BootNotificationRequest data = requestFrame.data();
-                            ChargingStation chargingStation = data.getChargingStation();
-                            System.out.println("login in charging Station: " + chargingStation);
+                        Frame<BootNotificationRequest> requestFrame = ctx.frame();
+                        BootNotificationRequest data = requestFrame.data();
+                        ChargingStation chargingStation = data.getChargingStation();
+                        System.out.println("login in charging Station: " + chargingStation);
 
-                            Frame<BootNotificationResponse> responseFrame = requestFrame.asRequest(BootNotificationResponse.class)
-                                    .responseFrame();
-                            BootNotificationResponse response = responseFrame.data();
+                        Frame<BootNotificationResponse> responseFrame = requestFrame.asRequest(BootNotificationResponse.class)
+                                .responseFrame();
+                        BootNotificationResponse response = responseFrame.data();
 
-                            response.setCurrentTime(ZonedDateTime.now());
-                            response.setInterval(45); // heart beat interval 45s
-                            response.setStatus(RegistrationStatusEnum.ACCEPTED); // success
+                        response.setCurrentTime(ZonedDateTime.now());
+                        response.setInterval(45); // heart beat interval 45s
+                        response.setStatus(RegistrationStatusEnum.ACCEPTED); // success
 
-                            responseFrame.data(response).write();
+                        responseFrame.data(response).write();
+
+                        // request frame to charging station
+                        OcppFrame<TriggerMessageRequest> frame = OcppFrame.create(ctx.connection(), Ocpp2_1Command.TriggerMessageRequest);
+                        TriggerMessageRequest requestData = frame.newData()
+                                .withEvse(new EVSE().withId(1))
+                                .withRequestedMessage(MessageTriggerEnum.HEARTBEAT);
+
+                        frame.data(requestData)
+                                .asRequest(TriggerMessageResponse.class)
+                                .request()
+                                .onSuccess(respFrame -> {
+                                    TriggerMessageResponse tmResponse = respFrame.data();
+                                    System.out.println("TriggerMessageResponse status: " + tmResponse.getStatus());
+                                })
+                                .onFailure(ex -> {
+                                    System.out.println("request TriggerMessage failed. ");
+                                    ex.printStackTrace();
+                                });
                     });
 
             router.route(new HeartbeatHandler());
@@ -100,7 +119,6 @@ public class OcppServerExample {
                     .write();
         }
     }
-
 
 
 }

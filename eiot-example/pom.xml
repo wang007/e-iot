@@ -12,8 +12,8 @@
     <artifactId>eiot-example</artifactId>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -52,6 +52,12 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <version>4.1.118.Final</version>
+            <classifier>osx-aarch_64</classifier>
+        </dependency>
 
     </dependencies>
 
