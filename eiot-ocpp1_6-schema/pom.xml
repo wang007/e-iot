@@ -68,7 +68,6 @@
                     <generateBuilders>true</generateBuilders>
                     <includeAdditionalProperties>true</includeAdditionalProperties>
                     <includeGeneratedAnnotation>false</includeGeneratedAnnotation>
-                    <removeOldOutput>true</removeOldOutput>
                 </configuration>
                 <executions>
                     <execution>
