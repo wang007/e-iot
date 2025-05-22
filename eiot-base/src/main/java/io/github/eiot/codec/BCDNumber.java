@@ -1,5 +1,7 @@
 package io.github.eiot.codec;
 
+import java.math.BigDecimal;
+
 /**
  * bcd must be a byte of 0 to 9.
  * If this is exceeded, bcdNumber is invalid and the actual value obtained is returned -1
@@ -8,24 +10,14 @@ package io.github.eiot.codec;
  */
 public class BCDNumber extends NumberUnit {
 
+    private static final BigDecimal INVALID_VALUE = BigDecimal.valueOf(-1L);
+
     private final BCD bcd;
 
     private final boolean valid;
 
     BCDNumber(BCD bcd, int unit) {
-        this(bcd, unit, 0);
-    }
-
-    BCDNumber(BCD bcd, int offset, boolean offsetReverse) {
-        this(bcd, 0, offset, offsetReverse);
-    }
-
-    BCDNumber(BCD bcd, int unit, int offset) {
-        this(bcd, unit, offset, false);
-    }
-
-    BCDNumber(BCD bcd, int unit, int offset, boolean offsetReverse) {
-        super(bcdToLong(bcd.getBytes()), unit, offset, offsetReverse);
+        super(bcdToLong(bcd.getBytes()), unit);
         this.bcd = bcd;
         this.valid = validBCDNumber(bcd.getBytes());
     }
@@ -33,18 +25,15 @@ public class BCDNumber extends NumberUnit {
     /**
      * new BCDNumber instance with unit and numeric offset
      *
-     * @param value         the origin number
-     * @param unit          the unit
-     * @param offset        number offset
-     * @param offsetReverse Decide how to calculate offset. true: offset - number, false: number + offset
-     * @param length        bcd length. NOTE: bcd length, Not the length of the underlying bytes
+     * @param value  the origin number
+     * @param unit   the unit
+     * @param length bcd length. NOTE: bcd length, Not the length of the underlying bytes
      */
-    BCDNumber(long value, int unit, int offset, boolean offsetReverse, int length) {
-        super(value, unit, offset, offsetReverse);
+    BCDNumber(long value, int unit, int length) {
+        super(value, unit);
         this.bcd = new BCD(longToBcd(value, length));
         this.valid = true;
     }
-
 
     public BCD getBcd() {
         return bcd;
@@ -55,6 +44,11 @@ public class BCDNumber extends NumberUnit {
      */
     public boolean isValid() {
         return valid;
+    }
+
+    @Override
+    public BigDecimal bigDecimalValue() {
+        return valid ? super.bigDecimalValue() : INVALID_VALUE;
     }
 
     @Override
@@ -97,9 +91,9 @@ public class BCDNumber extends NumberUnit {
     /**
      * long to bcd
      *
-     * @param v
+     * @param v   the origin value
      * @param len bcd length
-     * @return
+     * @return byte[]
      */
     private static byte[] longToBcd(long v, int len) {
         byte[] bcd = new byte[len];
@@ -135,7 +129,7 @@ public class BCDNumber extends NumberUnit {
      */
     public static BCDNumber from(int actualNumber, int unit, int length) {
         long v = unit == 0 || unit == 1 ? actualNumber : (long) actualNumber * unit;
-        return new BCDNumber(v, unit, 0, false, length);
+        return new BCDNumber(v, unit, length);
     }
 
     /**
@@ -146,52 +140,7 @@ public class BCDNumber extends NumberUnit {
      */
     public static BCDNumber from(double actualNumber, int unit, int length) {
         long v = unit == 0 || unit == 1 ? (long) actualNumber : (long) (actualNumber * unit);
-        return new BCDNumber(v, unit, 0, false, length);
-    }
-
-    /**
-     * @param actualNumber  the actual number
-     * @param offset        the unit
-     * @param offsetReverse Decide how to calculate offset. true: offset - number, false: number + offset
-     * @param length        bcd length. NOTE: bcd length, Not the length of the underlying bytes
-     */
-    public static BCDNumber from(int actualNumber, int offset, boolean offsetReverse, int length) {
-        return new BCDNumber(actualNumber, 0, offset, offsetReverse, length);
-    }
-
-    /**
-     * @param actualNumber  the actual number
-     * @param offset        the unit
-     * @param offsetReverse Decide how to calculate offset. true: offset - number, false: number + offset
-     * @param length        bcd length. NOTE: bcd length, Not the length of the underlying bytes
-     */
-    public static BCDNumber from(double actualNumber, int offset, boolean offsetReverse, int length) {
-        return new BCDNumber((long) actualNumber, 0, offset, offsetReverse, length);
-    }
-
-
-    /**
-     * @param actualNumber  the actual number
-     * @param unit          the unit
-     * @param offset        number offset
-     * @param offsetReverse Decide how to calculate offset. true: offset - number, false: number + offset
-     * @param length        bcd length. NOTE: bcd length, Not the length of the underlying bytes
-     */
-    public static BCDNumber from(int actualNumber, int unit, int offset, boolean offsetReverse, int length) {
-        long v = originNumber(actualNumber, unit, offset, offsetReverse);
-        return new BCDNumber(v, unit, offset, offsetReverse, length);
-    }
-
-    /**
-     * @param actualNumber  the actual number
-     * @param unit          the unit
-     * @param offset        number offset
-     * @param offsetReverse Decide how to calculate offset. true: offset - number, false: number + offset
-     * @param length        bcd length. NOTE: bcd length, Not the length of the underlying bytes
-     */
-    public static BCDNumber from(double actualNumber, int unit, int offset, boolean offsetReverse, int length) {
-        long v = originNumber(actualNumber, unit, offset, offsetReverse);
-        return new BCDNumber(v, unit, offset, offsetReverse, length);
+        return new BCDNumber(v, unit, length);
     }
 
 }

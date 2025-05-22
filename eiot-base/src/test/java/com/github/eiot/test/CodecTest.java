@@ -235,13 +235,13 @@ public class CodecTest {
         ByteBuf buf = Unpooled.wrappedBuffer(bs);
 
         // decode
-        BCDNumberCodec bcdNumberCodec = new BCDNumberCodec(bs.length, 100, offset);
+        OffsetBCDNumberCodec bcdNumberCodec = new OffsetBCDNumberCodec(bs.length, 100, offset);
         BCDNumber numberUnit = bcdNumberCodec.decode(buf);
         assertEquals(numberUnit.bigDecimalValue(), number);
 
         // encode
         ByteBuf bufOffset = Unpooled.buffer();
-        bcdNumberCodec.encode(bufOffset, BCDNumber.from(number.doubleValue(), 100, offset, false, 8));
+        bcdNumberCodec.encode(bufOffset, OffsetBCDNumber.from(number.doubleValue(), 100, offset, false, 8));
         assertArrayEquals(CodecUtil.readBytes(bufOffset, bs.length), bs);
 
         // reverse
@@ -249,12 +249,12 @@ public class CodecTest {
         number = BigDecimal.valueOf(21235.14);
         number = BigDecimal.valueOf(offset).subtract(number);
         buf = Unpooled.wrappedBuffer(bs);
-        BCDNumberCodec codecOffset1 = new BCDNumberCodec(bs.length, 100, offset, true);
+        OffsetBCDNumberCodec codecOffset1 = new OffsetBCDNumberCodec(bs.length, 100, offset, true);
         BCDNumber numberUnit1 = codecOffset1.decode(buf);
         assertEquals(numberUnit1.bigDecimalValue(), number);
 
         ByteBuf bufOffset1 = Unpooled.buffer();
-        codecOffset1.encode(bufOffset1, BCDNumber.from(number.doubleValue(), 100, offset, true, 8));
+        codecOffset1.encode(bufOffset1, OffsetBCDNumber.from(number.doubleValue(), 100, offset, true, 8));
         assertArrayEquals(CodecUtil.readBytes(bufOffset1, bs.length), bs);
     }
 
@@ -361,13 +361,13 @@ public class CodecTest {
         ByteBuf buf = Unpooled.wrappedBuffer(bs);
 
         // decode
-        NumberUnitCodec codecOffset = new NumberUnitCodec(bs.length, 100, offset);
+        OffsetNumberUnitCodec codecOffset = new OffsetNumberUnitCodec(bs.length, 100, offset);
         NumberUnit numberUnit = codecOffset.decode(buf);
         assertEquals(numberUnit.bigDecimalValue(), number);
 
         // encode
         ByteBuf bufOffset = Unpooled.buffer();
-        codecOffset.encode(bufOffset, NumberUnit.from(number.doubleValue(), 100, offset, false));
+        codecOffset.encode(bufOffset, OffsetNumberUnit.from(number.doubleValue(), 100, offset, false));
         assertArrayEquals(CodecUtil.readBytes(bufOffset, bs.length), bs);
 
         // reverse
@@ -375,12 +375,12 @@ public class CodecTest {
         number = BigDecimal.valueOf(1235.14);
         number = BigDecimal.valueOf(offset).subtract(number);
         buf = Unpooled.wrappedBuffer(bs);
-        NumberUnitCodec codecOffset1 = new NumberUnitCodec(bs.length, 100, offset, true);
+        OffsetNumberUnitCodec codecOffset1 = new OffsetNumberUnitCodec(bs.length, 100, offset, true);
         NumberUnit numberUnit1 = codecOffset1.decode(buf);
         assertEquals(numberUnit1.bigDecimalValue(), number);
 
         ByteBuf bufOffset1 = Unpooled.buffer();
-        codecOffset1.encode(bufOffset1, NumberUnit.from(number.doubleValue(), 100, offset, true));
+        codecOffset1.encode(bufOffset1, OffsetNumberUnit.from(number.doubleValue(), 100, offset, true));
         assertArrayEquals(CodecUtil.readBytes(bufOffset1, bs.length), bs);
     }
 

@@ -12,43 +12,21 @@ import java.nio.ByteOrder;
 public class NumberUnitCodec extends AbstractCodec<NumberUnit> {
 
     private final int unit;
-    private final int offset;
-    private final boolean offsetReverse;
 
     public NumberUnitCodec(int length, int unit) {
-        this(length, unit, 0, false);
-    }
-
-    public NumberUnitCodec(int length, int unit, int offset) {
-        this(length, unit, offset, false);
-    }
-
-    public NumberUnitCodec(int length, int unit, int offset, boolean offsetReverse) {
         super(length);
         this.unit = unit;
-        this.offset = offset;
-        this.offsetReverse = offsetReverse;
     }
 
     public NumberUnitCodec(int length, ByteOrder byteOrder, int unit) {
-        this(length, byteOrder, unit, 0, false);
-    }
-
-    public NumberUnitCodec(int length, ByteOrder byteOrder, int unit, int offset) {
-        this(length, byteOrder, unit, offset, false);
-    }
-
-    public NumberUnitCodec(int length, ByteOrder byteOrder, int unit, int offset, boolean offsetReverse) {
         super(length, byteOrder);
         this.unit = unit;
-        this.offset = offset;
-        this.offsetReverse = offsetReverse;
     }
 
     @Override
     public NumberUnit decode(ByteBuf byteBuf, CodecContext context) {
         long number = CodecUtil.readNumber(byteBuf, byteOrder, length);
-        return new NumberUnit(number, unit, offset, offsetReverse);
+        return new NumberUnit(number, unit);
     }
 
     @Override
