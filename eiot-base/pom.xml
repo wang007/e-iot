@@ -17,6 +17,14 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-symbol-solver-core</artifactId>
+            <version>3.26.4</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

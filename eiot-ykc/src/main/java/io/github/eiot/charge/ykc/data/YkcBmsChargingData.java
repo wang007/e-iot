@@ -9,6 +9,8 @@ import io.github.eiot.codec.OffsetNumberUnit;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * 充电过程 BMS 需求与充电机输出 0x23
  *
@@ -24,6 +26,10 @@ public class YkcBmsChargingData {
      */
     @FrameField(len = 16)
     private BCD orderNo;
+
+    public BCD getOrderNo() {
+        return orderNo;
+    }
 
     /**
      * 桩编码 BCD 码 7byte
@@ -106,4 +112,6 @@ public class YkcBmsChargingData {
      */
     @FrameField(len = 2)
     private int accumulateChargeTime;
+
+    private List<String> testList;
 }

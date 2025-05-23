@@ -72,4 +72,9 @@ public class Ascii {
         // TODO value check ascii
         return new Ascii(value);
     }
+
+    public static Ascii from(String value, int len) {
+        // TODO value check ascii
+        return new Ascii(value, len);
+    }
 }
