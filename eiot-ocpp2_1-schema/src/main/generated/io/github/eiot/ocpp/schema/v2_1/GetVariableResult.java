@@ -45,7 +45,7 @@ public class GetVariableResult {
     @Valid
     private StatusInfo attributeStatusInfo;
     @JsonProperty("attributeType")
-    private AttributeEnum attributeType = AttributeEnum.fromValue("Actual");
+    private AttributeEnum attributeType = null;
     /**
      * Value of requested attribute type of component-variable. This field can only be empty when the given status is NOT accepted.
      * 

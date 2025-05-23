@@ -62,7 +62,7 @@ public class GetVariableResult {
      */
     @JsonProperty("attributeType")
     @JsonPropertyDescription("Attribute type for which value is requested. When absent, default Actual is assumed.\r\n")
-    private AttributeEnum attributeType = AttributeEnum.fromValue("Actual");
+    private AttributeEnum attributeType = null;
     /**
      * Value of requested attribute type of component-variable. This field can only be empty when the given status is NOT accepted.
      * 

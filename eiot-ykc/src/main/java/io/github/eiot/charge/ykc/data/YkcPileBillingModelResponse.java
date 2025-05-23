@@ -4,16 +4,12 @@ import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
 import io.github.eiot.codec.NumberUnit;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 计费模型请求应答 0x0A
  * <p>
  * created by wang007 on 2024/11/11
  */
-@ToString
-@Data
 @Frame
 public class YkcPileBillingModelResponse extends YkcBaseData {
 
@@ -83,4 +79,222 @@ public class YkcPileBillingModelResponse extends YkcBaseData {
      */
     @FrameField(len = 48)
     private byte[] rateTimes;
+
+    /**
+     * getter auto generated
+     */
+    public BCD getModelNo() {
+        return modelNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setModelNo(BCD modelNo) {
+        this.modelNo = modelNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setModelNo(String modelNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(modelNo, 4, modelNo);
+        this.modelNo = BCD.from(modelNo, 4);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getTopElectricPrice() {
+        return topElectricPrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTopElectricPrice(NumberUnit topElectricPrice) {
+        this.topElectricPrice = topElectricPrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTopElectricPrice(double topElectricPrice) {
+        this.topElectricPrice = NumberUnit.from(topElectricPrice, 100000);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getTopServicePrice() {
+        return topServicePrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTopServicePrice(NumberUnit topServicePrice) {
+        this.topServicePrice = topServicePrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTopServicePrice(double topServicePrice) {
+        this.topServicePrice = NumberUnit.from(topServicePrice, 100000);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getPeakElectricPrice() {
+        return peakElectricPrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPeakElectricPrice(NumberUnit peakElectricPrice) {
+        this.peakElectricPrice = peakElectricPrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPeakElectricPrice(double peakElectricPrice) {
+        this.peakElectricPrice = NumberUnit.from(peakElectricPrice, 100000);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getPeakServicePrice() {
+        return peakServicePrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPeakServicePrice(NumberUnit peakServicePrice) {
+        this.peakServicePrice = peakServicePrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPeakServicePrice(double peakServicePrice) {
+        this.peakServicePrice = NumberUnit.from(peakServicePrice, 100000);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getFlatElectricPrice() {
+        return flatElectricPrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setFlatElectricPrice(NumberUnit flatElectricPrice) {
+        this.flatElectricPrice = flatElectricPrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setFlatElectricPrice(double flatElectricPrice) {
+        this.flatElectricPrice = NumberUnit.from(flatElectricPrice, 100000);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getFlatServicePrice() {
+        return flatServicePrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setFlatServicePrice(NumberUnit flatServicePrice) {
+        this.flatServicePrice = flatServicePrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setFlatServicePrice(double flatServicePrice) {
+        this.flatServicePrice = NumberUnit.from(flatServicePrice, 100000);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getLowElectricPrice() {
+        return lowElectricPrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setLowElectricPrice(NumberUnit lowElectricPrice) {
+        this.lowElectricPrice = lowElectricPrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setLowElectricPrice(double lowElectricPrice) {
+        this.lowElectricPrice = NumberUnit.from(lowElectricPrice, 100000);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getLowServicePrice() {
+        return lowServicePrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setLowServicePrice(NumberUnit lowServicePrice) {
+        this.lowServicePrice = lowServicePrice;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setLowServicePrice(double lowServicePrice) {
+        this.lowServicePrice = NumberUnit.from(lowServicePrice, 100000);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getLoseRate() {
+        return loseRate;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setLoseRate(int loseRate) {
+        this.loseRate = loseRate;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public byte[] getRateTimes() {
+        return rateTimes;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRateTimes(byte[] rateTimes) {
+        this.rateTimes = rateTimes;
+    }
 }

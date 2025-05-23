@@ -1,5 +1,6 @@
 package io.github.eiot.codec;
 
+import io.github.eiot.utils.StringUtil;
 import io.netty.buffer.ByteBufUtil;
 
 /**
@@ -21,7 +22,6 @@ public class Hex {
     }
 
     /**
-     *
      * @return never update byte[]!!!
      */
     public byte[] getBytes() {
@@ -34,6 +34,23 @@ public class Hex {
         }
         byte[] bytes = ByteBufUtil.decodeHexDump(hexString);
         return new Hex(bytes);
+    }
+
+    /**
+     * like {@link #from(String)}, but add 0 to the prefix depending on the length
+     *
+     * @param hexString hexString
+     * @param len       The length of hex
+     * @return new BCD
+     */
+    public static Hex from(String hexString, int len) {
+        if ((hexString.length() % 2) != 0) {
+            throw new IllegalArgumentException("hexString.length() /2 != 0");
+        }
+        if (hexString.length() == len) {
+            return from(hexString);
+        }
+        return from(StringUtil.leftPad(hexString, len, '0'));
     }
 
     @Override

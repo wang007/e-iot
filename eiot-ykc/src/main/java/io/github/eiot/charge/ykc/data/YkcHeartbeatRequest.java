@@ -2,17 +2,12 @@ package io.github.eiot.charge.ykc.data;
 
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 充电桩心跳包 0x03
  *
- *
  * created by wang007 on 2024/11/11
  */
-@ToString
-@Data
 @Frame
 public class YkcHeartbeatRequest extends YkcBaseData {
 
@@ -27,4 +22,32 @@ public class YkcHeartbeatRequest extends YkcBaseData {
      */
     @FrameField(len = 1)
     private int gunStatus;
+
+    /**
+     * getter auto generated
+     */
+    public int getGunNo() {
+        return gunNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setGunNo(int gunNo) {
+        this.gunNo = gunNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getGunStatus() {
+        return gunStatus;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setGunStatus(int gunStatus) {
+        this.gunStatus = gunStatus;
+    }
 }

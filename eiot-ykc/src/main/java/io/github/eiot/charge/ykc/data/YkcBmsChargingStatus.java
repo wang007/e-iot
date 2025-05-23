@@ -3,8 +3,7 @@ package io.github.eiot.charge.ykc.data;
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
-import lombok.Data;
-import lombok.ToString;
+import io.github.eiot.codec.OffsetNumberUnit;
 
 /**
  * 充电过程 BMS 信息 0x25
@@ -12,10 +11,9 @@ import lombok.ToString;
  * @author yan
  * @since 2024-11-20
  */
-@ToString(callSuper = true)
-@Data
 @Frame
 public class YkcBmsChargingStatus {
+
     /**
      * 交易流水号 BCD 码 16 见名词解释
      */
@@ -44,7 +42,7 @@ public class YkcBmsChargingStatus {
      * BMS 最高动力蓄电池温度; 1ºC/位，-50 ºC 偏移量；
      */
     @FrameField(len = 1, offset = -50)
-    private int maxTemp;
+    private OffsetNumberUnit maxTemp;
 
     /**
      * 最高温度检测点编号
@@ -56,7 +54,7 @@ public class YkcBmsChargingStatus {
      * 最低动力蓄电池温度;1ºC/位，-50 ºC 偏移量；
      */
     @FrameField(len = 1, offset = -50)
-    private int minTemp;
+    private OffsetNumberUnit minTemp;
 
     /**
      * 最低温度检测点编号
@@ -78,4 +76,160 @@ public class YkcBmsChargingStatus {
      */
     @FrameField(len = 2)
     private int status;
+
+    /**
+     * getter auto generated
+     */
+    public BCD getOrderNo() {
+        return orderNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOrderNo(BCD orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOrderNo(String orderNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(orderNo, 32, orderNo);
+        this.orderNo = BCD.from(orderNo, 32);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public BCD getTerminalNo() {
+        return terminalNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTerminalNo(BCD terminalNo) {
+        this.terminalNo = terminalNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTerminalNo(String terminalNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(terminalNo, 14, terminalNo);
+        this.terminalNo = BCD.from(terminalNo, 14);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getGunNo() {
+        return gunNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setGunNo(int gunNo) {
+        this.gunNo = gunNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getCellMaxNo() {
+        return cellMaxNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setCellMaxNo(int cellMaxNo) {
+        this.cellMaxNo = cellMaxNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public OffsetNumberUnit getMaxTemp() {
+        return maxTemp;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setMaxTemp(OffsetNumberUnit maxTemp) {
+        this.maxTemp = maxTemp;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setMaxTemp(double maxTemp) {
+        this.maxTemp = OffsetNumberUnit.from(maxTemp, 1, -50, false);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getMaxTempNo() {
+        return maxTempNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setMaxTempNo(int maxTempNo) {
+        this.maxTempNo = maxTempNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public OffsetNumberUnit getMinTemp() {
+        return minTemp;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setMinTemp(OffsetNumberUnit minTemp) {
+        this.minTemp = minTemp;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setMinTemp(double minTemp) {
+        this.minTemp = OffsetNumberUnit.from(minTemp, 1, -50, false);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getMinTempNo() {
+        return minTempNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setMinTempNo(int minTempNo) {
+        this.minTempNo = minTempNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getStatus() {
+        return status;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }

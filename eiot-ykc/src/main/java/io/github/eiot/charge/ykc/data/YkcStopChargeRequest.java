@@ -2,16 +2,12 @@ package io.github.eiot.charge.ykc.data;
 
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 运营平台远程停机  0x36
  *
  * created by wang007 on 2024/11/12
  */
-@ToString(callSuper = true)
-@Data
 @Frame
 public class YkcStopChargeRequest extends YkcBaseData {
 
@@ -20,4 +16,18 @@ public class YkcStopChargeRequest extends YkcBaseData {
      */
     @FrameField(len = 1)
     private int gunNo;
+
+    /**
+     * getter auto generated
+     */
+    public int getGunNo() {
+        return gunNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setGunNo(int gunNo) {
+        this.gunNo = gunNo;
+    }
 }

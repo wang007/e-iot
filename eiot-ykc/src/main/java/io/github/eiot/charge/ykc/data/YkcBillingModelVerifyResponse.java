@@ -3,8 +3,7 @@ package io.github.eiot.charge.ykc.data;
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
-import lombok.Data;
-import lombok.ToString;
+
 
 /**
  * 计费模型验证请求应答 0x06
@@ -14,8 +13,6 @@ import lombok.ToString;
  * <p>
  * created by wang007 on 2024/11/11
  */
-@ToString
-@Data
 @Frame
 public class YkcBillingModelVerifyResponse extends YkcBaseData {
 
@@ -31,5 +28,41 @@ public class YkcBillingModelVerifyResponse extends YkcBaseData {
      * 0x01 桩计费模型与平台不一致
      */
     @FrameField(len = 1)
-    private Long result;
+    private int result;
+
+    /**
+     * getter auto generated
+     */
+    public BCD getModelNo() {
+        return modelNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setModelNo(BCD modelNo) {
+        this.modelNo = modelNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setModelNo(String modelNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(modelNo, 4, modelNo);
+        this.modelNo = BCD.from(modelNo, 4);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getResult() {
+        return result;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setResult(int result) {
+        this.result = result;
+    }
 }

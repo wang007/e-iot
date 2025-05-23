@@ -78,7 +78,7 @@ public class BCD {
     /**
      * like {@link #from(String)}, but add 0 to the prefix depending on the length
      *
-     * @param bcdString bcdString Contains 0 to 9 digits and must be an even number
+     * @param bcdString bcdString Contains 0 to 9 digits
      * @param len The length of BCD
      * @return new BCD
      */
@@ -89,12 +89,7 @@ public class BCD {
         if (bcdString.length() == len) {
             return from(bcdString);
         }
-        StringBuilder s = new StringBuilder(len);
-        for (int i = 0; i < len - bcdString.length(); i++) {
-            s.append('0');
-        }
-        s.append(bcdString);
-        return from(s.toString());
+        return from(io.github.eiot.utils.StringUtil.leftPad(bcdString, len, '0'));
     }
 
 }

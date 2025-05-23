@@ -38,7 +38,7 @@ public class GetVariableData {
      */
     @JsonProperty("attributeType")
     @JsonPropertyDescription("Attribute type for which value is requested. When absent, default Actual is assumed.\r\n")
-    private AttributeEnum attributeType = AttributeEnum.fromValue("Actual");
+    private AttributeEnum attributeType = null;
     /**
      * A physical or logical component
      * 

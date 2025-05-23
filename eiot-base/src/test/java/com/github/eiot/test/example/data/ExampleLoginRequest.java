@@ -21,42 +21,60 @@ public class ExampleLoginRequest {
     @FrameField(len = 1)
     public int safeMode;
 
+    /**
+     * getter auto generated
+     */
     public Ascii getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        if (username.length() > 10) {
-            throw new IllegalArgumentException("username");
-        }
-        username = StringUtil.leftPad(username, 10, '0');
-        setUsername(Ascii.from(username));
-    }
-
+    /**
+     * setter auto generated
+     */
     public void setUsername(Ascii username) {
         this.username = username;
     }
 
+    /**
+     * setter auto generated
+     */
+    public void setUsername(String username) {
+        io.github.eiot.utils.ValidationUtil.lteLen(username, 10, username);
+        this.username = Ascii.from(username, 10);
+    }
+
+    /**
+     * getter auto generated
+     */
     public BCD getCard() {
         return card;
     }
 
-    public void setCard(String card) {
-        if (card.length() > 16) {
-            throw new IllegalArgumentException("username");
-        }
-        card = StringUtil.leftPad(card, 16, '0');
-        setCard(BCD.from(card));
-    }
-
+    /**
+     * setter auto generated
+     */
     public void setCard(BCD card) {
         this.card = card;
     }
 
+    /**
+     * setter auto generated
+     */
+    public void setCard(String card) {
+        io.github.eiot.utils.ValidationUtil.lteLen(card, 16, card);
+        this.card = BCD.from(card, 16);
+    }
+
+    /**
+     * getter auto generated
+     */
     public int getSafeMode() {
         return safeMode;
     }
 
+    /**
+     * setter auto generated
+     */
     public void setSafeMode(int safeMode) {
         this.safeMode = safeMode;
     }

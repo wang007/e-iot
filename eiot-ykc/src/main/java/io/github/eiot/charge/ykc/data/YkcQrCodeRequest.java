@@ -2,16 +2,12 @@ package io.github.eiot.charge.ykc.data;
 
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 后台远程下发二维码前缀指令  0xF0
  *
  * created by wang007 on 2025/3/21
  */
-@ToString
-@Data
 @Frame(withContext = true)
 public class YkcQrCodeRequest extends YkcBaseData {
 
@@ -27,8 +23,6 @@ public class YkcQrCodeRequest extends YkcBaseData {
      * 二维码前缀长度
      * BIN 码 1 二维码前缀长度长度最大不超过
      * 200 字节
-     *
-     *
      */
     @FrameField(len = 1)
     private int prefixLen;
@@ -39,4 +33,45 @@ public class YkcQrCodeRequest extends YkcBaseData {
     @FrameField(lenByField = "prefixLen")
     private String qrCodePrefix;
 
+    /**
+     * getter auto generated
+     */
+    public int getType() {
+        return type;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getPrefixLen() {
+        return prefixLen;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPrefixLen(int prefixLen) {
+        this.prefixLen = prefixLen;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public String getQrCodePrefix() {
+        return qrCodePrefix;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setQrCodePrefix(String qrCodePrefix) {
+        this.qrCodePrefix = qrCodePrefix;
+    }
 }

@@ -61,7 +61,7 @@ public class SampledValue {
      */
     @JsonProperty("context")
     @JsonPropertyDescription("Sampled_ Value. Context. Reading_ Context_ Code\r\nurn:x-oca:ocpp:uid:1:569261\r\nType of detail value: start, end or sample. Default = \"Sample.Periodic\"\r\n")
-    private ReadingContextEnum context = ReadingContextEnum.fromValue("Sample.Periodic");
+    private ReadingContextEnum context = null;
     /**
      * Sampled_ Value. Measurand. Measurand_ Code
      * urn:x-oca:ocpp:uid:1:569263
@@ -71,7 +71,7 @@ public class SampledValue {
      */
     @JsonProperty("measurand")
     @JsonPropertyDescription("Sampled_ Value. Measurand. Measurand_ Code\r\nurn:x-oca:ocpp:uid:1:569263\r\nType of measurement. Default = \"Energy.Active.Import.Register\"\r\n")
-    private MeasurandEnum measurand = MeasurandEnum.fromValue("Energy.Active.Import.Register");
+    private MeasurandEnum measurand = null;
     /**
      * Sampled_ Value. Phase. Phase_ Code
      * urn:x-oca:ocpp:uid:1:569264
@@ -92,7 +92,7 @@ public class SampledValue {
      */
     @JsonProperty("location")
     @JsonPropertyDescription("Sampled_ Value. Location. Location_ Code\r\nurn:x-oca:ocpp:uid:1:569265\r\nIndicates where the measured value has been sampled. Default =  \"Outlet\"\r\n\r\n")
-    private LocationEnum location = LocationEnum.fromValue("Outlet");
+    private LocationEnum location = null;
     /**
      * Represent a signed version of the meter value.
      * 

@@ -3,8 +3,6 @@ package io.github.eiot.charge.ykc.data;
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.Ascii;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 远程更新 0x94
@@ -15,8 +13,6 @@ import lombok.ToString;
  * <p>
  * created by wang007 on 2025/3/21
  */
-@ToString
-@Data
 @Frame
 public class YkcUpgradeRequest extends YkcBaseData {
 
@@ -75,4 +71,162 @@ public class YkcUpgradeRequest extends YkcBaseData {
      */
     @FrameField(len = 1)
     private int downloadTime;
+
+    /**
+     * getter auto generated
+     */
+    public int getPileType() {
+        return pileType;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPileType(int pileType) {
+        this.pileType = pileType;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getPileP() {
+        return pileP;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPileP(int pileP) {
+        this.pileP = pileP;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public Ascii getServerHost() {
+        return serverHost;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setServerHost(Ascii serverHost) {
+        this.serverHost = serverHost;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setServerHost(String serverHost) {
+        io.github.eiot.utils.ValidationUtil.lteLen(serverHost, 16, serverHost);
+        this.serverHost = Ascii.from(serverHost, 16);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getServerPort() {
+        return serverPort;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setServerPort(int serverPort) {
+        this.serverPort = serverPort;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public Ascii getUsername() {
+        return username;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setUsername(Ascii username) {
+        this.username = username;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setUsername(String username) {
+        io.github.eiot.utils.ValidationUtil.lteLen(username, 16, username);
+        this.username = Ascii.from(username, 16);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public Ascii getPassword() {
+        return password;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPassword(Ascii password) {
+        this.password = password;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPassword(String password) {
+        io.github.eiot.utils.ValidationUtil.lteLen(password, 16, password);
+        this.password = Ascii.from(password, 16);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public Ascii getFilePath() {
+        return filePath;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setFilePath(Ascii filePath) {
+        this.filePath = filePath;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setFilePath(String filePath) {
+        io.github.eiot.utils.ValidationUtil.lteLen(filePath, 32, filePath);
+        this.filePath = Ascii.from(filePath, 32);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getExecType() {
+        return execType;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setExecType(int execType) {
+        this.execType = execType;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getDownloadTime() {
+        return downloadTime;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setDownloadTime(int downloadTime) {
+        this.downloadTime = downloadTime;
+    }
 }

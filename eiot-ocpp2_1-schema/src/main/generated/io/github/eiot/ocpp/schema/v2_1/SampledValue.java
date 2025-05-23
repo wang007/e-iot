@@ -47,7 +47,7 @@ public class SampledValue {
      */
     @JsonProperty("measurand")
     @JsonPropertyDescription("Type of measurement. Default = \"Energy.Active.Import.Register\"\r\n")
-    private MeasurandEnum measurand = MeasurandEnum.fromValue("Energy.Active.Import.Register");
+    private MeasurandEnum measurand = null;
     /**
      * Type of detail value: start, end or sample. Default = "Sample.Periodic"
      * 
@@ -55,7 +55,7 @@ public class SampledValue {
      */
     @JsonProperty("context")
     @JsonPropertyDescription("Type of detail value: start, end or sample. Default = \"Sample.Periodic\"\r\n")
-    private ReadingContextEnum context = ReadingContextEnum.fromValue("Sample.Periodic");
+    private ReadingContextEnum context = null;
     /**
      * Indicates how the measured value is to be interpreted. For instance between L1 and neutral (L1-N) Please note that not all values of phase are applicable to all Measurands. When phase is absent, the measured value is interpreted as an overall value.
      * 
@@ -72,7 +72,7 @@ public class SampledValue {
      */
     @JsonProperty("location")
     @JsonPropertyDescription("Indicates where the measured value has been sampled. Default =  \"Outlet\"\r\n\r\n")
-    private LocationEnum location = LocationEnum.fromValue("Outlet");
+    private LocationEnum location = null;
     /**
      * Represent a signed version of the meter value.
      * 

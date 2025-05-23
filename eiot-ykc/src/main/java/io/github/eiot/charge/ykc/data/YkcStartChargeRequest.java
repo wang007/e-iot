@@ -4,16 +4,12 @@ import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
 import io.github.eiot.codec.NumberUnit;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 运营平台远程控制启机  0x34
  * <p>
  * created by wang007 on 2024/11/12
  */
-@ToString(callSuper = true)
-@Data
 @Frame
 public class YkcStartChargeRequest {
 
@@ -53,4 +49,118 @@ public class YkcStartChargeRequest {
     @FrameField(len = 4, unit = 100)
     private NumberUnit balance;
 
+    /**
+     * getter auto generated
+     */
+    public BCD getOrderNo() {
+        return orderNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOrderNo(BCD orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOrderNo(String orderNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(orderNo, 32, orderNo);
+        this.orderNo = BCD.from(orderNo, 32);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public BCD getTerminalNo() {
+        return terminalNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTerminalNo(BCD terminalNo) {
+        this.terminalNo = terminalNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTerminalNo(String terminalNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(terminalNo, 14, terminalNo);
+        this.terminalNo = BCD.from(terminalNo, 14);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getGunNo() {
+        return gunNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setGunNo(int gunNo) {
+        this.gunNo = gunNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public BCD getCardNo() {
+        return cardNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setCardNo(BCD cardNo) {
+        this.cardNo = cardNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setCardNo(String cardNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(cardNo, 16, cardNo);
+        this.cardNo = BCD.from(cardNo, 16);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public long getPhysicalCardNo() {
+        return physicalCardNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPhysicalCardNo(long physicalCardNo) {
+        this.physicalCardNo = physicalCardNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getBalance() {
+        return balance;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setBalance(NumberUnit balance) {
+        this.balance = balance;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setBalance(double balance) {
+        this.balance = NumberUnit.from(balance, 100);
+    }
 }

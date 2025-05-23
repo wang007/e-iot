@@ -2,16 +2,13 @@ package io.github.eiot.charge.ykc.data;
 
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 远程更新应答  0x93
  * <p>
  * created by wang007 on 2025/3/21
  */
-@ToString
-@Data
+
 @Frame
 public class YkcUpgradeResponse extends YkcBaseData {
 
@@ -24,4 +21,18 @@ public class YkcUpgradeResponse extends YkcBaseData {
      */
     @FrameField(len = 1)
     private int upgradeStatus;
+
+    /**
+     * getter auto generated
+     */
+    public int getUpgradeStatus() {
+        return upgradeStatus;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setUpgradeStatus(int upgradeStatus) {
+        this.upgradeStatus = upgradeStatus;
+    }
 }

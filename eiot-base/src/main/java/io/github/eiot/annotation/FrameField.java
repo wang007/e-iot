@@ -1,9 +1,6 @@
 package io.github.eiot.annotation;
 
-import io.github.eiot.codec.Codec;
-import io.github.eiot.codec.CodecContext;
-import io.github.eiot.codec.NumberUnit;
-import io.github.eiot.codec.VoidCodec;
+import io.github.eiot.codec.*;
 
 import java.lang.annotation.*;
 
@@ -37,6 +34,7 @@ public @interface FrameField {
      */
     int len() default -1;
 
+
     /**
      * @return if len = -1, lenByFields != null, try to get by CodecContext use lenByField as key
      */
@@ -48,19 +46,19 @@ public @interface FrameField {
     boolean intoContext() default false;
 
     /**
-     * specify the {@link NumberUnit#unit}
+     * specify the {@link OffsetNumberUnit#unit} and {@link OffsetBCDNumber#unit}
      *
      * @return the unit
      */
     int unit() default 1;
 
     /**
-     * specify the {@link NumberUnit#offset}
+     * specify the {@link OffsetNumberUnit#unit} and {@link OffsetBCDNumber#unit}
      */
     int offset() default 0;
 
     /**
-     * specify the {@link NumberUnit#offsetReverse}
+     * specify the {@link OffsetNumberUnit#unit} and {@link OffsetBCDNumber#unit}
      */
     boolean offsetReverse() default false;
 

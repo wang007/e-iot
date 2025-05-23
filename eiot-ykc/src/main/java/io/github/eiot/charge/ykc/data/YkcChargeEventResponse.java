@@ -3,16 +3,12 @@ package io.github.eiot.charge.ykc.data;
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 交易记录确认 0x40
  *
  * created by wang007 on 2024/11/14
  */
-@ToString(callSuper = true)
-@Data
 @Frame
 public class YkcChargeEventResponse {
 
@@ -27,4 +23,40 @@ public class YkcChargeEventResponse {
      */
     @FrameField(len = 1)
     private int result;
+
+    /**
+     * getter auto generated
+     */
+    public BCD getOrderNo() {
+        return orderNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOrderNo(BCD orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOrderNo(String orderNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(orderNo, 32, orderNo);
+        this.orderNo = BCD.from(orderNo, 32);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getResult() {
+        return result;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setResult(int result) {
+        this.result = result;
+    }
 }

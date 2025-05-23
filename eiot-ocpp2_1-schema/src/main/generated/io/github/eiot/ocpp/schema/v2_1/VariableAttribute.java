@@ -33,7 +33,7 @@ public class VariableAttribute {
      */
     @JsonProperty("type")
     @JsonPropertyDescription("Attribute: Actual, MinSet, MaxSet, etc.\r\nDefaults to Actual if absent.\r\n")
-    private AttributeEnum type = AttributeEnum.fromValue("Actual");
+    private AttributeEnum type = null;
     /**
      * Value of the attribute. May only be omitted when mutability is set to 'WriteOnly'.
      * 
@@ -52,7 +52,7 @@ public class VariableAttribute {
      */
     @JsonProperty("mutability")
     @JsonPropertyDescription("Defines the mutability of this attribute. Default is ReadWrite when omitted.\r\n")
-    private MutabilityEnum mutability = MutabilityEnum.fromValue("ReadWrite");
+    private MutabilityEnum mutability = null;
     /**
      * If true, value will be persistent across system reboots or power down. Default when omitted is false.
      * 

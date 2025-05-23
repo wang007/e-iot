@@ -84,7 +84,7 @@ public class DefaultYkcFrame<T> extends AbstractFrame<T, RawYkcFrame> implements
             } else {
                 String terminalNo = terminalNo();
                 if (terminalNo != null && !terminalNo.isEmpty()) {
-                    ((YkcBaseData) data).setTerminalNoString(terminalNo);
+                    ((YkcBaseData) data).setTerminalNo(terminalNo);
                 }
             }
         }

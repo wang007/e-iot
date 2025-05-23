@@ -26,7 +26,7 @@ public class SetVariableData {
      */
     @JsonProperty("attributeType")
     @JsonPropertyDescription("Type of attribute: Actual, Target, MinSet, MaxSet. Default is Actual when omitted.\r\n")
-    private AttributeEnum attributeType = AttributeEnum.fromValue("Actual");
+    private AttributeEnum attributeType = null;
     /**
      * Value to be assigned to attribute of variable.
      * This value is allowed to be an empty string ("").

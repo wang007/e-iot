@@ -1,19 +1,14 @@
 package io.github.eiot.charge.ykc.data;
 
-
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 运营平台确认并充启动充电 0xA2
  *
  * created by wang007 on 2024/11/14
  */
-@ToString
-@Data
 @Frame
 public class YkcPileMStartChargeResponse extends YkcPileStartChargeResponse {
 
@@ -22,4 +17,26 @@ public class YkcPileMStartChargeResponse extends YkcPileStartChargeResponse {
      */
     @FrameField(len = 6)
     private BCD serialNo;
+
+    /**
+     * getter auto generated
+     */
+    public BCD getSerialNo() {
+        return serialNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setSerialNo(BCD serialNo) {
+        this.serialNo = serialNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setSerialNo(String serialNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(serialNo, 12, serialNo);
+        this.serialNo = BCD.from(serialNo, 12);
+    }
 }

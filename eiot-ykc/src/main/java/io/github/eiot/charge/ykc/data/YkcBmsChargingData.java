@@ -1,12 +1,11 @@
 package io.github.eiot.charge.ykc.data;
 
-
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
 import io.github.eiot.codec.NumberUnit;
-import lombok.Data;
-import lombok.ToString;
+import io.github.eiot.codec.OffsetNumberUnit;
+
 
 /**
  * 充电过程 BMS 需求与充电机输出 0x23
@@ -14,10 +13,9 @@ import lombok.ToString;
  * @author yan
  * @since 2024-11-19
  */
-@ToString(callSuper = true)
-@Data
 @Frame
 public class YkcBmsChargingData {
+
     /**
      * 交易流水号 BCD 码 16 见名词解释
      */
@@ -46,7 +44,7 @@ public class YkcBmsChargingData {
      * 需求电流
      */
     @FrameField(len = 2, unit = 10, offset = 400, offsetReverse = true)
-    private NumberUnit requiredI;
+    private OffsetNumberUnit requiredI;
 
     /**
      * BMS 充电模式
@@ -66,7 +64,7 @@ public class YkcBmsChargingData {
      * 测量电流
      */
     @FrameField(len = 2, unit = 10, offset = 400, offsetReverse = true)
-    private NumberUnit measureI;
+    private OffsetNumberUnit measureI;
 
     /**
      * BMS 最高单体动力蓄电池电压及组号
@@ -98,11 +96,265 @@ public class YkcBmsChargingData {
      * 电桩电流输出值
      */
     @FrameField(len = 2, unit = 10, offset = 400, offsetReverse = true)
-    private NumberUnit pileOutI;
+    private OffsetNumberUnit pileOutI;
 
     /**
      * 累计充电时长(min)
      */
     @FrameField(len = 2)
     private int accumulateChargeTime;
+
+    /**
+     * getter auto generated
+     */
+    public BCD getOrderNo() {
+        return orderNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOrderNo(BCD orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOrderNo(String orderNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(orderNo, 32, orderNo);
+        this.orderNo = BCD.from(orderNo, 32);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public BCD getTerminalNo() {
+        return terminalNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTerminalNo(BCD terminalNo) {
+        this.terminalNo = terminalNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTerminalNo(String terminalNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(terminalNo, 14, terminalNo);
+        this.terminalNo = BCD.from(terminalNo, 14);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getGunNo() {
+        return gunNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setGunNo(int gunNo) {
+        this.gunNo = gunNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getRequiredV() {
+        return requiredV;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRequiredV(NumberUnit requiredV) {
+        this.requiredV = requiredV;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRequiredV(double requiredV) {
+        this.requiredV = NumberUnit.from(requiredV, 10);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public OffsetNumberUnit getRequiredI() {
+        return requiredI;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRequiredI(OffsetNumberUnit requiredI) {
+        this.requiredI = requiredI;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRequiredI(double requiredI) {
+        this.requiredI = OffsetNumberUnit.from(requiredI, 10, 400, true);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getChargeMode() {
+        return chargeMode;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setChargeMode(int chargeMode) {
+        this.chargeMode = chargeMode;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getMeasureV() {
+        return measureV;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setMeasureV(NumberUnit measureV) {
+        this.measureV = measureV;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setMeasureV(double measureV) {
+        this.measureV = NumberUnit.from(measureV, 10);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public OffsetNumberUnit getMeasureI() {
+        return measureI;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setMeasureI(OffsetNumberUnit measureI) {
+        this.measureI = measureI;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setMeasureI(double measureI) {
+        this.measureI = OffsetNumberUnit.from(measureI, 10, 400, true);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getCellMaxVAndNo() {
+        return cellMaxVAndNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setCellMaxVAndNo(int cellMaxVAndNo) {
+        this.cellMaxVAndNo = cellMaxVAndNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getCurrentSoc() {
+        return currentSoc;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setCurrentSoc(int currentSoc) {
+        this.currentSoc = currentSoc;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getRemainingTime() {
+        return remainingTime;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRemainingTime(int remainingTime) {
+        this.remainingTime = remainingTime;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getPileOutV() {
+        return pileOutV;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPileOutV(NumberUnit pileOutV) {
+        this.pileOutV = pileOutV;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPileOutV(double pileOutV) {
+        this.pileOutV = NumberUnit.from(pileOutV, 10);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public OffsetNumberUnit getPileOutI() {
+        return pileOutI;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPileOutI(OffsetNumberUnit pileOutI) {
+        this.pileOutI = pileOutI;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setPileOutI(double pileOutI) {
+        this.pileOutI = OffsetNumberUnit.from(pileOutI, 10, 400, true);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getAccumulateChargeTime() {
+        return accumulateChargeTime;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setAccumulateChargeTime(int accumulateChargeTime) {
+        this.accumulateChargeTime = accumulateChargeTime;
+    }
 }

@@ -4,16 +4,12 @@ import io.github.eiot.annotation.ByteOrder;
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.Ascii;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 充电桩主动申请启动充电 0x31
  * <p>
  * created by wang007 on 2024/11/12
  */
-@ToString
-@Data
 @Frame
 public class YkcPileStartChargeRequest extends YkcBaseData {
 
@@ -61,4 +57,96 @@ public class YkcPileStartChargeRequest extends YkcBaseData {
      */
     @FrameField(byteOrder = ByteOrder.BIG_ENDIAN, len = 17)
     private Ascii vin;
+
+    /**
+     * getter auto generated
+     */
+    public int getGunNo() {
+        return gunNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setGunNo(int gunNo) {
+        this.gunNo = gunNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getStartType() {
+        return startType;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setStartType(int startType) {
+        this.startType = startType;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getRequirePassword() {
+        return requirePassword;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRequirePassword(int requirePassword) {
+        this.requirePassword = requirePassword;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public long getCardNo() {
+        return cardNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setCardNo(long cardNo) {
+        this.cardNo = cardNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public byte[] getInputPassword() {
+        return inputPassword;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setInputPassword(byte[] inputPassword) {
+        this.inputPassword = inputPassword;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public Ascii getVin() {
+        return vin;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setVin(Ascii vin) {
+        this.vin = vin;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setVin(String vin) {
+        io.github.eiot.utils.ValidationUtil.lteLen(vin, 17, vin);
+        this.vin = Ascii.from(vin, 17);
+    }
 }

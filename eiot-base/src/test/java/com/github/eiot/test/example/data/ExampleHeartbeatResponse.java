@@ -12,10 +12,16 @@ public class ExampleHeartbeatResponse {
     @FrameField(len = 1)
     private int result;
 
+    /**
+     * getter auto generated
+     */
     public int getResult() {
         return result;
     }
 
+    /**
+     * setter auto generated
+     */
     public void setResult(int result) {
         this.result = result;
     }

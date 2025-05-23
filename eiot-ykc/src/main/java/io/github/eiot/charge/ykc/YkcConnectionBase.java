@@ -38,7 +38,7 @@ interface YkcConnectionBase extends IotConnection {
                 String terminalNo = ykcFrame
                         .data()
                         .getTerminalNo()
-                        .toString();
+                        .to0StripString();
                 this.put(TERMINAL_NO_KEY, terminalNo);
             } catch (Throwable e) {
                 logger.warn("try to parse terminalNo in loginRequestFrame failed", e);

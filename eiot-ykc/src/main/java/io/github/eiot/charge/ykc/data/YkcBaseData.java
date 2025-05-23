@@ -3,15 +3,10 @@ package io.github.eiot.charge.ykc.data;
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
-import io.github.eiot.utils.StringUtil;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * created by wang007 on 2024/11/11
  */
-@ToString
-@Data
 @Frame
 public class YkcBaseData {
 
@@ -21,8 +16,25 @@ public class YkcBaseData {
     @FrameField(len = 7)
     private BCD terminalNo;
 
-    public void setTerminalNoString(String terminalNo) {
-        terminalNo = StringUtil.leftPad(terminalNo, 14, '0');
-        setTerminalNo(BCD.from(terminalNo));
+    /**
+     * getter auto generated
+     */
+    public BCD getTerminalNo() {
+        return terminalNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTerminalNo(BCD terminalNo) {
+        this.terminalNo = terminalNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTerminalNo(String terminalNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(terminalNo, 14, terminalNo);
+        this.terminalNo = BCD.from(terminalNo, 14);
     }
 }

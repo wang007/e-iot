@@ -1,13 +1,10 @@
 package io.github.eiot.charge.ykc.data;
 
-
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.Ascii;
 import io.github.eiot.codec.BCD;
 import io.github.eiot.codec.NumberUnit;
-import lombok.Data;
-import lombok.ToString;
 
 /**
  * 充电握手 0x15
@@ -17,8 +14,6 @@ import lombok.ToString;
  * @author yan
  * @since 2024-11-18
  */
-@ToString(callSuper = true)
-@Data
 @Frame
 public class YkcBmsShake {
 
@@ -149,4 +144,296 @@ public class YkcBmsShake {
      */
     @FrameField(len = 8)
     private byte[] bmsSoftVersion;
+
+    /**
+     * getter auto generated
+     */
+    public BCD getOrderNo() {
+        return orderNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOrderNo(BCD orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOrderNo(String orderNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(orderNo, 32, orderNo);
+        this.orderNo = BCD.from(orderNo, 32);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public BCD getTerminalNo() {
+        return terminalNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTerminalNo(BCD terminalNo) {
+        this.terminalNo = terminalNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setTerminalNo(String terminalNo) {
+        io.github.eiot.utils.ValidationUtil.lteLen(terminalNo, 14, terminalNo);
+        this.terminalNo = BCD.from(terminalNo, 14);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getGunNo() {
+        return gunNo;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setGunNo(int gunNo) {
+        this.gunNo = gunNo;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public byte[] getBmsProtocolVersion() {
+        return bmsProtocolVersion;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setBmsProtocolVersion(byte[] bmsProtocolVersion) {
+        this.bmsProtocolVersion = bmsProtocolVersion;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getBmsType() {
+        return bmsType;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setBmsType(int bmsType) {
+        this.bmsType = bmsType;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getRatedCapacity() {
+        return ratedCapacity;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRatedCapacity(NumberUnit ratedCapacity) {
+        this.ratedCapacity = ratedCapacity;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRatedCapacity(double ratedCapacity) {
+        this.ratedCapacity = NumberUnit.from(ratedCapacity, 10);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public NumberUnit getRatedV() {
+        return ratedV;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRatedV(NumberUnit ratedV) {
+        this.ratedV = ratedV;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setRatedV(double ratedV) {
+        this.ratedV = NumberUnit.from(ratedV, 10);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public Ascii getManufacturer() {
+        return manufacturer;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setManufacturer(Ascii manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setManufacturer(String manufacturer) {
+        io.github.eiot.utils.ValidationUtil.lteLen(manufacturer, 4, manufacturer);
+        this.manufacturer = Ascii.from(manufacturer, 4);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public BCD getBmsSn() {
+        return bmsSn;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setBmsSn(BCD bmsSn) {
+        this.bmsSn = bmsSn;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setBmsSn(String bmsSn) {
+        io.github.eiot.utils.ValidationUtil.lteLen(bmsSn, 8, bmsSn);
+        this.bmsSn = BCD.from(bmsSn, 8);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getProductionYear() {
+        return productionYear;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setProductionYear(int productionYear) {
+        this.productionYear = productionYear;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getProductionMonth() {
+        return productionMonth;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setProductionMonth(int productionMonth) {
+        this.productionMonth = productionMonth;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getProductionDay() {
+        return productionDay;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setProductionDay(int productionDay) {
+        this.productionDay = productionDay;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getChargeCount() {
+        return chargeCount;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setChargeCount(int chargeCount) {
+        this.chargeCount = chargeCount;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getOwner() {
+        return owner;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setOwner(int owner) {
+        this.owner = owner;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public int getReverse1() {
+        return reverse1;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setReverse1(int reverse1) {
+        this.reverse1 = reverse1;
+    }
+
+    /**
+     * getter auto generated
+     */
+    public Ascii getVin() {
+        return vin;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setVin(Ascii vin) {
+        this.vin = vin;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setVin(String vin) {
+        io.github.eiot.utils.ValidationUtil.lteLen(vin, 17, vin);
+        this.vin = Ascii.from(vin, 17);
+    }
+
+    /**
+     * getter auto generated
+     */
+    public byte[] getBmsSoftVersion() {
+        return bmsSoftVersion;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setBmsSoftVersion(byte[] bmsSoftVersion) {
+        this.bmsSoftVersion = bmsSoftVersion;
+    }
 }
