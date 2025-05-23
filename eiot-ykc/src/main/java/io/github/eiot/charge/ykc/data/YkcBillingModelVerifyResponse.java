@@ -31,5 +31,5 @@ public class YkcBillingModelVerifyResponse extends YkcBaseData {
      * 0x01 桩计费模型与平台不一致
      */
     @FrameField(len = 1)
-    private Long result;
+    private int result;
 }

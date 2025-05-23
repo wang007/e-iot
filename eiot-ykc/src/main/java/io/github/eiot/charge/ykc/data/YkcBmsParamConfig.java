@@ -5,6 +5,7 @@ import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
 import io.github.eiot.codec.NumberUnit;
+import io.github.eiot.codec.OffsetNumberUnit;
 import lombok.Data;
 import lombok.ToString;
 
@@ -49,7 +50,7 @@ public class YkcBmsParamConfig {
      * 0.1 A/位，-400A 偏移量
      */
     @FrameField(len = 2, unit = 10, offset = -400)
-    private NumberUnit maxI;
+    private OffsetNumberUnit maxI;
 
     /**
      * BMS 动力蓄电池标称总能量
@@ -70,7 +71,7 @@ public class YkcBmsParamConfig {
      * 1ºC/位，-50 ºC 偏移量；数据范围：-50 ºC ~+200 ºC
      */
     @FrameField(len = 1, offset = -50)
-    private long maxTemp;
+    private OffsetNumberUnit maxTemp;
 
     /**
      * BMS 整车动力蓄电池荷电状态(soc)
@@ -104,12 +105,12 @@ public class YkcBmsParamConfig {
      * 0.1 V /位，0 V 偏移量
      */
     @FrameField(len = 2, unit = 10, offset = -400)
-    private NumberUnit pileMaxI;
+    private OffsetNumberUnit pileMaxI;
 
     /**
      * 电桩最低输出电流
      * 0.1 V /位，0 V 偏移量
      */
     @FrameField(len = 2, unit = 10, offset = -400)
-    private NumberUnit pileMinI;
+    private OffsetNumberUnit pileMinI;
 }

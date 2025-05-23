@@ -5,6 +5,7 @@ import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
 import io.github.eiot.codec.NumberUnit;
+import io.github.eiot.codec.OffsetNumberUnit;
 import lombok.Data;
 import lombok.ToString;
 
@@ -46,7 +47,7 @@ public class YkcBmsChargingData {
      * 需求电流
      */
     @FrameField(len = 2, unit = 10, offset = 400, offsetReverse = true)
-    private NumberUnit requiredI;
+    private OffsetNumberUnit requiredI;
 
     /**
      * BMS 充电模式
@@ -66,7 +67,7 @@ public class YkcBmsChargingData {
      * 测量电流
      */
     @FrameField(len = 2, unit = 10, offset = 400, offsetReverse = true)
-    private NumberUnit measureI;
+    private OffsetNumberUnit measureI;
 
     /**
      * BMS 最高单体动力蓄电池电压及组号
@@ -98,7 +99,7 @@ public class YkcBmsChargingData {
      * 电桩电流输出值
      */
     @FrameField(len = 2, unit = 10, offset = 400, offsetReverse = true)
-    private NumberUnit pileOutI;
+    private OffsetNumberUnit pileOutI;
 
     /**
      * 累计充电时长(min)

@@ -3,6 +3,7 @@ package io.github.eiot.charge.ykc.data;
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
+import io.github.eiot.codec.OffsetNumberUnit;
 import lombok.Data;
 import lombok.ToString;
 
@@ -44,7 +45,7 @@ public class YkcBmsChargingStatus {
      * BMS 最高动力蓄电池温度; 1ºC/位，-50 ºC 偏移量；
      */
     @FrameField(len = 1, offset = -50)
-    private int maxTemp;
+    private OffsetNumberUnit maxTemp;
 
     /**
      * 最高温度检测点编号
@@ -56,7 +57,7 @@ public class YkcBmsChargingStatus {
      * 最低动力蓄电池温度;1ºC/位，-50 ºC 偏移量；
      */
     @FrameField(len = 1, offset = -50)
-    private int minTemp;
+    private OffsetNumberUnit minTemp;
 
     /**
      * 最低温度检测点编号

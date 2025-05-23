@@ -4,6 +4,7 @@ import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
 import io.github.eiot.codec.BCD;
 import io.github.eiot.codec.NumberUnit;
+import io.github.eiot.codec.OffsetNumberUnit;
 import lombok.Data;
 import lombok.ToString;
 
@@ -79,7 +80,7 @@ public class YkcChargingData {
      * 枪线温度 BIN 码 1 整形，偏移量-50；待机置零
      */
     @FrameField(len = 1, offset = -50)
-    private NumberUnit gunTemp;
+    private OffsetNumberUnit gunTemp;
 
     /**
      * 枪线编码 BIN 码 8 没有置零
@@ -98,7 +99,7 @@ public class YkcChargingData {
      * 交流桩置零
      */
     @FrameField(len = 1, offset = -50)
-    private NumberUnit batteryTempMax;
+    private OffsetNumberUnit batteryTempMax;
 
     /**
      * 累计充电时间 BIN 码 2 单位：min；待机置零

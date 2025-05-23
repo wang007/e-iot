@@ -20,7 +20,7 @@ public class YkcLoginRequest extends YkcBaseData {
     /**
      * 桩类型 BIN 1  0 表示直流桩，1 表示交流桩
      */
-    @FrameField
+    @FrameField(len = 1)
     private int pileType;
 
     /**
