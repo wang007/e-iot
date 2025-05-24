@@ -14,7 +14,6 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <lombok.version>1.18.22</lombok.version>
     </properties>
 
     <dependencies>
@@ -31,18 +30,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version> <!-- 确保版本兼容 -->
-                <configuration>
-                    <source>8</source>     <!-- 根据项目 Java 版本修改 -->
-                    <target>8</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
+                <version>3.11.0</version>
             </plugin>
         </plugins>
     </build>
