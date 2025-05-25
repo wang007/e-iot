@@ -22,7 +22,8 @@ public class HexCodec extends AbstractCodec<Hex> {
 
     @Override
     public Hex decode(ByteBuf byteBuf, CodecContext context) {
-        byte[] bs = CodecUtil.readBytes(byteBuf, length);
+        int len = getLengthWithContext(context);
+        byte[] bs = CodecUtil.readBytes(byteBuf, len);
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             CodecUtil.reverseBytes(bs);
         }

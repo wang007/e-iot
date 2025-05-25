@@ -25,4 +25,17 @@ public abstract class AbstractCodec<T> implements Codec<T> {
     public int getLength() {
         return length;
     }
+
+
+    public int getLengthWithContext(CodecContext context) {
+        int len = length;
+        if (len == -1) {
+            len = context.get(CodecContext.DATA_LEN_KEY, -1);
+        }
+        if (len < 0) {
+            throw new IllegalArgumentException("codec length < 0");
+        }
+        return len;
+    }
+
 }

@@ -44,4 +44,16 @@ public class StringUtil {
         return s.toString();
     }
 
+    public static void validateAscii(String value) {
+        if (value == null) {
+            return;
+        }
+        for (int i = 0; i < value.length(); i++) {
+            int v = value.charAt(i);
+            if (v > 127) {
+                throw new IllegalArgumentException(value +  " is not ascii String");
+            }
+        }
+    }
+
 }

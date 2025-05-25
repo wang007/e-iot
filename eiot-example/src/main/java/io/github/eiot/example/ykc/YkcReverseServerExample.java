@@ -33,7 +33,7 @@ public class YkcReverseServerExample {
                     conn.pause();
 
                     // first frame must be login frame
-                    if (!frame.command().equals(YkcCommand.YkcLoginRequest.command())) {
+                    if (!frame.command().equals(YkcCommand.LoginRequest.command())) {
                         // drop it!
                         return;
                     }

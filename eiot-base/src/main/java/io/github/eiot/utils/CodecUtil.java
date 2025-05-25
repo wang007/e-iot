@@ -86,7 +86,7 @@ public class CodecUtil {
                     low5 = byteBuf.readUnsignedIntLE();
                     high5 = byteBuf.readByte();
                 }
-                return (((long) (0xFF & high5) << 32) & low5);
+                return (((long) (0xFF & high5) << 32) | low5);
             case 6:
                 short high6;
                 long low6;
@@ -97,7 +97,7 @@ public class CodecUtil {
                     low6 = byteBuf.readUnsignedIntLE();
                     high6 = byteBuf.readShortLE();
                 }
-                return (((long) (0xFFFF & high6) << 32) & low6);
+                return (((long) (0xFFFF & high6) << 32) | low6);
             case 7:
                 int high7;
                 long low7;
@@ -108,7 +108,7 @@ public class CodecUtil {
                     low7 = byteBuf.readUnsignedIntLE();
                     high7 = byteBuf.readMediumLE();
                 }
-                return (((long) (0xFFFFFF & high7) << 32) & low7);
+                return (((long) (0xFFFFFF & high7) << 32) | low7);
             default:
                 throw new IllegalArgumentException("length must be 0 ~ 8");
         }
@@ -118,7 +118,7 @@ public class CodecUtil {
      * read number for byteBuf
      *
      * @param byteBuf ByteBuf
-     * @param value a long number
+     * @param value   a long number
      * @param order   ByteOrder
      * @param length  rang 0 ~ 8
      */
@@ -157,7 +157,7 @@ public class CodecUtil {
                 return;
             case 5:
                 byte high5 = (byte) ((value >>> 32) & 0xFF);
-                int low5 = (int) (value >>> 32);
+                int low5 = (int) (value);
                 if (order == ByteOrder.BIG_ENDIAN) {
                     byteBuf.writeByte(high5);
                     byteBuf.writeInt(low5);
@@ -168,7 +168,7 @@ public class CodecUtil {
                 return;
             case 6:
                 short high6 = (byte) ((value >>> 32) & 0xFFFF);
-                int low6 = (int) (value >>> 32);
+                int low6 = (int) (value);
                 if (order == ByteOrder.BIG_ENDIAN) {
                     byteBuf.writeShort(high6);
                     byteBuf.writeInt(low6);
@@ -179,7 +179,7 @@ public class CodecUtil {
                 return;
             case 7:
                 int high7 = (byte) ((value >>> 32) & 0xFFFFFF);
-                int low7 = (int) (value >>> 32);
+                int low7 = (int) (value);
                 if (order == ByteOrder.BIG_ENDIAN) {
                     byteBuf.writeMedium(high7);
                     byteBuf.writeInt(low7);

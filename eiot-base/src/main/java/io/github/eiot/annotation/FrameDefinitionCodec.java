@@ -38,10 +38,33 @@ class FrameDefinitionCodec implements Codec<Object> {
             Field field = ffd.field;
             try {
                 if (ffd.frameField != null) {
+                    String lenKey = ffd.frameField.lenByField();
+                    boolean lenIntoContext = false;
+                    int preLen = -1;
+                    if (!"".equals(lenKey)) {
+                        int len = context.get(lenKey, -1);
+                        if (len != -1) {
+                            Object pre = context.put(CodecContext.DATA_LEN_KEY, len);
+                            if (pre != null) {
+                                preLen = ((Number) (pre)).intValue();
+                            }
+                            lenIntoContext = true;
+                        }
+                    }
+
                     Object v = ffd.codec.decode(byteBuf, context);
                     field.set(instance, v);
                     if (ffd.frameField.intoContext()) {
                         context.put(field.getName(), v);
+                    }
+
+                    if (lenIntoContext) {
+                        // prev is not exist, remove current
+                        if (preLen == -1) {
+                            context.remove(CodecContext.DATA_LEN_KEY);
+                        } else {
+                            context.put(CodecContext.DATA_LEN_KEY, preLen);
+                        }
                     }
                 } else if (ffd.frameFieldLoop != null) {
                     int loopNum = getLoopNum(ffd.frameFieldLoop, context);
@@ -100,6 +123,7 @@ class FrameDefinitionCodec implements Codec<Object> {
                             throw new IllegalArgumentException(field.getName() + " len not equals " + len);
                         }
                     }
+                    byteBuf.writeBytes(v);
                 }
             } catch (Exception e) {
                 throw new EncodeException("class: " + frameDefinition.frameDateClz.getName() + " " + ffd.field.getName() + " encode failed", e);

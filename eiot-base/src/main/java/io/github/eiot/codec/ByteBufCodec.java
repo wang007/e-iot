@@ -22,10 +22,11 @@ public class ByteBufCodec extends AbstractCodec<ByteBuf> {
 
     @Override
     public ByteBuf decode(ByteBuf byteBuf, CodecContext context) {
+        int len = getLengthWithContext(context);
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             throw new UnsupportedOperationException("byteBuf not support BIG_ENDIAN");
         }
-        byte[] bs = new byte[length];
+        byte[] bs = new byte[len];
         ByteBuf buffer = Unpooled.buffer();
         byteBuf.readBytes(bs);
         buffer.writeBytes(bs);

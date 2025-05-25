@@ -24,13 +24,7 @@ public class ByteBufRefCodec extends AbstractCodec<ByteBufRef> {
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             throw new UnsupportedOperationException("byteBuf not support BIG_ENDIAN");
         }
-        int len = length;
-        if (len == -1) {
-            len = context.get(CodecContext.DATA_LEN_KEY, -1);
-        }
-        if (len < 0) {
-            throw new IllegalArgumentException("codec length < 0");
-        }
+        int len = getLengthWithContext(context);
         return new ByteBufRef(byteBuf.readSlice(len));
     }
 

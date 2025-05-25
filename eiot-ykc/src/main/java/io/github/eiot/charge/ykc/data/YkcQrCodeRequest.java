@@ -2,6 +2,7 @@ package io.github.eiot.charge.ykc.data;
 
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
+import io.github.eiot.codec.Ascii;
 
 /**
  * 后台远程下发二维码前缀指令  0xF0
@@ -24,14 +25,14 @@ public class YkcQrCodeRequest extends YkcBaseData {
      * BIN 码 1 二维码前缀长度长度最大不超过
      * 200 字节
      */
-    @FrameField(len = 1)
+    @FrameField(len = 1, intoContext = true)
     private int prefixLen;
 
     /**
      * 二维码前缀 ASCII 可变 如：“www.baidu.com？No=”
      */
     @FrameField(lenByField = "prefixLen")
-    private String qrCodePrefix;
+    private Ascii qrCodePrefix;
 
     /**
      * getter auto generated
@@ -64,14 +65,21 @@ public class YkcQrCodeRequest extends YkcBaseData {
     /**
      * getter auto generated
      */
-    public String getQrCodePrefix() {
+    public Ascii getQrCodePrefix() {
         return qrCodePrefix;
     }
 
     /**
      * setter auto generated
      */
-    public void setQrCodePrefix(String qrCodePrefix) {
+    public void setQrCodePrefix(Ascii qrCodePrefix) {
         this.qrCodePrefix = qrCodePrefix;
+    }
+
+    /**
+     * setter auto generated
+     */
+    public void setQrCodePrefix(String qrCodePrefix) {
+        this.qrCodePrefix = Ascii.from(qrCodePrefix);
     }
 }

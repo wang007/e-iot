@@ -40,10 +40,10 @@ public class BCD {
         for (int j : bcd) {
             if (append) {
                 s.append(j);
-                break;
+                continue;
             }
             if (j == 0) {
-                break;
+                continue;
             }
             append = true;
             s.append(j);

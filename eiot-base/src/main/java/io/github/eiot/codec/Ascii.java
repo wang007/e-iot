@@ -1,5 +1,7 @@
 package io.github.eiot.codec;
 
+import io.github.eiot.utils.StringUtil;
+
 /**
  * ascii data type
  * created by wang007 on 2025/2/28
@@ -69,12 +71,11 @@ public class Ascii {
     }
 
     public static Ascii from(String value) {
-        // TODO value check ascii
-        return new Ascii(value);
+        return from(value, value.length());
     }
 
     public static Ascii from(String value, int len) {
-        // TODO value check ascii
+        StringUtil.validateAscii(value);
         return new Ascii(value, len);
     }
 }

@@ -20,6 +20,7 @@ class BaseTypeCodecCache {
 
     static {
         Map<Class<?>, Class<? extends Codec<?>>> tempMap = new HashMap<>();
+        tempMap.put(Ascii.class, AsciiCodec.class);
         tempMap.put(BCD.class, BCDCodec.class);
         tempMap.put(BCDNumber.class, BCDNumberCodec.class);
         tempMap.put(BCDTime.class, BCDTimeCodec.class);
@@ -33,6 +34,8 @@ class BaseTypeCodecCache {
         tempMap.put(CP56time2a.class, CP56time2aCodec.class);
         tempMap.put(Hex.class, HexCodec.class);
         tempMap.put(NumberUnit.class, NumberUnitCodec.class);
+        tempMap.put(OffsetBCDNumber.class, OffsetBCDNumberCodec.class);
+        tempMap.put(OffsetNumberUnit.class, OffsetNumberUnitCodec.class);
         baseTypeCodecs = tempMap;
     }
 
@@ -55,13 +58,17 @@ class BaseTypeCodecCache {
         Function<CodecKey, Codec<?>> f = k -> {
             try {
                 if (codecType == BCDNumberCodec.class || codecType == NumberUnitCodec.class) {
-                    Constructor<? extends Codec<?>> constructor = codecType.getConstructor(Integer.class, java.nio.ByteOrder.class, Integer.class, Integer.class, Boolean.class);
+                    Constructor<? extends Codec<?>> constructor = codecType.getConstructor(int.class, java.nio.ByteOrder.class, int.class);
+                    return constructor.newInstance(frameField.len(), byteOrder, frameField.unit());
+
+                } else if (codecType == OffsetNumberUnitCodec.class || codecType == OffsetBCDNumberCodec.class) {
+                    Constructor<? extends Codec<?>> constructor = codecType.getConstructor(int.class, java.nio.ByteOrder.class, int.class, int.class, boolean.class);
                     return constructor.newInstance(frameField.len(), byteOrder, frameField.unit(), frameField.offset(), frameField.offsetReverse());
                 } else if (codecType == BCDTimeCodec.class || codecType == CP56time2aCodec.class) {
                     Constructor<? extends Codec<?>> constructor = codecType.getConstructor(java.nio.ByteOrder.class);
                     return constructor.newInstance(byteOrder);
                 } else {
-                    Constructor<? extends Codec<?>> constructor = codecType.getConstructor(Integer.class, java.nio.ByteOrder.class);
+                    Constructor<? extends Codec<?>> constructor = codecType.getConstructor(int.class, java.nio.ByteOrder.class);
                     return constructor.newInstance(frameField.len(), byteOrder);
                 }
             } catch (Exception e) {
