@@ -1,14 +1,15 @@
-package io.github.eiot.server;
+package io.github.eiot;
 
-import io.github.eiot.IotServerOptions;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.impl.JsonUtil;
-
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 /**
- * Converter and mapper for {@link IotServerOptions}.
- * NOTE: This class has been automatically generated from the {@link IotServerOptions} original class using Vert.x codegen.
+ * Converter and mapper for {@link io.github.eiot.IotServerOptions}.
+ * NOTE: This class has been automatically generated from the {@link io.github.eiot.IotServerOptions} original class using Vert.x codegen.
  */
 public class IotServerOptionsConverter {
 
@@ -16,7 +17,7 @@ public class IotServerOptionsConverter {
   private static final Base64.Decoder BASE64_DECODER = JsonUtil.BASE64_DECODER;
   private static final Base64.Encoder BASE64_ENCODER = JsonUtil.BASE64_ENCODER;
 
-  public static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, IotServerOptions obj) {
+   static void fromJson(Iterable<java.util.Map.Entry<String, Object>> json, IotServerOptions obj) {
     for (java.util.Map.Entry<String, Object> member : json) {
       switch (member.getKey()) {
         case "frameCodecOptions":

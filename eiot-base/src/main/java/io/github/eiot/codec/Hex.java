@@ -17,6 +17,11 @@ public class Hex {
         this.hexString = ByteBufUtil.hexDump(bytes);
     }
 
+    public Hex(byte[] bytes, String hexString) {
+        this.bytes = bytes;
+        this.hexString = hexString;
+    }
+
     public String toHexString() {
         return this.hexString;
     }
@@ -33,7 +38,7 @@ public class Hex {
             throw new IllegalArgumentException("hexString.length() /2 != 0");
         }
         byte[] bytes = ByteBufUtil.decodeHexDump(hexString);
-        return new Hex(bytes);
+        return new Hex(bytes, hexString);
     }
 
     /**

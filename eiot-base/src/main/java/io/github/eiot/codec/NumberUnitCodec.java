@@ -14,12 +14,12 @@ public class NumberUnitCodec extends AbstractCodec<NumberUnit> {
     private final int unit;
 
     public NumberUnitCodec(int length, int unit) {
-        super(length);
-        this.unit = unit;
+        this(length, ByteOrder.LITTLE_ENDIAN, unit);
     }
 
+
     public NumberUnitCodec(int length, ByteOrder byteOrder, int unit) {
-        super(length, byteOrder);
+        super(length, byteOrder, null);
         this.unit = unit;
     }
 

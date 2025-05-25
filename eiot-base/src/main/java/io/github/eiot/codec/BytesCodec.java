@@ -16,12 +16,17 @@ public class BytesCodec extends AbstractCodec<byte[]> {
     }
 
     public BytesCodec(int length, ByteOrder byteOrder) {
-        super(length, byteOrder);
+        super(length, byteOrder, null);
+    }
+
+    public BytesCodec(int length, ByteOrder byteOrder, String lengthKey) {
+        super(length, byteOrder, lengthKey);
     }
 
     @Override
     public byte[] decode(ByteBuf byteBuf, CodecContext context) {
-        byte[] bs = CodecUtil.readBytes(byteBuf, length);
+        int len = getLengthWithContext(context);
+        byte[] bs = CodecUtil.readBytes(byteBuf, len);
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             CodecUtil.reverseBytes(bs);
         }
@@ -30,9 +35,7 @@ public class BytesCodec extends AbstractCodec<byte[]> {
 
     @Override
     public void encode(ByteBuf byteBuf, byte[] data, CodecContext context) {
-        if (length != -1 && data.length != length) {
-            throw new IllegalArgumentException("data length != codec length");
-        }
+        checkLength(data.length);
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             byteBuf.writeBytes(CodecUtil.reverseBytesNewOne(data));
         } else {

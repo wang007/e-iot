@@ -56,6 +56,7 @@
                 <artifactId>jsonschema2pojo-maven-plugin</artifactId>
                 <version>1.2.2</version>
                 <configuration>
+                    <skip>true</skip><!-- not repeat generate -->
                     <sourceDirectory>${basedir}/src/main/resources/schema</sourceDirectory>
                     <targetPackage>io.github.eiot.ocpp.schema.v2_1</targetPackage>
                     <targetVersion>1.8</targetVersion>

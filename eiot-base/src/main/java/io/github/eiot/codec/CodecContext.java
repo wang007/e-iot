@@ -12,8 +12,6 @@ import java.util.Map;
  */
 public interface CodecContext extends AttributeHolder {
 
-    String DATA_LEN_KEY = "_data_len";
-
     CodecContext EMPTY = new CodecContext() {
         @Override
         public CodecContext put(String key, Object obj) {

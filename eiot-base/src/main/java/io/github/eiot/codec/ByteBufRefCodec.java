@@ -16,7 +16,11 @@ public class ByteBufRefCodec extends AbstractCodec<ByteBufRef> {
     }
 
     public ByteBufRefCodec(int length, ByteOrder byteOrder) {
-        super(length, byteOrder);
+        super(length, byteOrder, null);
+    }
+
+    public ByteBufRefCodec(int length, ByteOrder byteOrder, String lengthKey) {
+        super(length, byteOrder, lengthKey);
     }
 
     @Override
@@ -24,27 +28,17 @@ public class ByteBufRefCodec extends AbstractCodec<ByteBufRef> {
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             throw new UnsupportedOperationException("byteBuf not support BIG_ENDIAN");
         }
-        int len = length;
-        if (len == -1) {
-            len = context.get(CodecContext.DATA_LEN_KEY, -1);
-        }
-        if (len < 0) {
-            throw new IllegalArgumentException("codec length < 0");
-        }
+        int len = getLengthWithContext(context);
         return new ByteBufRef(byteBuf.readSlice(len));
     }
 
     @Override
     public void encode(ByteBuf byteBuf, ByteBufRef data, CodecContext context) {
-        if (length != -1) {
-            int readableBytes = data.byteBuf().readableBytes();
-            if (readableBytes != length) {
-                throw new IllegalArgumentException("byteBuf length != codec length");
-            }
-        }
+        ByteBuf value = data.byteBuf();
+        checkLength(value.readableBytes());
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
             throw new UnsupportedOperationException("byteBuf not support BIG_ENDIAN");
         }
-        byteBuf.writeBytes(data.byteBuf());
+        byteBuf.writeBytes(value);
     }
 }

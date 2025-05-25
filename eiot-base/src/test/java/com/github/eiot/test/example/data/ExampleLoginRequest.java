@@ -2,9 +2,7 @@ package com.github.eiot.test.example.data;
 
 import io.github.eiot.annotation.Frame;
 import io.github.eiot.annotation.FrameField;
-import io.github.eiot.codec.Ascii;
-import io.github.eiot.codec.BCD;
-import io.github.eiot.utils.StringUtil;
+import io.github.eiot.codec.*;
 
 /**
  * created by wang007 on 2025/4/12
@@ -20,13 +18,6 @@ public class ExampleLoginRequest {
 
     @FrameField(len = 1)
     public int safeMode;
-
-    /**
-     * getter auto generated
-     */
-    public Ascii getUsername() {
-        return username;
-    }
 
     /**
      * setter auto generated

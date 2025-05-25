@@ -27,11 +27,11 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
 
     static {
         HexCodec start = new HexCodec(1);
-        BIN4ContextCodec len = new BIN4ContextCodec(2);
+        BIN4Codec len = new BIN4Codec(2, ByteOrder.LITTLE_ENDIAN, "len");
         BIN4Codec seqNo = new BIN4Codec(2);
         BIN4Codec cryptType = new BIN4Codec(1);
         HexCodec command = new HexCodec(1);
-        ByteBufRefCodec data = new ByteBufRefCodec(-1);
+        ByteBufRefCodec data = new ByteBufRefCodec(-1, ByteOrder.LITTLE_ENDIAN, "len");
         BIN4Codec checkCode = new BIN4Codec(2);
         YKC_CODEC = new ComposeCodec(Arrays.asList(start, len, seqNo, cryptType, command, data, checkCode));
     }

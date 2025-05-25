@@ -27,15 +27,15 @@ public class OffsetBCDNumberCodec extends AbstractCodec<OffsetBCDNumber> {
     }
 
     public OffsetBCDNumberCodec(int length, ByteOrder byteOrder, int unit, int offset) {
-        this(length, byteOrder, unit, offset, false);
+        this(length, byteOrder, null, unit, offset, false);
     }
 
-    public OffsetBCDNumberCodec(int length, ByteOrder byteOrder, int unit, int offset, boolean offsetReverse) {
-        super(length, byteOrder);
+    public OffsetBCDNumberCodec(int length, ByteOrder byteOrder, String lengthKey, int unit, int offset, boolean offsetReverse) {
+        super(length, byteOrder, null);
         this.unit = unit;
         this.offset = offset;
         this.offsetReverse = offsetReverse;
-        this.bcdCodec = new BCDCodec(length, byteOrder);
+        this.bcdCodec = new BCDCodec(length, byteOrder, lengthKey);
     }
 
     @Override

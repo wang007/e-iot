@@ -104,7 +104,8 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
             frameConvert = this.frameConverter;
             setResponseResult = this.setResponseResult;
         }
-        if (frameHandler != null) {
+
+        if (frameHandler != null || setResponseResult) {
             context.dispatch(byteBuf, v -> {
                 Frame<?> frame;
                 try {
@@ -147,7 +148,9 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
                 if (setResponseResult && trySetResponseResult(frame, null)) {
                     return;
                 }
-                frameHandler.handle(frame);
+                if (frameHandler != null) {
+                    frameHandler.handle(frame);
+                }
             });
         }
 

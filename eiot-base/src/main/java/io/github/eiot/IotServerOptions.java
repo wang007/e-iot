@@ -2,7 +2,7 @@ package io.github.eiot;
 
 import io.github.eiot.impl.MatchCommandIotConnection;
 import io.github.eiot.impl.SeqNoIotConnection;
-import io.github.eiot.server.IotServerOptionsConverter;
+import io.github.eiot.IotServerOptionsConverter;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.codegen.json.annotations.JsonGen;
 import io.vertx.core.json.JsonObject;

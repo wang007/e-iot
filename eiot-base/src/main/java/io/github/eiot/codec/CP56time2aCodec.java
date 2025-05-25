@@ -17,7 +17,7 @@ public class CP56time2aCodec extends AbstractCodec<CP56time2a> {
     }
 
     public CP56time2aCodec(ByteOrder byteOrder) {
-        super(7, byteOrder);
+        super(7, byteOrder, null);
     }
 
     @Override

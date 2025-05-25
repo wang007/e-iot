@@ -223,13 +223,15 @@ public class FrameDataGenerate {
                 BlockStmt doubleSetterBody = new BlockStmt();
                 switch (fd.simpleTypeName) {
                     case "BCDNumber":
+                        len = len * 2;
                         doubleSetterBody.addAndGetStatement("this." + fd.name + " = " + fd.simpleTypeName + ".from(" + fd.name + ", " + unit + "," + len + ")");
                         break;
                     case "NumberUnit":
                         doubleSetterBody.addAndGetStatement("this." + fd.name + " = " + fd.simpleTypeName + ".from(" + fd.name + ", " + unit + ")");
                         break;
                     case "OffsetBCDNumber":
-                        doubleSetterBody.addAndGetStatement("this." + fd.name + " = " + fd.simpleTypeName + ".from(" + fd.name + ", " + unit + ", " + offset + ", " + offsetReverse + len + ")");
+                        len = len * 2;
+                        doubleSetterBody.addAndGetStatement("this." + fd.name + " = " + fd.simpleTypeName + ".from(" + fd.name + ", " + unit + ", " + offset + ", " + offsetReverse + ", " + len + ")");
                         break;
                     case "OffsetNumberUnit":
                         doubleSetterBody.addAndGetStatement("this." + fd.name + " = " + fd.simpleTypeName + ".from(" + fd.name + ", " + unit + ", " + offset + ", " + offsetReverse + ")");

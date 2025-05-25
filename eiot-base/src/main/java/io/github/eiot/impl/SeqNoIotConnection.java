@@ -66,6 +66,9 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
 
                 Timer timer = vertx.timer(timeout, TimeUnit.MILLISECONDS);
                 timer.onComplete(ar -> {
+                    if (ar.failed()) { // ignore cancel
+                        return;
+                    }
                     Promise<Integer> peek = pendingRequests.peek();
                     if (peek == promise) {
                         // drop

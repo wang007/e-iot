@@ -22,10 +22,15 @@ public class BCDNumberCodec extends AbstractCodec<BCDNumber> {
     }
 
     public BCDNumberCodec(int length, ByteOrder byteOrder, int unit) {
-        super(length, byteOrder);
-        this.unit = unit;
-        this.bcdCodec = new BCDCodec(length, byteOrder);
+        this(length, byteOrder, null, unit);
     }
+
+    public BCDNumberCodec(int length, ByteOrder byteOrder, String lengthKey, int unit) {
+        super(length, byteOrder, null);
+        this.unit = unit;
+        this.bcdCodec = new BCDCodec(length, byteOrder, lengthKey);
+    }
+
 
     @Override
     public BCDNumber decode(ByteBuf byteBuf, CodecContext context) {

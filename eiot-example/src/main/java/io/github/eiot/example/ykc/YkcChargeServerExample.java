@@ -32,7 +32,7 @@ public class YkcChargeServerExample {
             IotRouter router = IotRouter.router(vertx);
 
             // heartbeat handler
-            router.route(YkcCommand.YkcHeartbeatRequest)
+            router.route(YkcCommand.HeartbeatRequest)
                     .handler(ctx -> {
                         Frame<YkcHeartbeatRequest> frame = ctx.frame();
                         System.out.println("heartbeat. gunNo: " + frame.data().getGunNo());
@@ -45,7 +45,7 @@ public class YkcChargeServerExample {
                         responseFrame.data(response).write();
 
                         // sync time for charge point
-                        DefaultYkcFrame<YkcSyncTimeRequest> ykcFrame = new DefaultYkcFrame<>(frame.iotConnection(), YkcCommand.YkcSyncTimeRequest);
+                        DefaultYkcFrame<YkcSyncTimeRequest> ykcFrame = new DefaultYkcFrame<>(frame.iotConnection(), YkcCommand.SyncTimeRequest);
                         YkcSyncTimeRequest timeRequest = ykcFrame.newData();
                         timeRequest.setTime(CP56time2a.now());
                         ykcFrame.data(timeRequest)
@@ -85,7 +85,7 @@ public class YkcChargeServerExample {
 
             @Override
             public CommandDef<YkcLoginRequest> commandDef() {
-                return YkcCommand.YkcLoginRequest;
+                return YkcCommand.LoginRequest;
             }
 
             @Override

@@ -1,5 +1,6 @@
 package io.github.eiot.example.ykc;
 
+import io.github.eiot.IotServerOptions;
 import io.github.eiot.charge.ykc.YkcClient;
 import io.github.eiot.charge.ykc.YkcServer;
 import io.github.eiot.charge.ykc.YkcCommand;
@@ -26,14 +27,15 @@ public class YkcReverseServerExample {
 
             YkcClient chargeClient = YkcClient.create(vertx);
 
-            YkcServer chargeServer = YkcServer.create(vertx);
+            IotServerOptions options = YkcServer.newOptions().setSetResponseResult(false); // disabled set result
+            YkcServer chargeServer = YkcServer.create(vertx, options);
             chargeServer.connectionHandler(conn -> {
                 conn.frameHandler(frame -> {
                     // pause first
                     conn.pause();
 
                     // first frame must be login frame
-                    if (!frame.command().equals(YkcCommand.YkcLoginRequest.command())) {
+                    if (!frame.command().equals(YkcCommand.LoginRequest.command())) {
                         // drop it!
                         return;
                     }

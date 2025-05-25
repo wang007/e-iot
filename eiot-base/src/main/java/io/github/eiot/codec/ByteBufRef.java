@@ -23,6 +23,6 @@ public class ByteBufRef {
     }
 
     public ByteBuf byteBuf() {
-        return byteBuf.slice();
+        return byteBuf.retainedSlice();
     }
 }
