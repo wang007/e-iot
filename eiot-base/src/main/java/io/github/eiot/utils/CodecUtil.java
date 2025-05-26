@@ -198,7 +198,7 @@ public class CodecUtil {
         for (int i = 0; i < len; i++) {
             byte b;
             if (order == ByteOrder.BIG_ENDIAN) {
-                b = (byte) (num >>> (8 * (len - i)) & 0xFF);
+                b = (byte) (num >>> (8 * (len - 1 - i)) & 0xFF);
             } else {
                 b = (byte) ((num >>> (8 * i)) & 0xFF);
             }

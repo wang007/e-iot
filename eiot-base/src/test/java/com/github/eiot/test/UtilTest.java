@@ -1,6 +1,7 @@
 package com.github.eiot.test;
 
 import io.github.eiot.utils.CodecUtil;
+import io.github.eiot.utils.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.junit.Assert;
@@ -11,7 +12,9 @@ import java.nio.ByteOrder;
 /**
  * created by wang007 on 2025/5/26
  */
-public class CodecUtilTest {
+public class UtilTest {
+
+    // CodecUtil
 
     @Test
     public void readAndWriteNumberTest() {
@@ -29,11 +32,20 @@ public class CodecUtilTest {
         CodecUtil.writeNumber(buffer, 12345, ByteOrder.LITTLE_ENDIAN, 5);
         Assert.assertEquals(12345, CodecUtil.readNumber(buffer, ByteOrder.LITTLE_ENDIAN, 5));
 
+        CodecUtil.writeNumber(buffer, 12345, ByteOrder.BIG_ENDIAN, 5);
+        Assert.assertEquals(12345, CodecUtil.readNumber(buffer, ByteOrder.BIG_ENDIAN, 5));
+
         CodecUtil.writeNumber(buffer, 123456, ByteOrder.LITTLE_ENDIAN, 6);
         Assert.assertEquals(123456, CodecUtil.readNumber(buffer, ByteOrder.LITTLE_ENDIAN, 6));
 
+        CodecUtil.writeNumber(buffer, 123456, ByteOrder.BIG_ENDIAN, 6);
+        Assert.assertEquals(123456, CodecUtil.readNumber(buffer, ByteOrder.BIG_ENDIAN, 6));
+
         CodecUtil.writeNumber(buffer, 1234567, ByteOrder.LITTLE_ENDIAN, 7);
         Assert.assertEquals(1234567, CodecUtil.readNumber(buffer, ByteOrder.LITTLE_ENDIAN, 7));
+
+        CodecUtil.writeNumber(buffer, 1234567, ByteOrder.BIG_ENDIAN, 7);
+        Assert.assertEquals(1234567, CodecUtil.readNumber(buffer, ByteOrder.BIG_ENDIAN, 7));
     }
 
     @Test
@@ -62,4 +74,19 @@ public class CodecUtilTest {
         ByteBuf byteBuf0 = Unpooled.buffer().writeInt((int) num);
         Assert.assertEquals(byteBuf0, Unpooled.wrappedBuffer(bytes0));
     }
+
+    // StringUtil
+    @Test
+    public void padTest() {
+        String str = "abc";
+        String leftPad = StringUtil.leftPad(str, 10, '0');
+        Assert.assertTrue(leftPad.startsWith("0000000"));
+
+        String rightPad = StringUtil.rightPad(str, 10, '0');
+        Assert.assertTrue(rightPad.endsWith("0000000"));
+
+        StringUtil.validateAscii("abcd123+-[];'");
+        Assert.assertThrows(IllegalArgumentException.class, () -> StringUtil.validateAscii("abc王"));
+    }
+
 }
