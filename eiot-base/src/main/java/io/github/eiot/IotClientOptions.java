@@ -1,6 +1,6 @@
 package io.github.eiot;
 
-import io.github.eiot.client.IotClientOptionsConverter;
+import io.github.eiot.IotClientOptionsConverter;
 import io.github.eiot.impl.MatchCommandIotConnection;
 import io.github.eiot.impl.SeqNoIotConnection;
 import io.vertx.codegen.annotations.DataObject;

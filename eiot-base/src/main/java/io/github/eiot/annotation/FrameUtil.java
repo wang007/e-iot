@@ -152,11 +152,13 @@ public class FrameUtil {
                             // if list class type have @Frame, use Frame, else use @FrameLoop.@FrameField
                             if (innerType.getDeclaredAnnotation(Frame.class) != null) {
                                 //FrameDefinition definition = parseFrameDefinitionAndCache(innerType);
-                                ffd.codec = parseFrameDefinitionAndCache(innerType);
+                                FrameDefinitionCodec codec = parseFrameDefinitionAndCache(innerType);
+                                ffd.codec = new ListCodec<>(fieldLoop.loopCount(), java.nio.ByteOrder.LITTLE_ENDIAN, fieldLoop.loopByField(), codec);
                             } else {
                                 if (fieldLoop.frameField() != null) {
                                     FrameField frameField = fieldLoop.frameField();
-                                    ffd.codec = BASE_TYPE_CODEC_CACHE.generateBaseCodec(innerType, field, frameByteOrder, frameField);
+                                    Codec<?> codec = BASE_TYPE_CODEC_CACHE.generateBaseCodec(innerType, field, frameByteOrder, frameField);
+                                    ffd.codec = new ListCodec<>(fieldLoop.loopCount(), java.nio.ByteOrder.LITTLE_ENDIAN, fieldLoop.loopByField(), codec);
                                 } else {
                                     throw new IllegalArgumentException("@FrameFieldLoop Field List class codec can not find");
                                 }

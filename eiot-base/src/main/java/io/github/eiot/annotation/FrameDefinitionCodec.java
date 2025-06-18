@@ -37,18 +37,7 @@ class FrameDefinitionCodec implements Codec<Object> {
         for (FrameDefinition.FrameFieldDefinition ffd : frameDefinition.fieldDefinitions) {
             Field field = ffd.field;
             try {
-                if (ffd.frameField != null) {
-                    Object v = ffd.codec.decode(byteBuf, context);
-                    field.set(instance, v);
-                } else if (ffd.frameFieldLoop != null) {
-                    int loopNum = getLoopNum(ffd.frameFieldLoop, context);
-                    List<Object> list = new ArrayList<>();
-                    for (int l = 0; l < loopNum; l++) {
-                        Object o = ffd.codec.decode(byteBuf, context);
-                        list.add(o);
-                    }
-                    field.set(instance, list);
-                } else {
+                if (ffd.frameFieldDynamics != null) {
                     int len = byteBuf.readableBytes();
                     FrameFieldDynamics dynamics = ffd.frameFieldDynamics;
                     if (!dynamics.isLast()) {
@@ -57,7 +46,10 @@ class FrameDefinitionCodec implements Codec<Object> {
 
                     ByteBufRef byteBufRef = ByteBufRef.from(byteBuf.readSlice(len));
                     field.set(instance, byteBufRef);
+                    continue;
                 }
+                Object v = ffd.codec.decode(byteBuf, context);
+                field.set(instance, v);
             } catch (Exception e) {
                 throw new DecodeException("class: " + frameDefinition.frameDateClz.getName() + " " + ffd.field.getName() + " codec failed", e);
             }
@@ -72,19 +64,7 @@ class FrameDefinitionCodec implements Codec<Object> {
         for (FrameDefinition.FrameFieldDefinition ffd : frameDefinition.fieldDefinitions) {
             try {
                 Field field = ffd.field;
-                if (ffd.frameField != null) {
-                    Object v = field.get(data);
-                    ffd.codec.encode(byteBuf, v, context);
-                } else if (ffd.frameFieldLoop != null) {
-                    int loopNum = getLoopNum(ffd.frameFieldLoop, context);
-                    List<?> list = (List<?>) field.get(data);
-                    if (list.size() != loopNum) {
-                        throw new IllegalArgumentException(field.getName() + " list size not equals " + loopNum);
-                    }
-                    for (int i = 0; i < loopNum; i++) {
-                        ffd.codec.encode(byteBuf, list.get(i), context);
-                    }
-                } else {
+                if (ffd.frameFieldDynamics != null) {
                     FrameFieldDynamics fieldDynamics = ffd.frameFieldDynamics;
                     ByteBuf v = ((ByteBufRef) field.get(data)).byteBuf();
                     // check
@@ -95,7 +75,10 @@ class FrameDefinitionCodec implements Codec<Object> {
                         }
                     }
                     byteBuf.writeBytes(v);
+                    continue;
                 }
+                Object v = field.get(data);
+                ffd.codec.encode(byteBuf, v, context);
             } catch (Exception e) {
                 throw new EncodeException("class: " + frameDefinition.frameDateClz.getName() + " " + ffd.field.getName() + " encode failed", e);
             }

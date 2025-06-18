@@ -58,6 +58,10 @@ class BaseTypeCodecCache {
 
         Function<CodecKey, Codec<?>> f = k -> {
             try {
+                String lengthKey = frameField.lenByField();
+                if (lengthKey.isEmpty()) {
+                    lengthKey = null;
+                }
                 if (codecType == BCDNumberCodec.class) {
                     Constructor<? extends Codec<?>> constructor = codecType.getConstructor(int.class, java.nio.ByteOrder.class, String.class, int.class);
                     return constructor.newInstance(frameField.len(), byteOrder, frameField.lenByField(), frameField.unit());
@@ -77,15 +81,14 @@ class BaseTypeCodecCache {
                 } else if (codecType == BCDTimeCodec.class || codecType == CP56time2aCodec.class) {
                     Constructor<? extends Codec<?>> constructor = codecType.getConstructor(java.nio.ByteOrder.class);
                     return constructor.newInstance(byteOrder);
+
                 } else {
-                    String lengthKey = frameField.lenByField();
-                    if (lengthKey.isEmpty() && frameField.intoContext()) {
+                    if (lengthKey == null && frameField.intoContext()) {
                         lengthKey = field.getName();
                     }
                     Constructor<? extends Codec<?>> constructor = codecType.getConstructor(int.class, java.nio.ByteOrder.class, String.class);
                     return constructor.newInstance(frameField.len(), byteOrder, lengthKey);
                 }
-
             } catch (Exception e) {
                 throw new IotException("class: " + k.clz.getName() + "new Codec instance failed", e);
             }
