@@ -17,7 +17,11 @@ public class HexCodec extends AbstractCodec<Hex> {
     }
 
     public HexCodec(int length, ByteOrder byteOrder) {
-        super(length, byteOrder);
+        super(length, byteOrder, null);
+    }
+
+    public HexCodec(int length, ByteOrder byteOrder, String lengthKey) {
+        super(length, byteOrder, lengthKey);
     }
 
     @Override
@@ -32,13 +36,12 @@ public class HexCodec extends AbstractCodec<Hex> {
 
     @Override
     public void encode(ByteBuf byteBuf, Hex data, CodecContext context) {
-        if (length != -1 && data.getBytes().length != length) {
-            throw new IllegalArgumentException("hex length != codec length");
-        }
+        byte[] bytes = data.bytes;
+        checkLength(bytes.length);
         if (byteOrder == ByteOrder.BIG_ENDIAN) {
-            byteBuf.writeBytes(CodecUtil.reverseBytesNewOne(data.getBytes()));
+            byteBuf.writeBytes(CodecUtil.reverseBytesNewOne(bytes));
         } else {
-            byteBuf.writeBytes(data.getBytes());
+            byteBuf.writeBytes(bytes);
         }
     }
 }

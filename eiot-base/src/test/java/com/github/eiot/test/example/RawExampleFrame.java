@@ -6,6 +6,7 @@ import io.github.eiot.impl.AbstractRawFrame;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,8 +34,8 @@ public class RawExampleFrame extends AbstractRawFrame implements ExampleFrame<By
         BCDCodec terminalNo = new BCDCodec(6);
         HexCodec command = new HexCodec(1);
         BIN4Codec seqNo = new BIN4Codec(2);
-        BIN4ContextCodec len = new BIN4ContextCodec(2);
-        ByteBufRefCodec data = new ByteBufRefCodec(-1);
+        BIN4Codec len = new BIN4Codec(2, ByteOrder.LITTLE_ENDIAN, "len");
+        ByteBufRefCodec data = new ByteBufRefCodec(-1, ByteOrder.LITTLE_ENDIAN, "len");
 
         CODEC = new ComposeCodec(Arrays.asList(header, terminalNo, command, seqNo, len, data));
     }

@@ -156,7 +156,7 @@ public class FrameUtil {
                             } else {
                                 if (fieldLoop.frameField() != null) {
                                     FrameField frameField = fieldLoop.frameField();
-                                    ffd.codec = BASE_TYPE_CODEC_CACHE.generateBaseCodec(innerType, frameByteOrder, frameField);
+                                    ffd.codec = BASE_TYPE_CODEC_CACHE.generateBaseCodec(innerType, field, frameByteOrder, frameField);
                                 } else {
                                     throw new IllegalArgumentException("@FrameFieldLoop Field List class codec can not find");
                                 }
@@ -174,7 +174,7 @@ public class FrameUtil {
                             if (ffd.frameField.intoContext() && !useContext) {
                                 throw new IllegalStateException("@FrameField intoContext() must be @Frame withContext() return true. current false.");
                             }
-                            ffd.codec = BASE_TYPE_CODEC_CACHE.generateBaseCodec(type, frameByteOrder, ffd.frameField);
+                            ffd.codec = BASE_TYPE_CODEC_CACHE.generateBaseCodec(type, field, frameByteOrder, ffd.frameField);
                         }
                         list.add(ffd);
                     }

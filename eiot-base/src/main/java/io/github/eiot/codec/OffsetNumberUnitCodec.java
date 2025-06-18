@@ -30,7 +30,7 @@ public class OffsetNumberUnitCodec extends AbstractCodec<OffsetNumberUnit> {
     }
 
     public OffsetNumberUnitCodec(int length, ByteOrder byteOrder, int unit, int offset, boolean offsetReverse) {
-        super(length, byteOrder);
+        super(length, byteOrder, null);
         this.unit = unit;
         this.offset = offset;
         this.offsetReverse = offsetReverse;

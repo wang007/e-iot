@@ -17,7 +17,7 @@ public class BCDTimeCodec extends AbstractCodec<BCDTime> {
     }
 
     public BCDTimeCodec(ByteOrder byteOrder) {
-        super(6, byteOrder);
+        super(6, byteOrder, null);
         this.bcdCodec = new BCDCodec(length, byteOrder);
     }
 

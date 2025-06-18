@@ -14,14 +14,15 @@ import java.nio.ByteOrder;
 public class BIN4Codec extends AbstractCodec<Integer> {
 
     public BIN4Codec(int length) {
-        super(length);
-        if (length > 4 || length < 1) {
-            throw new IllegalArgumentException("BIN4 codec length must be >= 1 and <= 4");
-        }
+        this(length, ByteOrder.LITTLE_ENDIAN);
     }
 
     public BIN4Codec(int length, ByteOrder byteOrder) {
-        super(length, byteOrder);
+        this(length, byteOrder, null);
+    }
+
+    public BIN4Codec(int length, ByteOrder byteOrder, String lengthKey) {
+        super(length, byteOrder, lengthKey);
         if (length > 4 || length < 1) {
             throw new IllegalArgumentException("BIN4 codec length must be >=1 and <= 4");
         }
@@ -30,11 +31,14 @@ public class BIN4Codec extends AbstractCodec<Integer> {
     @Override
     public Integer decode(ByteBuf byteBuf, CodecContext context) {
         long number = CodecUtil.readNumber(byteBuf, byteOrder, length);
-        return (int) number;
+        Integer v = (int) number;
+        putLengthIntoContext(context, v);
+        return v;
     }
 
     @Override
     public void encode(ByteBuf byteBuf, Integer data, CodecContext context) {
         CodecUtil.writeNumber(byteBuf, data, byteOrder, length);
+        putLengthIntoContext(context, data);
     }
 }

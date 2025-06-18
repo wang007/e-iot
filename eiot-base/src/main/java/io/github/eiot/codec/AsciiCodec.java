@@ -19,7 +19,11 @@ public class AsciiCodec extends AbstractCodec<Ascii> {
     }
 
     public AsciiCodec(int length, ByteOrder byteOrder) {
-        super(length, byteOrder);
+        super(length, byteOrder, null);
+    }
+
+    public AsciiCodec(int length, ByteOrder byteOrder, String lengthKey) {
+        super(length, byteOrder, lengthKey);
     }
 
     @Override
@@ -44,11 +48,7 @@ public class AsciiCodec extends AbstractCodec<Ascii> {
             ascii = new StringBuilder(ascii).reverse().toString();
         }
         byte[] bytes = ascii.getBytes(StandardCharsets.US_ASCII);
-        if (length != -1) {
-            if (bytes.length != length) {
-                throw new IllegalArgumentException("ascii length != codec length");
-            }
-        }
+        checkLength(bytes.length);
         byteBuf.writeBytes(bytes);
     }
 }

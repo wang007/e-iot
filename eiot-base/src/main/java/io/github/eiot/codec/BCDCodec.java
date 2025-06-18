@@ -18,7 +18,11 @@ public class BCDCodec extends AbstractCodec<BCD> {
     }
 
     public BCDCodec(int length, ByteOrder byteOrder) {
-        super(length, byteOrder);
+        super(length, byteOrder, null);
+    }
+
+    public BCDCodec(int length, ByteOrder byteOrder, String lengthKey) {
+        super(length, byteOrder, lengthKey);
     }
 
     @Override
@@ -47,11 +51,7 @@ public class BCDCodec extends AbstractCodec<BCD> {
         if ((value.length & 1) != 0) {
             throw new IllegalArgumentException("BCD encoding, value length must be a multiple of 2");
         }
-        if (length != -1) {
-            if ((value.length / 2) != length) {
-                throw new IllegalArgumentException("bcd length != codec length");
-            }
-        }
+        checkLength(value.length / 2);
 
         byte[] bcd = new byte[length];
         for (int i = 0; i < length; i++) {
