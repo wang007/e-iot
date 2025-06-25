@@ -44,7 +44,7 @@ public class RawExampleFrame extends AbstractRawFrame implements ExampleFrame<By
     private ByteBuf bytebuf;
 
     public static RawExampleFrame new4Receiver(IotConnection connection, ByteBuf byteBuf) {
-        List<Object> fields = CODEC.decode(byteBuf.slice(), new DefaultCodecContext());
+        List<Object> fields = CODEC.decode(byteBuf.retainedSlice(), new DefaultCodecContext());
         Hex command = (Hex) fields.get(2);
         return new RawExampleFrame(connection, command.toString(), fields, byteBuf);
     }

@@ -53,10 +53,10 @@ public abstract class AbstractRawFrame implements Frame<ByteBuf> {
     @Override
     public final ByteBuf data() {
         if (this.data != null) {
-            return this.data.slice();
+            return this.data.retainedSlice();
         }
         this.data = decodeData();
-        return data.slice();
+        return data.retainedSlice();
     }
 
     protected abstract ByteBuf decodeData();
@@ -104,7 +104,7 @@ public abstract class AbstractRawFrame implements Frame<ByteBuf> {
         } else {
             byteBuf = this.frameByteBuf;
         }
-        return byteBuf.slice();
+        return byteBuf.retainedSlice();
     }
 
     @Override

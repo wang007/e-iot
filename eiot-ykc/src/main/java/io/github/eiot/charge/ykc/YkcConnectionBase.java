@@ -32,9 +32,9 @@ interface YkcConnectionBase extends IotConnection {
 
     default Frame<?> convertRawFrame(ByteBuf byteBuf) {
         RawYkcFrame rawYkcFrame = RawYkcFrame.new4Receiver(this, byteBuf);
-        if (YkcCommand.YkcLoginRequest.command().equals(rawYkcFrame.command())) {
+        if (YkcCommand.LoginRequest.command().equals(rawYkcFrame.command())) {
             try {
-                DefaultYkcFrame<YkcLoginRequest> ykcFrame = new DefaultYkcFrame<>(rawYkcFrame, YkcCommand.YkcLoginRequest);
+                DefaultYkcFrame<YkcLoginRequest> ykcFrame = new DefaultYkcFrame<>(rawYkcFrame, YkcCommand.LoginRequest);
                 String terminalNo = ykcFrame
                         .data()
                         .getTerminalNo()

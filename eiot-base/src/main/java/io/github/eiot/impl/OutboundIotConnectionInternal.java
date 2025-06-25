@@ -71,6 +71,9 @@ public interface OutboundIotConnectionInternal extends IotConnection {
                             }
                             Timer timer = vertx().timer(time, TimeUnit.MILLISECONDS);
                             timer.onComplete(ar0 -> {
+                                if (ar0.failed()) { // ignore cancel
+                                    return;
+                                }
                                 Throwable e = new TimeoutException("wait result frame timeout");
                                 promise.tryFail(e);
                                 f.trySetResponseResult(null, e);

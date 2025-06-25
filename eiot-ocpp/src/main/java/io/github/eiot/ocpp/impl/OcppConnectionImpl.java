@@ -321,6 +321,9 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
         if (!writeFuture.failed()) {
             Timer timer = this.vertx.timer(timeoutMs, TimeUnit.MILLISECONDS);
             timer.onComplete(ar -> {
+                if (ar.failed()) { // ignore cancel
+                    return;
+                }
                 Promise<ErrorOcppFrame> p = writeResultAwaitErrors.remove(messageId);
                 // timeout and promise not null, the peer not response call result error
                 if (p != null) {
