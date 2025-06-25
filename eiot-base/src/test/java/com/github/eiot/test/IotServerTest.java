@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -304,9 +305,68 @@ public class IotServerTest extends VertxTestBase {
                             .onFailure(this::fail)
                             .onSuccess(responseFrame -> {
                                 ExampleHeartbeatResponse response = responseFrame.data();
-                                assertTrue(response != null && response.getResult() ==1);
+                                assertTrue(response != null && response.getResult() == 1);
                                 complete();
                             });
+                });
+        await();
+    }
+
+    @Test
+    public void testProxyServer() throws Exception {
+        int count = 10;
+        waitFor(count);
+
+        String terminalNo = "123456789012";
+        ExampleIotServer proxyServer = ExampleIotServer.create(vertx, ExampleIotServer.newOptions().setSetResponseResult(false));
+        proxyServer.frameHandler(frame -> {
+            IotConnection proxyConnection = frame.iotConnection();
+            proxyConnection.pause();
+            proxyConnection.frameHandler(null); //reset handler
+            iotClient.connect(socketAddress)
+                    .onFailure(ex -> {
+                        proxyConnection.close();
+                        this.fail(ex);
+                    })
+                    .onSuccess(connection -> {
+                        connection.pipeTo(proxyConnection).onFailure(this::fail);
+                        proxyConnection.pipeTo(connection).onFailure(this::fail);
+                        connection.write(frame); // write first accepted frame
+                    });
+        });
+        SocketAddress proxyAddress = SocketAddress.inetSocketAddress(8888, "localhost");
+        startServer(proxyAddress, proxyServer);
+
+        AtomicInteger receiveCount = new AtomicInteger();
+        iotServer.frameHandler(frame -> {
+            System.out.println("frame receive count: " + receiveCount.getAndIncrement());
+            frame.iotConnection().put(IotConnection.TERMINAL_NO_KEY, terminalNo);
+            Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
+            ExampleHeartbeatResponse response = responseFrame.newData();
+            response.setResult(1);
+            responseFrame.data(response).write();
+        });
+        startServer(socketAddress);
+
+        iotClient.connect(proxyAddress)
+                .onFailure(this::fail)
+                .onSuccess(connection -> {
+                    connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
+                    for (int i = 0; i < count; i++) {
+                        ExampleFrame<ExampleHeartbeatRequest> frame = new DefaultExampleFrame<>(connection, ExampleCommand.HeartbeatRequest);
+                        ExampleHeartbeatRequest data = frame.newData();
+                        data.setTime(BCDTime.now());
+                        frame.data(data)
+                                .asRequest(ExampleHeartbeatResponse.class)
+                                .request()
+                                .onFailure(this::fail)
+                                .onSuccess(responseFrame -> {
+                                    ExampleHeartbeatResponse response = responseFrame.data();
+                                    assertTrue(response != null && response.getResult() == 1);
+                                    complete();
+                                });
+                    }
+
                 });
         await();
     }
