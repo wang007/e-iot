@@ -54,7 +54,7 @@ public abstract class IotClientBase implements IotClient {
                 0,
                 true
         );
-        ch.pipeline().addLast("frameBytesDecoder", lengthFieldBasedFrameDecoder);
+        ch.pipeline().addBefore("handler","frameBytesDecoder", lengthFieldBasedFrameDecoder);
 
         VertxHandler<IotConnectionBase> handler = VertxHandler.create(ctx ->
                 newIotConnection(context, ctx, metrics, options));

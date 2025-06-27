@@ -10,6 +10,7 @@ import io.netty.buffer.ByteBuf;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.NetServer;
 import io.vertx.core.net.SocketAddress;
@@ -29,10 +30,12 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class IotServerTest extends VertxTestBase {
 
+    protected String terminalNo = "123456789012";
 
-    private SocketAddress socketAddress;
-    private IotClient iotClient;
-    private IotServer iotServer;
+    protected SocketAddress socketAddress;
+    protected IotClient iotClient;
+    protected IotServer iotServer;
+    
 
     @Override
     public void setUp() throws Exception {
@@ -83,7 +86,6 @@ public class IotServerTest extends VertxTestBase {
         });
         startServer(socketAddress, iotServer);
 
-        String terminalNo = "123456789012";
         iotClient.connect(socketAddress)
                 .onFailure(this::fail)
                 .onSuccess(connection -> {
@@ -118,7 +120,7 @@ public class IotServerTest extends VertxTestBase {
     public void testOutBoundHook() throws Exception {
         waitFor(3);
 
-        String terminalNo = "123456789012";
+        
         iotServer.connectionHandler(connection -> {
             OutboundHook o1 = new OutboundHook() {
                 @Override
@@ -183,7 +185,7 @@ public class IotServerTest extends VertxTestBase {
         });
         startServer(socketAddress);
 
-        String terminalNo = "123456789012";
+        
         iotClient.connect(socketAddress)
                 .onFailure(this::fail)
                 .onSuccess(connection -> {
@@ -208,7 +210,7 @@ public class IotServerTest extends VertxTestBase {
 
     @Test
     public void testRequest() throws Exception {
-        String terminalNo = "123456789012";
+        
         iotServer.frameHandler(frame -> {
             frame.iotConnection().put(IotConnection.TERMINAL_NO_KEY, terminalNo);
             Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
@@ -243,7 +245,7 @@ public class IotServerTest extends VertxTestBase {
 
     @Test
     public void testRequestTimeout() throws Exception {
-        String terminalNo = "123456789012";
+        
         iotServer.frameHandler(frame -> {
         });
         startServer(socketAddress);
@@ -274,7 +276,7 @@ public class IotServerTest extends VertxTestBase {
 
     @Test
     public void testBufferHandler() throws Exception {
-        String terminalNo = "123456789012";
+        
         iotServer.connectionHandler(connection -> {
             connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
             connection.handler(buffer -> {
@@ -317,10 +319,11 @@ public class IotServerTest extends VertxTestBase {
         int count = 10;
         waitFor(count);
 
-        String terminalNo = "123456789012";
+        
         ExampleIotServer proxyServer = ExampleIotServer.create(vertx, ExampleIotServer.newOptions().setSetResponseResult(false));
         proxyServer.frameHandler(frame -> {
             IotConnection proxyConnection = frame.iotConnection();
+
             proxyConnection.pause();
             proxyConnection.frameHandler(null); //reset handler
             iotClient.connect(socketAddress)
@@ -337,13 +340,12 @@ public class IotServerTest extends VertxTestBase {
         SocketAddress proxyAddress = SocketAddress.inetSocketAddress(8888, "localhost");
         startServer(proxyAddress, proxyServer);
 
-        AtomicInteger receiveCount = new AtomicInteger();
         iotServer.frameHandler(frame -> {
-            System.out.println("frame receive count: " + receiveCount.getAndIncrement());
+            ExampleHeartbeatRequest request = (ExampleHeartbeatRequest) frame.data();
             frame.iotConnection().put(IotConnection.TERMINAL_NO_KEY, terminalNo);
             Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
             ExampleHeartbeatResponse response = responseFrame.newData();
-            response.setResult(1);
+            response.setResult(request.getStatus());
             responseFrame.data(response).write();
         });
         startServer(socketAddress);
@@ -353,8 +355,10 @@ public class IotServerTest extends VertxTestBase {
                 .onSuccess(connection -> {
                     connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
                     for (int i = 0; i < count; i++) {
+                        int i0 = i;
                         ExampleFrame<ExampleHeartbeatRequest> frame = new DefaultExampleFrame<>(connection, ExampleCommand.HeartbeatRequest);
                         ExampleHeartbeatRequest data = frame.newData();
+                        data.setStatus(i);
                         data.setTime(BCDTime.now());
                         frame.data(data)
                                 .asRequest(ExampleHeartbeatResponse.class)
@@ -362,11 +366,10 @@ public class IotServerTest extends VertxTestBase {
                                 .onFailure(this::fail)
                                 .onSuccess(responseFrame -> {
                                     ExampleHeartbeatResponse response = responseFrame.data();
-                                    assertTrue(response != null && response.getResult() == 1);
+                                    assertTrue(response != null && response.getResult() == i0);
                                     complete();
                                 });
                     }
-
                 });
         await();
     }
