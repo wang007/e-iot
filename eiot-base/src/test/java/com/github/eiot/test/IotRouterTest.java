@@ -8,10 +8,12 @@ import io.github.eiot.Frame;
 import io.github.eiot.IotConnection;
 import io.github.eiot.IotServerOptions;
 import io.github.eiot.codec.BCDTime;
-import io.github.eiot.route.FrameConverterHandler;
-import io.github.eiot.route.IotRouter;
+import io.github.eiot.route.*;
 import io.netty.buffer.ByteBuf;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * created by wang007 on 2025/6/26
@@ -79,17 +81,7 @@ public class IotRouterTest extends IotServerTest {
         iotServer.frameHandler(router);
         startServer(socketAddress);
 
-        iotClient.connect(socketAddress)
-                .onFailure(this::fail)
-                .onSuccess(connection -> {
-                    connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
-
-                    ExampleFrame<ExampleHeartbeatRequest> frame = new DefaultExampleFrame<>(connection, ExampleCommand.HeartbeatRequest);
-                    ExampleHeartbeatRequest heartbeatRequest = frame.newData();
-                    heartbeatRequest.setTime(BCDTime.now());
-                    heartbeatRequest.setStatus(1);
-                    frame.data(heartbeatRequest).write();
-                });
+        writeHeartbeatFrame();
         await();
     }
 
@@ -119,17 +111,7 @@ public class IotRouterTest extends IotServerTest {
         iotServer.frameHandler(router);
         startServer(socketAddress);
 
-        iotClient.connect(socketAddress)
-                .onFailure(this::fail)
-                .onSuccess(connection -> {
-                    connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
-
-                    ExampleFrame<ExampleHeartbeatRequest> frame = new DefaultExampleFrame<>(connection, ExampleCommand.HeartbeatRequest);
-                    ExampleHeartbeatRequest request = frame.newData();
-                    request.setTime(BCDTime.now());
-                    request.setStatus(1);
-                    frame.data(request).write();
-                });
+        writeHeartbeatFrame();
         await();
     }
 
@@ -170,17 +152,7 @@ public class IotRouterTest extends IotServerTest {
         iotServer.frameHandler(router);
         startServer(socketAddress, iotServer);
 
-        iotClient.connect(socketAddress)
-                .onFailure(this::fail)
-                .onSuccess(connection -> {
-                    connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
-
-                    ExampleFrame<ExampleHeartbeatRequest> frame = new DefaultExampleFrame<>(connection, ExampleCommand.HeartbeatRequest);
-                    ExampleHeartbeatRequest request = frame.newData();
-                    request.setTime(BCDTime.now());
-                    request.setStatus(1);
-                    frame.data(request).write();
-                });
+        writeHeartbeatFrame();
         await();
     }
 
@@ -223,26 +195,102 @@ public class IotRouterTest extends IotServerTest {
         iotServer.frameHandler(router);
         startServer(socketAddress);
 
-        iotClient.connect(socketAddress)
-                .onFailure(this::fail)
-                .onSuccess(connection -> {
-                    connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
-
-                    ExampleFrame<ExampleHeartbeatRequest> frame = new DefaultExampleFrame<>(connection, ExampleCommand.HeartbeatRequest);
-                    ExampleHeartbeatRequest request = frame.newData();
-                    request.setTime(BCDTime.now());
-                    request.setStatus(1);
-                    frame.data(request).write();
-                });
+        writeHeartbeatFrame();
         await();
     }
 
     @Test
     public void testOrder() throws Exception {
+        waitFor(4);
         IotRouter router = IotRouter.router(vertx);
+        List<Integer> orders = new ArrayList<>();
+
+        router.route()
+                .last()
+                .handler(ctx -> {
+                    orders.add(4);
+                    ctx.next();
+                    complete();
+                });
+
+        router.route()
+                .first()
+                .handler(ctx -> {
+                    orders.add(1);
+                    ctx.next();
+                    complete();
+                });
+
+        router.route(ExampleCommand.HeartbeatRequest)
+                .order(1)
+                .handler(ctx -> {
+                    orders.add(2);
+                    ctx.next();
+                    complete();
+                });
+
+        router.route()
+                .order(2)
+                .handler(ctx -> {
+                    orders.add(3);
+                    ctx.next();
+                    complete();
+                });
+
+        iotServer.frameHandler(router);
+        startServer(socketAddress);
+
+        writeHeartbeatFrame();
+        await();
+
+        for (int i = 1; i <= 4; i++) {
+            assertTrue(orders.get(i - 1) == i);
+        }
     }
 
 
+    @Test
+    public void testHandlerMapping() throws Exception {
+        waitFor(2);
+
+        IotRouter router = IotRouter.router(vertx);
+        IotHandlerMapping handlers = new IotHandlerMapping();
+        router.route().handler(handlers);
+
+        handlers.handler(ExampleCommand.HeartbeatRequest, ctx -> {
+            Frame<ExampleHeartbeatRequest> frame = ctx.frame();
+            ExampleHeartbeatRequest data = frame.data();
+            assertTrue(data != null);
+            complete();
+        });
+
+        handlers.handler(ExampleCommand.LoginRequest, ctx -> {
+            Frame<ExampleLoginRequest> frame = ctx.frame();
+            ExampleLoginRequest data = frame.data();
+            assertTrue(data != null);
+            complete();
+        });
+
+        iotServer.frameHandler(router);
+        startServer(socketAddress);
+
+        writeHeartbeatFrame();
+
+        iotClient.connect(socketAddress)
+                .onFailure(this::fail)
+                .onSuccess(connection -> {
+                    connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
+
+                    ExampleFrame<ExampleLoginRequest> frame = new DefaultExampleFrame<>(connection, ExampleCommand.LoginRequest);
+                    ExampleLoginRequest request = frame.newData();
+                    request.setUsername("wang007");
+                    request.setCard("1234");
+                    request.setSafeMode(1);
+                    frame.data(request).write();
+                });
+
+        await();
+    }
 
 
 }
