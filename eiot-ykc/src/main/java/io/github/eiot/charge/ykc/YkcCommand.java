@@ -3,7 +3,6 @@ package io.github.eiot.charge.ykc;
 import io.github.eiot.CommandDef;
 import io.github.eiot.charge.ykc.data.*;
 import io.github.eiot.impl.CommandDefProtocol;
-import io.github.eiot.impl.CommandDefProtocols;
 
 /**
  * created by wang007 on 2025/3/17

@@ -27,7 +27,7 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
 
     static {
         HexCodec start = new HexCodec(1);
-        BIN4Codec len = new BIN4Codec(2, ByteOrder.LITTLE_ENDIAN, "len");
+        BIN4OffsetCodec len = new BIN4OffsetCodec(1, ByteOrder.LITTLE_ENDIAN, "len", -4);
         BIN4Codec seqNo = new BIN4Codec(2);
         BIN4Codec cryptType = new BIN4Codec(1);
         HexCodec command = new HexCodec(1);
@@ -107,7 +107,7 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
     protected void encodeData(ByteBuf byteBuf) {
         int len = byteBuf.readableBytes();
         ByteBufRef bufRef = ByteBufRef.from(byteBuf);
-        fields.set(1, len);
+        fields.set(1, len + 4);
         fields.set(5, bufRef);
     }
 

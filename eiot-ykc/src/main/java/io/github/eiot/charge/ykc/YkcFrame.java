@@ -3,6 +3,7 @@ package io.github.eiot.charge.ykc;
 import io.github.eiot.CommandDef;
 import io.github.eiot.Frame;
 import io.github.eiot.IotConnection;
+import io.github.eiot.RequestFrame;
 import io.github.eiot.codec.Hex;
 
 /**
@@ -71,4 +72,9 @@ public interface YkcFrame<T> extends Frame<T> {
 
     @Override
     <Resp> YkcRequestFrame<T, Resp> asRequest();
+
+    @Override
+    default <Resp> YkcRequestFrame<T, Resp> asRequest(Class<Resp> responseType) throws IllegalStateException {
+        return asRequest();
+    }
 }

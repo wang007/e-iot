@@ -1,7 +1,6 @@
 package io.github.eiot;
 
 
-import io.github.eiot.impl.CommandDefProtocols;
 
 /**
  * command definition
@@ -9,10 +8,6 @@ import io.github.eiot.impl.CommandDefProtocols;
  * created by wang007 on 2025/2/20
  */
 public interface CommandDef<Req> {
-
-    static CommandDef<?> match(String protocol, String command) {
-        return CommandDefProtocols.match(protocol, command);
-    }
 
     /**
      * @return command
