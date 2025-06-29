@@ -181,6 +181,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
         });
     }
 
+    @Override
     public String nextMessageId() {
         long messageId = messageIdGenerator.getAndIncrement();
         return Long.toString(messageId);

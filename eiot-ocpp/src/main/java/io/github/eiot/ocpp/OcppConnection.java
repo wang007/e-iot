@@ -47,4 +47,12 @@ public interface OcppConnection extends IotConnection {
      */
     @Override
     Future<Void> write(Buffer utf8TextData);
+
+    /**
+     * generate next messageId, It is internal method and don't call it!!!
+     *
+     * @return next messageId
+     */
+    String nextMessageId();
+
 }

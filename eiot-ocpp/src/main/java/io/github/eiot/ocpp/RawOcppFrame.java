@@ -82,7 +82,7 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
     public static RawOcppFrame new4Sender(OcppConnection connection, String command, OcppFrame<?> receiver) {
         // not response frame
         if (receiver == null) {
-            return new RawOcppFrame(connection, Side.SENDER, MessageTypeId.CALL, ((OcppConnectionImpl) connection).nextMessageId(), command, null);
+            return new RawOcppFrame(connection, Side.SENDER, MessageTypeId.CALL, connection.nextMessageId(), command, null);
         }
         // for new response frame
         String messageId = receiver.messageId();
@@ -110,9 +110,8 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
                 JsonObject data = array.size() > 3 ? array.getJsonObject(3) : new JsonObject();
                 return new RawOcppFrame(connection, Side.RECEIVER, messageTypeId, messageId, messageType, data);
             case CALLRESULT:
-                String resultMessageType = array.getString(2);
                 JsonObject resultData = array.size() > 2 ? array.getJsonObject(2) : new JsonObject();
-                return new RawOcppFrame(connection, Side.RECEIVER, messageTypeId, messageId, resultMessageType, resultData);
+                return new RawOcppFrame(connection, Side.RECEIVER, messageTypeId, messageId, null, resultData);
             case CALLRESULTERROR:
                 if (!connection.ocppVersion().supportResultError()) {
                     throw new OcppProtocolUnsupportedException("current connection ocpp version: " + connection.ocppVersion().versionName + " not support to receive resultErrorFrame");
@@ -199,7 +198,12 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
         return toRawString(data);
     }
 
-    public String toRawString(Object data) {
+    @Override
+    public String toString() {
+        return toRawString();
+    }
+
+    protected String toRawString(Object data) {
         List<Object> list = new ArrayList<>();
         list.add(messageTypeId.value);
         list.add(messageId);
@@ -302,18 +306,12 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
 
     @Override
     public OcppFrame<Void> newErrorFrame(OcppError errorCode, String errorDescription, JsonObject errorDetails) {
-        if (isSender()) {
-            throw new IllegalStateException("sender frame not support to send error frame");
-        }
         RawOcppFrame rawOcppFrame = new4ErrorFrame(connection, messageId, errorCode, errorDescription, errorDetails);
         return new ErrorOcppFrame(rawOcppFrame);
     }
 
     @Override
     public OcppFrame<Void> newResulErrorFrame(OcppError errorCode, String errorDescription, JsonObject errorDetails) throws UnsupportedOperationException {
-        if (isSender()) {
-            throw new IllegalStateException("sender frame not support to send result error frame");
-        }
         if (!ocppVersion().supportResultError()) {
             throw new UnsupportedOperationException("current connection ocpp version: " + ocppVersion().versionName + " not support result error frame");
         }
