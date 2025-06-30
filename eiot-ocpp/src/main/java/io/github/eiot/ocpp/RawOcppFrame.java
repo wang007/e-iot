@@ -183,7 +183,7 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
     }
 
     @Override
-    public IotConnection iotConnection() {
+    public OcppConnection iotConnection() {
         return connection;
     }
 

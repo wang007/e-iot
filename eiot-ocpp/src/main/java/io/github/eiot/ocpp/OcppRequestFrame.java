@@ -1,6 +1,7 @@
 package io.github.eiot.ocpp;
 
 import io.github.eiot.CommandDef;
+import io.github.eiot.IotConnection;
 import io.github.eiot.impl.RequestFrameBase;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
@@ -35,7 +36,8 @@ public class OcppRequestFrame<Req, Resp> extends RequestFrameBase<Req, OcppFrame
     @Override
     public OcppFrame<Resp> responseFrame() {
         CommandDef<Resp> commandDef = (CommandDef<Resp>) ocppFrame.commandDef().responseType();
-        return new DefaultOcppFrame<>(ocppFrame.iotConnection(), commandDef);
+        RawOcppFrame rawOcppFrame = RawOcppFrame.new4Sender(ocppFrame.iotConnection(), null, ocppFrame.rawFrame());
+        return new DefaultOcppFrame<>(rawOcppFrame, commandDef);
     }
 
     @Override
@@ -86,5 +88,10 @@ public class OcppRequestFrame<Req, Resp> extends RequestFrameBase<Req, OcppFrame
     @Override
     public Future<ErrorOcppFrame> writeResultAwaitError(int timeoutMs) {
         return ocppFrame.writeResultAwaitError(timeoutMs);
+    }
+
+    @Override
+    public String toString() {
+        return ocppFrame.toString();
     }
 }

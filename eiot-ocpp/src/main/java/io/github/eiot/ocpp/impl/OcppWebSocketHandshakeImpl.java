@@ -1,7 +1,10 @@
 package io.github.eiot.ocpp.impl;
 
+import io.github.eiot.Frame;
+import io.github.eiot.IotConnection;
 import io.github.eiot.ocpp.*;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.ServerWebSocketHandshake;
 import io.vertx.core.impl.VertxInternal;
@@ -25,13 +28,27 @@ public class OcppWebSocketHandshakeImpl implements OcppWebSocketHandshake {
 
     private final OcppServerOptions options;
 
-    private final OcppServerImpl ocppServer;
+    private final boolean compatibleOcpp2_0_1;
 
-    public OcppWebSocketHandshakeImpl(VertxInternal vertx, ServerWebSocketHandshake webSocketHandshake, OcppServerOptions options, OcppServerImpl ocppServer) {
+    private final Handler<Frame<?>> handler;
+
+    private final Handler<Throwable> exceptionHandler;
+
+    private final Handler<IotConnection> connectionHandler;
+
+    public OcppWebSocketHandshakeImpl(VertxInternal vertx,
+                                      ServerWebSocketHandshake webSocketHandshake, OcppServerOptions options,
+                                      Handler<Frame<?>> handler,
+                                      Handler<Throwable> exceptionHandler,
+                                      Handler<IotConnection> connectionHandler,
+                                      boolean compatibleOcpp2_0_1) {
         this.vertx = vertx;
         this.webSocketHandshake = webSocketHandshake;
         this.options = options;
-        this.ocppServer = ocppServer;
+        this.handler = handler;
+        this.exceptionHandler = exceptionHandler;
+        this.connectionHandler = connectionHandler;
+        this.compatibleOcpp2_0_1 = compatibleOcpp2_0_1;
     }
 
     @Override
@@ -79,10 +96,15 @@ public class OcppWebSocketHandshakeImpl implements OcppWebSocketHandshake {
                             this.options.isFrameConverter(),
                             this.options.isSetResponseResult(),
                             ocppVersion,
-                            ocppServer.isCompatibleOcpp2_0_1());
-                    ocppServer.configOcppConnection(conn);
-                    conn.configCompleted();
+                            compatibleOcpp2_0_1);
+                    conn.frameHandler(handler);
+                    conn.exceptionHandler(exceptionHandler);
 
+                    Handler<IotConnection> connectionHandler = this.connectionHandler;
+                    if (connectionHandler != null) {
+                        conn.context.dispatch(conn, connectionHandler);
+                    }
+                    conn.configCompleted();
                     return conn;
                 });
     }

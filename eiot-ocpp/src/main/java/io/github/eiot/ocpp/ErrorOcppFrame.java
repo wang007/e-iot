@@ -60,7 +60,7 @@ public class ErrorOcppFrame implements OcppFrame<Void> {
     }
 
     @Override
-    public IotConnection iotConnection() {
+    public OcppConnection iotConnection() {
         return rawFrame.iotConnection();
     }
 
@@ -142,5 +142,10 @@ public class ErrorOcppFrame implements OcppFrame<Void> {
     @Override
     public Future<ErrorOcppFrame> writeResultAwaitError(int timeoutMs) {
         throw new IllegalStateException("error ocpp frame not allow write as result");
+    }
+
+    @Override
+    public String toString() {
+        return rawFrame.toString();
     }
 }

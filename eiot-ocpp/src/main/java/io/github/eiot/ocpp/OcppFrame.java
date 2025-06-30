@@ -209,4 +209,9 @@ public interface OcppFrame<T> extends Frame<T> {
 
     @Override
     <Resp> OcppRequestFrame<T, Resp> asRequest() throws IllegalStateException;
+
+    @Override
+    default <Resp> OcppRequestFrame<T, Resp> asRequest(Class<Resp> responseType) throws IllegalStateException {
+        return asRequest();
+    }
 }

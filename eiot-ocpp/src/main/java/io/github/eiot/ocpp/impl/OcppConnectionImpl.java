@@ -102,7 +102,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
                 bufferHandler = this.bufferHandler;
                 exceptionHandler = this.exceptionHandler;
             }
-            if (frameHandler != null) {
+            if (frameHandler != null || setResponseResult) {
                 context.dispatch(json, v -> {
                     Frame<?> frame;
                     try {
@@ -171,7 +171,9 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
                     if (setResponseResult && trySetResponseResult(frame, null)) {
                         return;
                     }
-                    frameHandler.handle(frame);
+                    if (frameHandler != null) {
+                        frameHandler.handle(frame);
+                    }
                 });
             }
 

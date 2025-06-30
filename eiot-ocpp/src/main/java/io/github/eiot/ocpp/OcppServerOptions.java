@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * created by wang007 on 2025/4/17
@@ -92,6 +93,7 @@ public class OcppServerOptions extends HttpServerOptions {
         this.frameConverter = DEFAULT_FRAME_CONVERTER;
         this.setResponseResult = DEFAULT_SET_RESPONSE_RESULT;
         this.ocppVersions = DEFAULT_OCPP_VERSIONS;
+        this.setWebSocketSubProtocols(this.ocppVersions.stream().map(v -> v.versionName).collect(Collectors.toList()));
     }
 
     public int getWaitResponseTimeout() {
