@@ -46,7 +46,7 @@ class IotRouteImpl<T> implements IotRoute<T> {
 
     @Override
     public IotRoute<T> blockingHandler(Handler<IotRoutingContext<T>> blockingHandler) {
-        throw new UnsupportedOperationException("unsupported blocking handler");
+        return handler(new BlockingHandlerDecorator<>(blockingHandler, true));
     }
 
     @Override

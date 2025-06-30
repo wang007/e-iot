@@ -67,7 +67,7 @@ public class DefaultYkcFrame<T> extends AbstractFrame<T, RawYkcFrame> implements
     }
 
     @Override
-    public <Resp> YkcRequestFrame<T, Resp>  asRequest() {
+    public <Resp> YkcRequestFrame<T, Resp> asRequest() {
         if (commandDef().responseType() == null) {
             throw new IllegalStateException("not request type frame");
         }

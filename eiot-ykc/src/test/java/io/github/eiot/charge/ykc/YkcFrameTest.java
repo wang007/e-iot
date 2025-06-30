@@ -1,5 +1,8 @@
 package io.github.eiot.charge.ykc;
 
+import io.github.eiot.IotConnection;
+import io.github.eiot.charge.ykc.data.YkcBillingModelRequest;
+import io.github.eiot.charge.ykc.data.YkcBillingModelResponse;
 import io.github.eiot.charge.ykc.data.YkcLoginRequest;
 import io.github.eiot.charge.ykc.data.YkcLoginResponse;
 import io.github.eiot.codec.Hex;
@@ -18,12 +21,15 @@ import java.util.List;
  */
 public class YkcFrameTest {
 
+    private static final String terminalNo = "12345678901234";
+
     public static RawYkcFrame convertRaw(String hexFrame) {
         try {
             hexFrame = hexFrame.replaceAll("\\([^)]*\\)|（[^）]*）", "").replace("\n", "");
             hexFrame = hexFrame.replaceAll("-", "").replaceAll(" ", "");
             Hex hex = Hex.from(hexFrame);
-            RawYkcFrame ykcFrame = RawYkcFrame.new4Receiver(new FakeIotConnection(), Unpooled.wrappedBuffer(hex.getBytes()));
+
+            RawYkcFrame ykcFrame = RawYkcFrame.new4Receiver(newIotConnection(), Unpooled.wrappedBuffer(hex.getBytes()));
         /*if (!ykcFrame.checkCodeResult()) {
             throw new IllegalStateException("ykc frame checkCodeResult error");
         }*/
@@ -31,7 +37,24 @@ public class YkcFrameTest {
         } catch (Throwable e) {
             throw e;
         }
+    }
 
+    public static IotConnection newIotConnection() {
+        FakeIotConnection connection = new FakeIotConnection();
+        connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
+        return connection;
+    }
+
+    public static void setCheckCode(YkcFrame<?> frame) {
+        RawYkcFrame rawYkcFrame;
+        if (frame instanceof RawYkcFrame) {
+            rawYkcFrame = (RawYkcFrame) frame;
+        } else {
+            DefaultYkcFrame<?> defaultYkcFrame = (DefaultYkcFrame<?>) frame;
+            rawYkcFrame = defaultYkcFrame.rawFrame();
+        }
+        int checkCode = rawYkcFrame.calcCheckCode();
+        rawYkcFrame.checkCode(checkCode);
     }
 
     @SuppressWarnings("unchecked")
@@ -39,6 +62,13 @@ public class YkcFrameTest {
         RawYkcFrame rawYkcFrame = convertRaw(hexFrame);
         return (YkcFrame<T>) YkcFramerConverter.INSTANCE.apply(rawYkcFrame);
     }
+
+    @SuppressWarnings("unchecked")
+    public static <T> YkcFrame<T> convertFrame(ByteBuf byteBuf) {
+        RawYkcFrame rawYkcFrame = RawYkcFrame.new4Receiver(newIotConnection(), byteBuf);
+        return (YkcFrame<T>) YkcFramerConverter.INSTANCE.apply(rawYkcFrame);
+    }
+
 
     @Test
     public void testRawFrame() throws Exception {
@@ -82,6 +112,66 @@ public class YkcFrameTest {
         YkcLoginResponse response = loginResponseFrame.data();
         Assert.assertEquals(response.getResult(), 0);
     }
+
+
+    @Test
+    public void testBillingModelFrame() {
+        YkcBillingModelRequest request = new YkcBillingModelRequest();
+        request.setTerminalNo(terminalNo);
+        request.setModelNo("10");
+        request.setTopElectricPrice(1.11);
+        request.setTopServicePrice(1.11);
+        request.setPeakElectricPrice(2.22);
+        request.setPeakServicePrice(2.22);
+        request.setFlatElectricPrice(3.33);
+        request.setFlatServicePrice(3.33);
+        request.setLowElectricPrice(4.44);
+        request.setLowServicePrice(4.44);
+        byte[] rateTimes = new byte[48];
+        for (int i = 0; i < 48; i++) {
+            rateTimes[i] = (byte) (i % 4);
+        }
+        request.setRateTimes(rateTimes);
+
+        YkcFrame<YkcBillingModelRequest> requestYkcFrame = YkcFrame.create(newIotConnection(), YkcCommand.BillingModelRequest);
+        requestYkcFrame.data(request);
+        setCheckCode(requestYkcFrame);
+
+        ByteBuf byteBuf = requestYkcFrame.toByteBuf();
+        requestYkcFrame = convertFrame(byteBuf);
+
+        Assert.assertTrue(requestYkcFrame.checkCodeResult());
+        Assert.assertEquals(requestYkcFrame.command(), YkcCommand.BillingModelRequest.command());
+        Assert.assertEquals(requestYkcFrame.sequenceNo(), 0);
+        YkcBillingModelRequest data = requestYkcFrame.data();
+        Assert.assertEquals(data.getModelNo().to0StripString(), "10");
+        Assert.assertEquals(data.getTopElectricPrice().doubleValue(), 1.11, 0.001d);
+        Assert.assertEquals(data.getTopServicePrice().doubleValue(), 1.11, 0.001d);
+        Assert.assertEquals(data.getPeakElectricPrice().doubleValue(), 2.22, 0.001d);
+        Assert.assertEquals(data.getPeakServicePrice().doubleValue(), 2.22, 0.001d);
+
+        Assert.assertEquals(data.getFlatElectricPrice().doubleValue(), 3.33, 0.001d);
+        Assert.assertEquals(data.getFlatServicePrice().doubleValue(), 3.33, 0.001d);
+        Assert.assertEquals(data.getLowElectricPrice().doubleValue(), 4.44, 0.001d);
+        Assert.assertEquals(data.getLowServicePrice().doubleValue(), 4.44, 0.001d);
+
+        byte[] times = data.getRateTimes();
+        for (int i = 0; i < 48; i++) {
+            Assert.assertEquals(times[i], rateTimes[i]);
+        }
+
+
+        YkcFrame<YkcBillingModelResponse> responseFrame = requestYkcFrame.asRequest(YkcCommand.BillingModelResponse.dataType()).responseFrame();
+        YkcBillingModelResponse response = responseFrame.newData();
+        response.setResult(1);
+        responseFrame.data(response);
+        byteBuf = responseFrame.toByteBuf();
+
+        responseFrame = convertFrame(byteBuf);
+        response = responseFrame.data();
+        Assert.assertEquals(response.getResult(), 1);
+    }
+
 
 
     //@Test
@@ -269,9 +359,8 @@ public class YkcFrameTest {
             }
             Assert.assertNotNull(data);
         }
-
-
     }
+
 
 
 }

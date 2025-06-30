@@ -1,9 +1,16 @@
 package io.github.eiot.ocpp;
 
 import io.github.eiot.Frame;
+import io.github.eiot.ocpp.schema.BootNotificationRequest;
+import io.github.eiot.ocpp.schema.BootNotificationResponse;
+import io.github.eiot.ocpp.schema.BootReasonEnum;
+import io.github.eiot.ocpp.schema.RegistrationStatusEnum;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.time.ZonedDateTime;
 
 /**
  * created by wang007 on 2025/6/29
@@ -107,6 +114,40 @@ public class OcppFrameTest {
     }
 
 
+    @Test
+    public void testFrame() {
+        String callJson = "[2,\n" +
+                " \"19223201\",\n" +
+                " \"BootNotification\",\n" +
+                " {\n" +
+                " \"reason\": \"PowerUp\",\n" +
+                " \"chargingStation\": {\n" +
+                " \"model\": \"SingleSocketCharger\",\n" +
+                " \"vendorName\": \"VendorX\"\n" +
+                " }\n" +
+                " }\n" +
+                "]";
+        OcppFrame<BootNotificationRequest> ocppFrame = convertFrame(callJson);
+        System.out.println(ocppFrame);
 
+        Assert.assertEquals(ocppFrame.data().getReason(), BootReasonEnum.POWER_UP);
+        Assert.assertEquals(ocppFrame.data().getChargingStation().getModel(), "SingleSocketCharger");
+
+        OcppFrame<BootNotificationResponse> responseOcppFrame = ocppFrame.asRequest(BootNotificationResponse.class).responseFrame();
+        BootNotificationResponse bootNotificationResponse = responseOcppFrame.newData();
+        bootNotificationResponse.setCurrentTime(ZonedDateTime.now());
+        bootNotificationResponse.setStatus(RegistrationStatusEnum.ACCEPTED);
+        bootNotificationResponse.setInterval(300);
+        responseOcppFrame.data(bootNotificationResponse);
+        System.out.println(responseOcppFrame);
+
+        Assert.assertEquals(responseOcppFrame.messageId(), ocppFrame.messageId());
+        Assert.assertNull(responseOcppFrame.command());
+
+
+        OcppFrame<Void> errorFrame = ocppFrame.newErrorFrame(OcppError.GenericError, "test", new JsonObject().put("user", "wang007"));
+        Assert.assertEquals(errorFrame.messageId(), ocppFrame.messageId());
+        System.out.println(errorFrame);
+    }
 
 }

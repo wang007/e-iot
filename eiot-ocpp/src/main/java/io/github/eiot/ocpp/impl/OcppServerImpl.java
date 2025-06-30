@@ -36,12 +36,21 @@ public class OcppServerImpl implements OcppServer {
     public OcppServerImpl(Vertx vertx, HttpServer httpServer, OcppServerOptions options) {
         this.vertx = (VertxInternal) vertx;
         this.options = convertOptions(options);
+        List<String> subProtocols = options.getWebSocketSubProtocols();
+        if (subProtocols == null || subProtocols.isEmpty()) {
+            throw new IllegalStateException("wrapped http server must be set subProtocols");
+        }
         configHttpServer(httpServer);
         this.httpServer = (HttpServerImpl) httpServer;
     }
 
     public OcppServerImpl(Vertx vertx, OcppServerOptions options) {
-        this(vertx, vertx.createHttpServer(options), options);
+        this.vertx = (VertxInternal) vertx;
+        options = convertOptions(options);
+        this.options = options;
+        HttpServer httpServer = vertx.createHttpServer(options);
+        configHttpServer(httpServer);
+        this.httpServer = (HttpServerImpl) httpServer;
     }
 
     private OcppServerOptions convertOptions(OcppServerOptions options) {
@@ -69,19 +78,11 @@ public class OcppServerImpl implements OcppServer {
         });
         server.webSocketHandshakeHandler(wsHandshake -> {
             Handler<OcppWebSocketHandshake> handshakeHandler = this.handshakeHandler;
-            OcppWebSocketHandshakeImpl ocppWebSocketHandshake = new OcppWebSocketHandshakeImpl(vertx, wsHandshake, this.options, this);
+            OcppWebSocketHandshakeImpl ocppWebSocketHandshake = new OcppWebSocketHandshakeImpl(vertx, wsHandshake, this.options,
+                    this.frameHandler, this.exceptionHandler, this.connectionHandler,
+                    compatibleOcpp2_0_1);
             handshakeHandler.handle(ocppWebSocketHandshake);
         });
-    }
-
-    void configOcppConnection(OcppConnectionImpl connection) {
-        connection.frameHandler(this.frameHandler);
-        connection.exceptionHandler(this.exceptionHandler);
-
-        Handler<IotConnection> connectionHandler = connectionHandler();
-        if (connectionHandler != null) {
-            connection.context.dispatch(connection, connectionHandler);
-        }
     }
 
     @Override
@@ -91,7 +92,7 @@ public class OcppServerImpl implements OcppServer {
 
     @Override
     public synchronized Future<IotServer> listen(SocketAddress address) {
-        if (handshakeHandler != null) {
+        if (handshakeHandler == null) {
             throw new IllegalStateException("Set webSocketHandshakeHandler first");
         }
         if (frameHandler == null && connectionHandler == null) {

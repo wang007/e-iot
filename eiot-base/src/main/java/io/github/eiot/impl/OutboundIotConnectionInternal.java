@@ -81,7 +81,7 @@ public interface OutboundIotConnectionInternal extends IotConnection {
 
                             f.requestResult().onComplete(ar0 -> {
                                 timer.cancel();
-                                if (ar.failed()) {
+                                if (ar0.failed()) {
                                     promise.tryFail(ar0.cause());
                                 } else {
                                     Frame<?> result = ar0.result();

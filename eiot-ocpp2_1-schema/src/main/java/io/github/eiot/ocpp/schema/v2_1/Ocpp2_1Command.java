@@ -279,6 +279,9 @@ public interface Ocpp2_1Command {
     CommandDef<SendLocalListResponse> SendLocalListResponse = COMMAND_PROTOCOL.createAndRegister("SendLocalListResponse", SendLocalListResponse.class, null);
     CommandDef<SendLocalListRequest> SendLocalListRequest = COMMAND_PROTOCOL.createAndRegister("SendLocalList", SendLocalListRequest.class, SendLocalListResponse);
 
+    // manual generated
+    CommandDef<NotifyPeriodicEventStream> NotifyPeriodicEventStream = COMMAND_PROTOCOL.createAndRegister("NotifyPeriodicEventStream", NotifyPeriodicEventStream.class, null);
+
     static CommandDef<?> match(String command) {
         return COMMAND_PROTOCOL.match(command);
     }

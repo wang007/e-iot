@@ -23,7 +23,7 @@ public class OcppConnectOptions extends WebSocketConnectOptions {
     private String terminalNo;
 
     public List<OcppVersion> getOcppVersions() {
-        return Collections.unmodifiableList(ocppVersions);
+        return ocppVersions == null ? Collections.emptyList() : ocppVersions;
     }
 
     public OcppConnectOptions setOcppVersions(List<OcppVersion> ocppVersions) {

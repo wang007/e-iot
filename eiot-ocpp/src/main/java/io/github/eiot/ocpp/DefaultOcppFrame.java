@@ -4,6 +4,7 @@ import io.github.eiot.*;
 import io.github.eiot.annotation.FrameUtil;
 import io.github.eiot.impl.CommandDefFrame;
 import io.github.eiot.ocpp.impl.OcppConnectionImpl;
+import io.github.eiot.ocpp.impl.OcppDataUtil;
 import io.github.eiot.ocpp.json.Json;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -33,7 +34,7 @@ public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
     }
 
     public DefaultOcppFrame(RawOcppFrame rawFrame, CommandDef<T> commandDef) {
-        this.connection = (OcppConnection) rawFrame.iotConnection();
+        this.connection = rawFrame.iotConnection();
         this.commandDef = commandDef;
         this.rawFrame = rawFrame;
     }
@@ -46,6 +47,10 @@ public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
     @Override
     public Map<String, Object> attributes() {
         return rawFrame.attributes();
+    }
+
+    public final RawOcppFrame rawFrame() {
+        return rawFrame;
     }
 
     @Override
@@ -96,7 +101,7 @@ public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
     }
 
     @Override
-    public IotConnection iotConnection() {
+    public OcppConnection iotConnection() {
         return connection;
     }
 
@@ -115,7 +120,7 @@ public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
 
     @Override
     public T newData() {
-        return FrameUtil.newInstance(commandDef.dataType());
+        return OcppDataUtil.newInstance(commandDef.dataType());
     }
 
     @Override
@@ -190,5 +195,8 @@ public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
         return connection.writeResultAwaitError(this, timeoutMs);
     }
 
-
+    @Override
+    public String toString() {
+        return toRawString();
+    }
 }

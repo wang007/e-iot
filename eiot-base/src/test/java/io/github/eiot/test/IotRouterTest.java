@@ -1,7 +1,11 @@
 package io.github.eiot.test;
 
+import io.github.eiot.route.handler.CheckCodeHandler;
+import io.github.eiot.route.handler.FrameConverterHandler;
+import io.github.eiot.route.handler.SetResponseResultHandler;
 import io.github.eiot.test.example.*;
 import io.github.eiot.test.example.data.ExampleHeartbeatRequest;
+import io.github.eiot.test.example.data.ExampleHeartbeatResponse;
 import io.github.eiot.test.example.data.ExampleLoginRequest;
 import io.github.eiot.Frame;
 import io.github.eiot.IotConnection;
@@ -286,6 +290,73 @@ public class IotRouterTest extends IotServerTest {
                     request.setCard("1234");
                     request.setSafeMode(1);
                     frame.data(request).write();
+                });
+
+        await();
+    }
+
+
+    @Test
+    public void testUseFrameConvertAndSetResultHandler() throws Exception {
+        IotServerOptions options = ExampleIotServer.newOptions().setSetResponseResult(false).setFrameConverter(false);
+        ExampleIotServer iotServer = ExampleIotServer.create(vertx, options);
+
+        IotRouter router = IotRouter.router(vertx);
+
+        router.route().matchRaw().handler(ctx -> {
+            ctx.connection().put(IotConnection.TERMINAL_NO_KEY, terminalNo);
+            Frame<Object> frame = ctx.frame();
+            assertTrue(frame.isRaw());
+            ctx.next();
+        });
+        router.route().matchRaw().handler(new CheckCodeHandler());
+        router.route().matchRaw().handler(new FrameConverterHandler(ExampleFrameConverter.INSTANCE));
+        router.route().matchRaw().handler(new SetResponseResultHandler());
+
+        router.route(ExampleCommand.HeartbeatRequest)
+                .handler(ctx -> {
+                    Frame<ExampleHeartbeatRequest> frame = ctx.frame();
+                    assertTrue(frame.data() != null);
+
+                    Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
+                    ExampleHeartbeatResponse response = responseFrame.newData();
+                    response.setResult(1);
+                    responseFrame.data(response).write();
+
+                    ExampleFrame<ExampleHeartbeatRequest> requestFrame = new DefaultExampleFrame<>(ctx.connection(), ExampleCommand.HeartbeatRequest);
+                    ExampleHeartbeatRequest request = requestFrame.newData();
+                    request.setTime(BCDTime.now());
+                    request.setStatus(1);
+                    requestFrame.data(request)
+                            .asRequest(ExampleHeartbeatResponse.class)
+                            .request()
+                            .onFailure(this::fail)
+                            .onSuccess(respFrame -> {
+                                ExampleHeartbeatResponse data = respFrame.data();
+                                assertTrue(data != null);
+                                complete();
+                            });
+                });
+
+        iotServer.frameHandler(router);
+        startServer(socketAddress, iotServer);
+
+        iotClient.connect(socketAddress)
+                .onFailure(this::fail)
+                .onSuccess(connection -> {
+                    connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
+                    connection.frameHandler(frame -> {
+                        Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
+                        ExampleHeartbeatResponse response = responseFrame.newData();
+                        response.setResult(1);
+                        responseFrame.data(response).write();
+                    });
+
+                    ExampleFrame<ExampleHeartbeatRequest> frame = new DefaultExampleFrame<>(connection, ExampleCommand.HeartbeatRequest);
+                    ExampleHeartbeatRequest heartbeatRequest = frame.newData();
+                    heartbeatRequest.setTime(BCDTime.now());
+                    heartbeatRequest.setStatus(1);
+                    frame.data(heartbeatRequest).asRequest().request();
                 });
 
         await();
