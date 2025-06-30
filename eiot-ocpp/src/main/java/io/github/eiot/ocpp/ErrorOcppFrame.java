@@ -81,7 +81,7 @@ public class ErrorOcppFrame implements OcppFrame<Void> {
 
     @Override
     public boolean isRaw() {
-        return rawFrame.isRaw();
+        return false;
     }
 
     @Override

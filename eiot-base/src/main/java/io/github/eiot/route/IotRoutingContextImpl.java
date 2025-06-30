@@ -13,7 +13,7 @@ import java.util.*;
  * @author yan
  * @since 2025-03-23
  */
-class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
+public class IotRoutingContextImpl<T> implements IotRoutingContext<T> {
 
     protected static final Logger LOG = LoggerFactory.getLogger(IotRoutingContextImpl.class);
 

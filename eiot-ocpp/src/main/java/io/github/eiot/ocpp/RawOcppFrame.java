@@ -159,7 +159,7 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
 
     @Override
     public JsonObject data() {
-        return data != null ? data : new JsonObject();
+        return data;
     }
 
     @Override
