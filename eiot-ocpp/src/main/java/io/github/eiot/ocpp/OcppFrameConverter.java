@@ -16,7 +16,7 @@ public class OcppFrameConverter implements FrameConverter {
 
     public static final OcppFrameConverter INSTANCE = new OcppFrameConverter(false);
 
-    public static final OcppFrameConverter COMPATIBLE_OCPP2_0_1_INSTANCE = new OcppFrameConverter(true);
+    public static final OcppFrameConverter COMPATIBLE_INSTANCE = new OcppFrameConverter(true);
 
     private final boolean compatibleOcpp2_0_1;
 

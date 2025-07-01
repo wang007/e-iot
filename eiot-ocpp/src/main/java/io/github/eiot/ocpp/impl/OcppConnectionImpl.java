@@ -147,7 +147,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
                     if (frameConvert) {
                         try {
                             if (compatibleOcpp2_0_1) {
-                                frame = OcppFrameConverter.COMPATIBLE_OCPP2_0_1_INSTANCE.apply(frame);
+                                frame = OcppFrameConverter.COMPATIBLE_INSTANCE.apply(frame);
                             } else {
                                 frame = OcppFrameConverter.INSTANCE.apply(frame);
                             }

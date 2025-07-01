@@ -1,17 +1,18 @@
 package io.github.eiot.ocpp;
 
 import io.github.eiot.*;
-import io.github.eiot.ocpp.impl.OcppConnectionImpl;
 import io.github.eiot.ocpp.schema.*;
+import io.github.eiot.route.IotRouter;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.SocketAddress;
 import io.vertx.test.core.VertxTestBase;
-import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.ZonedDateTime;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -497,6 +498,222 @@ public class OcppServerTest extends VertxTestBase {
                 });
         await();
 
+        assertTrue(failedCount.get() == 10);
+        assertTrue(succeedCount.get() == 10);
+    }
+
+
+    @Test
+    public void testRequestTimeout() throws Exception {
+        ocppServer.frameHandler(frame -> {
+        });
+        startServer(socketAddress);
+
+        ocppClient.connect(getOcppConnectOptions())
+                .onFailure(this::fail)
+                .onSuccess(connection -> {
+                    OcppFrame<BootNotificationRequest> ocppFrame = OcppFrame.create(connection, Ocpp2_1Command.BootNotificationRequest);
+                    ocppFrame.asRequest()
+                            .request(500)
+                            .onSuccess(result -> this.fail("not except success"))
+                            .onFailure(ex -> {
+                                assertTrue(ex instanceof TimeoutException);
+                                complete();
+                            });
+                });
+        await();
+    }
+
+    @Test
+    public void testBufferHandler() throws Exception {
+        waitFor(20);
+        ocppServer.connectionHandler(connection -> {
+            connection.handler(buffer -> {
+                String json = buffer.toString();
+                RawOcppFrame ocppFrame = RawOcppFrame.new4Receiver((OcppConnection) connection, json);
+                OcppFrame<BootNotificationRequest> frame = (OcppFrame<BootNotificationRequest>) OcppFrameConverter.INSTANCE.apply(ocppFrame);
+
+                OcppFrame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                BootNotificationResponse response = responseFrame.newData();
+                response.setStatus(RegistrationStatusEnum.ACCEPTED);
+                response.setCurrentTime(ZonedDateTime.now());
+                responseFrame.data(response).write();
+            });
+        });
+        startServer(socketAddress);
+
+        for (int i = 0; i < 10; i++) {
+            ocppClient.connect(getOcppConnectOptions())
+                    .onFailure(this::fail)
+                    .onSuccess(connection -> {
+                        OcppFrame<BootNotificationRequest> ocppFrame = OcppFrame.create(connection, Ocpp2_1Command.BootNotificationRequest);
+                        BootNotificationRequest request = ocppFrame.newData();
+                        request.setReason(BootReasonEnum.POWER_UP);
+                        request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
+                        ocppFrame.data(request)
+                                .asRequest(BootNotificationResponse.class)
+                                .request()
+                                .onSuccess(responseFrame -> {
+                                    BootNotificationResponse data = responseFrame.data();
+                                    assertTrue(data.getStatus() == RegistrationStatusEnum.ACCEPTED);
+                                    complete();
+                                });
+                    });
+        }
+
+        ocppClient.connect(getOcppConnectOptions())
+                .onFailure(this::fail)
+                .onSuccess(connection -> {
+                    for (int i = 0; i < 10; i++) {
+                        OcppFrame<BootNotificationRequest> ocppFrame = OcppFrame.create(connection, Ocpp2_1Command.BootNotificationRequest);
+                        BootNotificationRequest request = ocppFrame.newData();
+                        request.setReason(BootReasonEnum.POWER_UP);
+                        request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
+                        ocppFrame.data(request)
+                                .asRequest(BootNotificationResponse.class)
+                                .request()
+                                .onSuccess(responseFrame -> {
+                                    BootNotificationResponse data = responseFrame.data();
+                                    assertTrue(data.getStatus() == RegistrationStatusEnum.ACCEPTED);
+                                    complete();
+                                });
+                    }
+                });
+        await();
+    }
+
+    @Test
+    public void testProxyServer() throws Exception {
+        waitFor(20);
+        OcppServer proxyServer = OcppServer.create(vertx, OcppServer.newOptions().setSetResponseResult(false));
+        proxyServer.frameHandler(frame -> {
+            IotConnection proxyConnection = frame.iotConnection();
+
+            proxyConnection.pause();
+            proxyConnection.frameHandler(null); //reset handler
+
+            ocppClient.connect(getOcppConnectOptions())
+                    .onFailure(ex -> {
+                        proxyConnection.close();
+                        this.fail(ex);
+                    })
+                    .onSuccess(connection -> {
+                        connection.pipeTo(proxyConnection).onFailure(this::fail);
+                        proxyConnection.pipeTo(connection).onFailure(this::fail);
+                        connection.write(frame); // write first accepted frame
+                    });
+        });
+        proxyServer.webSocketHandshakeHandler(wsHandshake -> {
+            String terminalNo = wsHandshake.extractLastPathAsTerminalNo();
+            wsHandshake.accept(terminalNo);
+        });
+
+        SocketAddress proxyAddress = SocketAddress.inetSocketAddress(5678, "localhost");
+        startServer(proxyAddress, proxyServer);
+
+        ocppServer.connectionHandler(connection -> {
+            connection.frameHandler(frame -> {
+                Frame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                BootNotificationResponse response = responseFrame.newData();
+                response.setStatus(RegistrationStatusEnum.ACCEPTED);
+                response.setInterval(300);
+                responseFrame.data(response).write();
+            });
+        });
+        startServer(socketAddress);
+
+        for (int i = 0; i < 10; i++) {
+            OcppConnectOptions proxyOptions = getOcppConnectOptions();
+            proxyOptions.setServer(proxyAddress);
+
+            ocppClient.connect(proxyOptions)
+                    .onFailure(this::fail)
+                    .onSuccess(connection -> {
+                        OcppFrame<BootNotificationRequest> ocppFrame = OcppFrame.create(connection, Ocpp2_1Command.BootNotificationRequest);
+                        BootNotificationRequest request = ocppFrame.newData();
+                        request.setReason(BootReasonEnum.POWER_UP);
+                        request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
+                        ocppFrame.data(request)
+                                .asRequest(BootNotificationResponse.class)
+                                .request()
+                                .onSuccess(responseFrame -> {
+                                    BootNotificationResponse data = responseFrame.data();
+                                    assertTrue(data.getStatus() == RegistrationStatusEnum.ACCEPTED);
+                                    assertTrue(data.getInterval() == 300);
+                                    complete();
+                                });
+                    });
+        }
+
+
+        OcppConnectOptions proxyOptions = getOcppConnectOptions();
+        proxyOptions.setServer(proxyAddress);
+        ocppClient.connect(proxyOptions)
+                .onFailure(this::fail)
+                .onSuccess(connection -> {
+                    for (int i = 0; i < 10; i++) {
+                        OcppFrame<BootNotificationRequest> ocppFrame = OcppFrame.create(connection, Ocpp2_1Command.BootNotificationRequest);
+                        BootNotificationRequest request = ocppFrame.newData();
+                        request.setReason(BootReasonEnum.POWER_UP);
+                        request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
+                        ocppFrame.data(request)
+                                .asRequest(BootNotificationResponse.class)
+                                .request(100000000)
+                                .onSuccess(responseFrame -> {
+                                    BootNotificationResponse data = responseFrame.data();
+                                    assertTrue(data.getStatus() == RegistrationStatusEnum.ACCEPTED);
+                                    assertTrue(data.getInterval() == 300);
+                                    complete();
+                                });
+                    }
+                });
+        await();
+    }
+
+
+    @Test
+    public void testRouter() throws Exception {
+        waitFor(3);
+        IotRouter router = IotRouter.router(vertx);
+        router.route(Ocpp2_1Command.BootNotificationRequest)
+                .handler(ctx -> {
+                    Frame<BootNotificationRequest> frame = ctx.frame();
+                    BootNotificationRequest data = frame.data();
+                    assertTrue(data.getReason() == BootReasonEnum.POWER_UP);
+                    ctx.next();
+                    complete();
+                });
+
+        router.route(Ocpp2_1Command.BootNotificationRequest)
+                .handler(ctx -> {
+                    Frame<BootNotificationRequest> frame = ctx.frame();
+                    Frame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                    BootNotificationResponse response = responseFrame.newData();
+                    response.setStatus(RegistrationStatusEnum.ACCEPTED);
+                    response.setInterval(300);
+                    responseFrame.data(response).write();
+                    complete();
+                });
+        ocppServer.frameHandler(router);
+        startServer(socketAddress);
+
+        ocppClient.connect(getOcppConnectOptions())
+                .onFailure(this::fail)
+                .onSuccess(connection -> {
+                    OcppFrame<BootNotificationRequest> ocppFrame = OcppFrame.create(connection, Ocpp2_1Command.BootNotificationRequest);
+                    BootNotificationRequest request = ocppFrame.newData();
+                    request.setReason(BootReasonEnum.POWER_UP);
+                    request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
+                    ocppFrame.data(request)
+                            .asRequest(BootNotificationResponse.class)
+                            .request()
+                            .onSuccess(responseFrame -> {
+                                BootNotificationResponse data = responseFrame.data();
+                                assertTrue(data.getStatus() == RegistrationStatusEnum.ACCEPTED);
+                                complete();
+                            });
+                });
+        await();
     }
 
 }
