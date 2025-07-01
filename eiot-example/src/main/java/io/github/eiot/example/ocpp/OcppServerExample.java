@@ -36,8 +36,6 @@ public class OcppServerExample {
             OcppServer ocppServer = OcppServer.create(vertx);
 
             IotRouter router = IotRouter.router(vertx);
-
-
             router.route(Ocpp2_1Command.BootNotificationRequest)
                     .handler(ctx -> {
                         Frame<BootNotificationRequest> requestFrame = ctx.frame();

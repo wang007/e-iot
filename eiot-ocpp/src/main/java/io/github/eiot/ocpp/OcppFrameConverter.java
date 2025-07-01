@@ -38,7 +38,7 @@ public class OcppFrameConverter implements FrameConverter {
         switch (messageTypeId) {
             case SEND:
             case CALL:
-                return convert(ocppFrame);
+                return convert(ocppFrame.command(), ocppFrame);
             case CALLERROR:
             case CALLRESULTERROR:
                 return new ErrorOcppFrame(ocppFrame);
@@ -55,38 +55,29 @@ public class OcppFrameConverter implements FrameConverter {
                 }
                 // call result not has command, use request command + "Response" as response command, see OcppCommand
                 String command = requestCommand + "Response";
-                String protocol = ocppFrame.iotConnection().protocol();
-
-                // compatibleOcpp2_0_1
-                if (compatibleOcpp2_0_1 && protocol.equals(OcppVersion.OCPP2_0_1.versionName)) {
-                    CommandDef<?> compatible = OcppCommandDefProtocols.match(OcppVersion.OCPP2_1.versionName, command);
-                    if (compatible != null) {
-                        return new DefaultOcppFrame<>(ocppFrame, compatible);
-                    }
-                }
-
-                CommandDef<?> commandDef = OcppCommandDefProtocols.match(protocol, command);
-                if (commandDef == null) {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("terminalNo: {} ocpp command: {} not found commandDef.", frame.terminalNo(), command);
-                    }
-                    return frame;
-                }
-                return new DefaultOcppFrame<>(ocppFrame, commandDef);
+                return convert(command, ocppFrame);
         }
 
         return ocppFrame;
     }
 
-    private Frame<?> convert(RawOcppFrame frame) {
-        String protocol = frame.iotConnection().protocol();
-        CommandDef<?> command = OcppCommandDefProtocols.match(protocol, frame.command());
-        if (command == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("terminalNo: {} ocpp command: {} not found commandDef.", frame.terminalNo(), frame.command());
+    private Frame<?> convert(String command, RawOcppFrame rawFrame) {
+        String protocol = rawFrame.iotConnection().protocol();
+        // compatibleOcpp2_0_1
+        if (compatibleOcpp2_0_1 && protocol.equals(OcppVersion.OCPP2_0_1.versionName)) {
+            CommandDef<?> compatible = OcppCommandDefProtocols.match(OcppVersion.OCPP2_1.versionName, command);
+            if (compatible != null) {
+                return new DefaultOcppFrame<>(rawFrame, compatible);
             }
-            return frame;
         }
-        return new DefaultOcppFrame<>(frame, command);
+
+        CommandDef<?> commandDef = OcppCommandDefProtocols.match(protocol, command);
+        if (commandDef == null) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("terminalNo: {} ocpp command: {} not found commandDef.", rawFrame.terminalNo(), command);
+            }
+            return rawFrame;
+        }
+        return new DefaultOcppFrame<>(rawFrame, commandDef);
     }
 }

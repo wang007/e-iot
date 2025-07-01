@@ -13,6 +13,7 @@ Simple, high performance, based on vertx to implement a variety of charging prot
 1. [云快充 使用实例](./eiot-example/src/main/java/io/github/eiot/example/ykc/YkcChargeServerExample.java)
 2. [云快充 代理服务实例](./eiot-example/src/main/java/io/github/eiot/example/ykc/YkcReverseServerExample.java)
 3. [ocpp 使用实例](./eiot-example/src/main/java/io/github/eiot/example/ocpp/OcppServerExample.java)
+4. [ocpp 多协议共用服务使用实例](./eiot-example/src/main/java/io/github/eiot/example/ocpp/MultiOcppServerExample.java)
 
 ### 支持
 1. 由于协议定义涉及版权问题，如需私有 iot 协议开发，请联系我
