@@ -16,7 +16,6 @@ public class YkcReverseServerExample {
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
-
         vertx.deployVerticle(YkcReverseServerVerticle.class, new DeploymentOptions());
     }
 
@@ -25,7 +24,7 @@ public class YkcReverseServerExample {
         @Override
         public void start(Promise<Void> startPromise) {
 
-            YkcClient chargeClient = YkcClient.create(vertx);
+            YkcClient chargeClient = YkcClient.create(vertx, YkcClient.newOptions().setSetResponseResult(false)); // disabled set result
 
             IotServerOptions options = YkcServer.newOptions().setSetResponseResult(false); // disabled set result
             YkcServer chargeServer = YkcServer.create(vertx, options);

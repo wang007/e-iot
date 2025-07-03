@@ -3,6 +3,7 @@ package io.github.eiot.example.ykc;
 import io.github.eiot.CommandDef;
 import io.github.eiot.Frame;
 import io.github.eiot.charge.ykc.DefaultYkcFrame;
+import io.github.eiot.charge.ykc.YkcFrame;
 import io.github.eiot.charge.ykc.YkcServer;
 import io.github.eiot.charge.ykc.YkcCommand;
 import io.github.eiot.charge.ykc.data.*;
@@ -20,7 +21,6 @@ public class YkcChargeServerExample {
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
-
         vertx.deployVerticle(YkcServerVerticle.class, new DeploymentOptions());
     }
 
@@ -45,7 +45,7 @@ public class YkcChargeServerExample {
                         responseFrame.data(response).write();
 
                         // sync time for charge point
-                        DefaultYkcFrame<YkcSyncTimeRequest> ykcFrame = new DefaultYkcFrame<>(frame.iotConnection(), YkcCommand.SyncTimeRequest);
+                        YkcFrame<YkcSyncTimeRequest> ykcFrame = YkcFrame.create(frame.iotConnection(), YkcCommand.SyncTimeRequest);
                         YkcSyncTimeRequest timeRequest = ykcFrame.newData();
                         timeRequest.setTime(CP56time2a.now());
                         ykcFrame.data(timeRequest)
@@ -71,7 +71,6 @@ public class YkcChargeServerExample {
                         } else {
                             System.out.println(ar.result().protocol() + " server start failed");
                             ar.cause().printStackTrace();
-                            ;
                         }
                     })
                     .<Void>mapEmpty()

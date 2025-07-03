@@ -23,7 +23,6 @@ public class OcppServerExample {
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
-
         vertx.deployVerticle(OcppServerVerticle.class, new DeploymentOptions());
     }
 
