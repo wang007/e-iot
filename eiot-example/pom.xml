@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>eiot</artifactId>
-        <groupId>io.github.eiot</groupId>
+        <groupId>io.github.wang007</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -18,35 +18,35 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.eiot</groupId>
+            <groupId>io.github.wang007</groupId>
             <artifactId>eiot-ykc</artifactId>
             <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>io.github.eiot</groupId>
+            <groupId>io.github.wang007</groupId>
             <artifactId>eiot-ocpp</artifactId>
             <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>io.github.eiot</groupId>
+            <groupId>io.github.wang007</groupId>
             <artifactId>eiot-ocpp2_1-schema</artifactId>
             <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>io.github.eiot</groupId>
+            <groupId>io.github.wang007</groupId>
             <artifactId>eiot-ocpp2_0_1-schema</artifactId>
             <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>io.github.eiot</groupId>
+            <groupId>io.github.wang007</groupId>
             <artifactId>eiot-ocpp1_6-schema</artifactId>
             <version>${revision}</version>
             <scope>compile</scope>
