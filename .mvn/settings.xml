@@ -10,4 +10,12 @@
             <url>https://maven.aliyun.com/repository/central</url>
         </mirror>
     </mirrors>
+
+    <servers>
+        <server>
+            <id>oss</id>
+            <username>${username}</username>
+            <password>${password}</password>
+        </server>
+    </servers>
 </settings>
