@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -59,7 +59,7 @@ public class StartTransactionRequest {
      */
     @JsonProperty("timestamp")
     @NotNull
-    private ZonedDateTime timestamp;
+    private OffsetDateTime timestamp;
 
     /**
      * 
@@ -157,7 +157,7 @@ public class StartTransactionRequest {
      * 
      */
     @JsonProperty("timestamp")
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -167,11 +167,11 @@ public class StartTransactionRequest {
      * 
      */
     @JsonProperty("timestamp")
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public StartTransactionRequest withTimestamp(ZonedDateTime timestamp) {
+    public StartTransactionRequest withTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }

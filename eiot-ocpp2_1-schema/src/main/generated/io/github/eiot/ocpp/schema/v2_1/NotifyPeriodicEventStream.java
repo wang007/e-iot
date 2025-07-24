@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -64,7 +64,7 @@ public class NotifyPeriodicEventStream {
     @JsonProperty("basetime")
     @JsonPropertyDescription("Base timestamp to add to time offset of values.\r\n")
     @NotNull
-    private ZonedDateTime basetime;
+    private OffsetDateTime basetime;
     /**
      * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
      * 
@@ -160,7 +160,7 @@ public class NotifyPeriodicEventStream {
      * 
      */
     @JsonProperty("basetime")
-    public ZonedDateTime getBasetime() {
+    public OffsetDateTime getBasetime() {
         return basetime;
     }
 
@@ -171,11 +171,11 @@ public class NotifyPeriodicEventStream {
      * 
      */
     @JsonProperty("basetime")
-    public void setBasetime(ZonedDateTime basetime) {
+    public void setBasetime(OffsetDateTime basetime) {
         this.basetime = basetime;
     }
 
-    public NotifyPeriodicEventStream withBasetime(ZonedDateTime basetime) {
+    public NotifyPeriodicEventStream withBasetime(OffsetDateTime basetime) {
         this.basetime = basetime;
         return this;
     }

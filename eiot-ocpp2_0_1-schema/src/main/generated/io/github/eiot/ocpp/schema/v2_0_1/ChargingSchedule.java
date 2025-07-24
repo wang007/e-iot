@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_0_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -60,7 +60,7 @@ public class ChargingSchedule {
      */
     @JsonProperty("startSchedule")
     @JsonPropertyDescription("Charging_ Schedule. Start_ Schedule. Date_ Time\r\nurn:x-oca:ocpp:uid:1:569237\r\nStarting point of an absolute schedule. If absent the schedule will be relative to start of charging.\r\n")
-    private ZonedDateTime startSchedule;
+    private OffsetDateTime startSchedule;
     /**
      * Charging_ Schedule. Duration. Elapsed_ Time
      * urn:x-oca:ocpp:uid:1:569236
@@ -173,7 +173,7 @@ public class ChargingSchedule {
      * 
      */
     @JsonProperty("startSchedule")
-    public ZonedDateTime getStartSchedule() {
+    public OffsetDateTime getStartSchedule() {
         return startSchedule;
     }
 
@@ -185,11 +185,11 @@ public class ChargingSchedule {
      * 
      */
     @JsonProperty("startSchedule")
-    public void setStartSchedule(ZonedDateTime startSchedule) {
+    public void setStartSchedule(OffsetDateTime startSchedule) {
         this.startSchedule = startSchedule;
     }
 
-    public ChargingSchedule withStartSchedule(ZonedDateTime startSchedule) {
+    public ChargingSchedule withStartSchedule(OffsetDateTime startSchedule) {
         this.startSchedule = startSchedule;
         return this;
     }

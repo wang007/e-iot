@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -63,9 +63,9 @@ public class CsChargingProfiles {
     @JsonProperty("recurrencyKind")
     private CsChargingProfiles.RecurrencyKind recurrencyKind;
     @JsonProperty("validFrom")
-    private ZonedDateTime validFrom;
+    private OffsetDateTime validFrom;
     @JsonProperty("validTo")
-    private ZonedDateTime validTo;
+    private OffsetDateTime validTo;
     /**
      * 
      * (Required)
@@ -207,31 +207,31 @@ public class CsChargingProfiles {
     }
 
     @JsonProperty("validFrom")
-    public ZonedDateTime getValidFrom() {
+    public OffsetDateTime getValidFrom() {
         return validFrom;
     }
 
     @JsonProperty("validFrom")
-    public void setValidFrom(ZonedDateTime validFrom) {
+    public void setValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
     }
 
-    public CsChargingProfiles withValidFrom(ZonedDateTime validFrom) {
+    public CsChargingProfiles withValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
         return this;
     }
 
     @JsonProperty("validTo")
-    public ZonedDateTime getValidTo() {
+    public OffsetDateTime getValidTo() {
         return validTo;
     }
 
     @JsonProperty("validTo")
-    public void setValidTo(ZonedDateTime validTo) {
+    public void setValidTo(OffsetDateTime validTo) {
         this.validTo = validTo;
     }
 
-    public CsChargingProfiles withValidTo(ZonedDateTime validTo) {
+    public CsChargingProfiles withValidTo(OffsetDateTime validTo) {
         this.validTo = validTo;
         return this;
     }

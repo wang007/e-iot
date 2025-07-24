@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +51,7 @@ public class StopTransactionRequest {
      */
     @JsonProperty("timestamp")
     @NotNull
-    private ZonedDateTime timestamp;
+    private OffsetDateTime timestamp;
     /**
      * 
      * (Required)
@@ -112,7 +112,7 @@ public class StopTransactionRequest {
      * 
      */
     @JsonProperty("timestamp")
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -122,11 +122,11 @@ public class StopTransactionRequest {
      * 
      */
     @JsonProperty("timestamp")
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public StopTransactionRequest withTimestamp(ZonedDateTime timestamp) {
+    public StopTransactionRequest withTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }

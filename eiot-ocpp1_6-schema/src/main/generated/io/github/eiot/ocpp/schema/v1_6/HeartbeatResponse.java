@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -27,7 +27,7 @@ public class HeartbeatResponse {
      */
     @JsonProperty("currentTime")
     @NotNull
-    private ZonedDateTime currentTime;
+    private OffsetDateTime currentTime;
 
     /**
      * 
@@ -35,7 +35,7 @@ public class HeartbeatResponse {
      * 
      */
     @JsonProperty("currentTime")
-    public ZonedDateTime getCurrentTime() {
+    public OffsetDateTime getCurrentTime() {
         return currentTime;
     }
 
@@ -45,11 +45,11 @@ public class HeartbeatResponse {
      * 
      */
     @JsonProperty("currentTime")
-    public void setCurrentTime(ZonedDateTime currentTime) {
+    public void setCurrentTime(OffsetDateTime currentTime) {
         this.currentTime = currentTime;
     }
 
-    public HeartbeatResponse withCurrentTime(ZonedDateTime currentTime) {
+    public HeartbeatResponse withCurrentTime(OffsetDateTime currentTime) {
         this.currentTime = currentTime;
         return this;
     }

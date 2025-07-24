@@ -66,7 +66,7 @@
                     <includeJsr303Annotations>true</includeJsr303Annotations>
                     <usePrimitives>true</usePrimitives>
                     <useTitleAsClassname>true</useTitleAsClassname>
-                    <dateTimeType>java.time.ZonedDateTime</dateTimeType>
+                    <dateTimeType>java.time.OffsetDateTime</dateTimeType>
                     <generateBuilders>true</generateBuilders>
                     <includeAdditionalProperties>true</includeAdditionalProperties>
                     <includeGeneratedAnnotation>false</includeGeneratedAnnotation>

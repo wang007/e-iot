@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -63,7 +63,7 @@ public class ChargingSchedule {
      */
     @JsonProperty("startSchedule")
     @JsonPropertyDescription("Starting point of an absolute schedule or recurring schedule.\r\n")
-    private ZonedDateTime startSchedule;
+    private OffsetDateTime startSchedule;
     /**
      * Duration of the charging schedule in seconds. If the duration is left empty, the last period will continue indefinitely or until end of the transaction in case startSchedule is absent.
      * 
@@ -233,7 +233,7 @@ public class ChargingSchedule {
      * 
      */
     @JsonProperty("startSchedule")
-    public ZonedDateTime getStartSchedule() {
+    public OffsetDateTime getStartSchedule() {
         return startSchedule;
     }
 
@@ -243,11 +243,11 @@ public class ChargingSchedule {
      * 
      */
     @JsonProperty("startSchedule")
-    public void setStartSchedule(ZonedDateTime startSchedule) {
+    public void setStartSchedule(OffsetDateTime startSchedule) {
         this.startSchedule = startSchedule;
     }
 
-    public ChargingSchedule withStartSchedule(ZonedDateTime startSchedule) {
+    public ChargingSchedule withStartSchedule(OffsetDateTime startSchedule) {
         this.startSchedule = startSchedule;
         return this;
     }

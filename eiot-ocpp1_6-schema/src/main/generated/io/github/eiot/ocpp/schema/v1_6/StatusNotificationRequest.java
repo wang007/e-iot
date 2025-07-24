@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -59,7 +59,7 @@ public class StatusNotificationRequest {
     @NotNull
     private StatusNotificationRequest.Status status;
     @JsonProperty("timestamp")
-    private ZonedDateTime timestamp;
+    private OffsetDateTime timestamp;
     @JsonProperty("vendorId")
     @Size(max = 255)
     private String vendorId;
@@ -158,16 +158,16 @@ public class StatusNotificationRequest {
     }
 
     @JsonProperty("timestamp")
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
     @JsonProperty("timestamp")
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public StatusNotificationRequest withTimestamp(ZonedDateTime timestamp) {
+    public StatusNotificationRequest withTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }

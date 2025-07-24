@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -61,7 +61,7 @@ public class CertificateStatus {
      */
     @JsonProperty("nextUpdate")
     @NotNull
-    private ZonedDateTime nextUpdate;
+    private OffsetDateTime nextUpdate;
     /**
      * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
      * 
@@ -156,7 +156,7 @@ public class CertificateStatus {
      * 
      */
     @JsonProperty("nextUpdate")
-    public ZonedDateTime getNextUpdate() {
+    public OffsetDateTime getNextUpdate() {
         return nextUpdate;
     }
 
@@ -166,11 +166,11 @@ public class CertificateStatus {
      * 
      */
     @JsonProperty("nextUpdate")
-    public void setNextUpdate(ZonedDateTime nextUpdate) {
+    public void setNextUpdate(OffsetDateTime nextUpdate) {
         this.nextUpdate = nextUpdate;
     }
 
-    public CertificateStatus withNextUpdate(ZonedDateTime nextUpdate) {
+    public CertificateStatus withNextUpdate(OffsetDateTime nextUpdate) {
         this.nextUpdate = nextUpdate;
         return this;
     }

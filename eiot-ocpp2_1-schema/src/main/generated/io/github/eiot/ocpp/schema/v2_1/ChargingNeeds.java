@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -133,7 +133,7 @@ public class ChargingNeeds {
      */
     @JsonProperty("departureTime")
     @JsonPropertyDescription("Estimated departure time of the EV. +\r\n*ISO 15118-2:* AC/DC_EVChargeParameterType: DepartureTime +\r\n*ISO 15118-20:* Dynamic/Scheduled_SEReqControlModeType: DepartureTIme\r\n")
-    private ZonedDateTime departureTime;
+    private OffsetDateTime departureTime;
     /**
      * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
      * 
@@ -408,7 +408,7 @@ public class ChargingNeeds {
      * 
      */
     @JsonProperty("departureTime")
-    public ZonedDateTime getDepartureTime() {
+    public OffsetDateTime getDepartureTime() {
         return departureTime;
     }
 
@@ -420,11 +420,11 @@ public class ChargingNeeds {
      * 
      */
     @JsonProperty("departureTime")
-    public void setDepartureTime(ZonedDateTime departureTime) {
+    public void setDepartureTime(OffsetDateTime departureTime) {
         this.departureTime = departureTime;
     }
 
-    public ChargingNeeds withDepartureTime(ZonedDateTime departureTime) {
+    public ChargingNeeds withDepartureTime(OffsetDateTime departureTime) {
         this.departureTime = departureTime;
         return this;
     }

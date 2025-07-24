@@ -2,7 +2,7 @@
 package io.github.eiot.ocpp.schema.v1_6;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -41,7 +41,7 @@ public class UpdateFirmwareRequest {
      */
     @JsonProperty("retrieveDate")
     @NotNull
-    private ZonedDateTime retrieveDate;
+    private OffsetDateTime retrieveDate;
     @JsonProperty("retryInterval")
     private int retryInterval;
 
@@ -91,7 +91,7 @@ public class UpdateFirmwareRequest {
      * 
      */
     @JsonProperty("retrieveDate")
-    public ZonedDateTime getRetrieveDate() {
+    public OffsetDateTime getRetrieveDate() {
         return retrieveDate;
     }
 
@@ -101,11 +101,11 @@ public class UpdateFirmwareRequest {
      * 
      */
     @JsonProperty("retrieveDate")
-    public void setRetrieveDate(ZonedDateTime retrieveDate) {
+    public void setRetrieveDate(OffsetDateTime retrieveDate) {
         this.retrieveDate = retrieveDate;
     }
 
-    public UpdateFirmwareRequest withRetrieveDate(ZonedDateTime retrieveDate) {
+    public UpdateFirmwareRequest withRetrieveDate(OffsetDateTime retrieveDate) {
         this.retrieveDate = retrieveDate;
         return this;
     }

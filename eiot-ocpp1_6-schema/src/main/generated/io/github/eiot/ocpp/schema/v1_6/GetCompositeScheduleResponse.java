@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -39,7 +39,7 @@ public class GetCompositeScheduleResponse {
     @JsonProperty("connectorId")
     private int connectorId;
     @JsonProperty("scheduleStart")
-    private ZonedDateTime scheduleStart;
+    private OffsetDateTime scheduleStart;
     @JsonProperty("chargingSchedule")
     @Valid
     private ChargingSchedule chargingSchedule;
@@ -85,16 +85,16 @@ public class GetCompositeScheduleResponse {
     }
 
     @JsonProperty("scheduleStart")
-    public ZonedDateTime getScheduleStart() {
+    public OffsetDateTime getScheduleStart() {
         return scheduleStart;
     }
 
     @JsonProperty("scheduleStart")
-    public void setScheduleStart(ZonedDateTime scheduleStart) {
+    public void setScheduleStart(OffsetDateTime scheduleStart) {
         this.scheduleStart = scheduleStart;
     }
 
-    public GetCompositeScheduleResponse withScheduleStart(ZonedDateTime scheduleStart) {
+    public GetCompositeScheduleResponse withScheduleStart(OffsetDateTime scheduleStart) {
         this.scheduleStart = scheduleStart;
         return this;
     }

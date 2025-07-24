@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -90,7 +90,7 @@ public class NotifySettlementRequest {
     @JsonProperty("settlementTime")
     @JsonPropertyDescription("The time when the settlement was done.\r\n\r\n")
     @NotNull
-    private ZonedDateTime settlementTime;
+    private OffsetDateTime settlementTime;
     @JsonProperty("receiptId")
     @Size(max = 50)
     private String receiptId;
@@ -281,7 +281,7 @@ public class NotifySettlementRequest {
      * 
      */
     @JsonProperty("settlementTime")
-    public ZonedDateTime getSettlementTime() {
+    public OffsetDateTime getSettlementTime() {
         return settlementTime;
     }
 
@@ -293,11 +293,11 @@ public class NotifySettlementRequest {
      * 
      */
     @JsonProperty("settlementTime")
-    public void setSettlementTime(ZonedDateTime settlementTime) {
+    public void setSettlementTime(OffsetDateTime settlementTime) {
         this.settlementTime = settlementTime;
     }
 
-    public NotifySettlementRequest withSettlementTime(ZonedDateTime settlementTime) {
+    public NotifySettlementRequest withSettlementTime(OffsetDateTime settlementTime) {
         this.settlementTime = settlementTime;
         return this;
     }

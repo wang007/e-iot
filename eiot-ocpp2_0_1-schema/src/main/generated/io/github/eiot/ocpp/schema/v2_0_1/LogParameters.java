@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_0_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -57,7 +57,7 @@ public class LogParameters {
      */
     @JsonProperty("oldestTimestamp")
     @JsonPropertyDescription("Log. Oldest_ Timestamp. Date_ Time\r\nurn:x-enexis:ecdm:uid:1:569477\r\nThis contains the date and time of the oldest logging information to include in the diagnostics.\r\n")
-    private ZonedDateTime oldestTimestamp;
+    private OffsetDateTime oldestTimestamp;
     /**
      * Log. Latest_ Timestamp. Date_ Time
      * urn:x-enexis:ecdm:uid:1:569482
@@ -67,7 +67,7 @@ public class LogParameters {
      */
     @JsonProperty("latestTimestamp")
     @JsonPropertyDescription("Log. Latest_ Timestamp. Date_ Time\r\nurn:x-enexis:ecdm:uid:1:569482\r\nThis contains the date and time of the latest logging information to include in the diagnostics.\r\n")
-    private ZonedDateTime latestTimestamp;
+    private OffsetDateTime latestTimestamp;
 
     /**
      * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
@@ -131,7 +131,7 @@ public class LogParameters {
      * 
      */
     @JsonProperty("oldestTimestamp")
-    public ZonedDateTime getOldestTimestamp() {
+    public OffsetDateTime getOldestTimestamp() {
         return oldestTimestamp;
     }
 
@@ -143,11 +143,11 @@ public class LogParameters {
      * 
      */
     @JsonProperty("oldestTimestamp")
-    public void setOldestTimestamp(ZonedDateTime oldestTimestamp) {
+    public void setOldestTimestamp(OffsetDateTime oldestTimestamp) {
         this.oldestTimestamp = oldestTimestamp;
     }
 
-    public LogParameters withOldestTimestamp(ZonedDateTime oldestTimestamp) {
+    public LogParameters withOldestTimestamp(OffsetDateTime oldestTimestamp) {
         this.oldestTimestamp = oldestTimestamp;
         return this;
     }
@@ -160,7 +160,7 @@ public class LogParameters {
      * 
      */
     @JsonProperty("latestTimestamp")
-    public ZonedDateTime getLatestTimestamp() {
+    public OffsetDateTime getLatestTimestamp() {
         return latestTimestamp;
     }
 
@@ -172,11 +172,11 @@ public class LogParameters {
      * 
      */
     @JsonProperty("latestTimestamp")
-    public void setLatestTimestamp(ZonedDateTime latestTimestamp) {
+    public void setLatestTimestamp(OffsetDateTime latestTimestamp) {
         this.latestTimestamp = latestTimestamp;
     }
 
-    public LogParameters withLatestTimestamp(ZonedDateTime latestTimestamp) {
+    public LogParameters withLatestTimestamp(OffsetDateTime latestTimestamp) {
         this.latestTimestamp = latestTimestamp;
         return this;
     }

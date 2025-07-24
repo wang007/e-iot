@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -28,7 +28,7 @@ public class BootNotificationResponse {
     @JsonProperty("currentTime")
     @JsonPropertyDescription("This contains the CSMS\u2019s current time.\r\n")
     @NotNull
-    private ZonedDateTime currentTime;
+    private OffsetDateTime currentTime;
     /**
      * When &lt;&lt;cmn_registrationstatusenumtype,Status&gt;&gt; is Accepted, this contains the heartbeat interval in seconds. If the CSMS returns something other than Accepted, the value of the interval field indicates the minimum wait time before sending a next BootNotification request.
      * 
@@ -75,7 +75,7 @@ public class BootNotificationResponse {
      * 
      */
     @JsonProperty("currentTime")
-    public ZonedDateTime getCurrentTime() {
+    public OffsetDateTime getCurrentTime() {
         return currentTime;
     }
 
@@ -86,11 +86,11 @@ public class BootNotificationResponse {
      * 
      */
     @JsonProperty("currentTime")
-    public void setCurrentTime(ZonedDateTime currentTime) {
+    public void setCurrentTime(OffsetDateTime currentTime) {
         this.currentTime = currentTime;
     }
 
-    public BootNotificationResponse withCurrentTime(ZonedDateTime currentTime) {
+    public BootNotificationResponse withCurrentTime(OffsetDateTime currentTime) {
         this.currentTime = currentTime;
         return this;
     }

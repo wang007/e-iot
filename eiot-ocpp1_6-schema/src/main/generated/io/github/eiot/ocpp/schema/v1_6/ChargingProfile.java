@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -63,9 +63,9 @@ public class ChargingProfile {
     @JsonProperty("recurrencyKind")
     private ChargingProfile.RecurrencyKind recurrencyKind;
     @JsonProperty("validFrom")
-    private ZonedDateTime validFrom;
+    private OffsetDateTime validFrom;
     @JsonProperty("validTo")
-    private ZonedDateTime validTo;
+    private OffsetDateTime validTo;
     /**
      * 
      * (Required)
@@ -207,31 +207,31 @@ public class ChargingProfile {
     }
 
     @JsonProperty("validFrom")
-    public ZonedDateTime getValidFrom() {
+    public OffsetDateTime getValidFrom() {
         return validFrom;
     }
 
     @JsonProperty("validFrom")
-    public void setValidFrom(ZonedDateTime validFrom) {
+    public void setValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
     }
 
-    public ChargingProfile withValidFrom(ZonedDateTime validFrom) {
+    public ChargingProfile withValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
         return this;
     }
 
     @JsonProperty("validTo")
-    public ZonedDateTime getValidTo() {
+    public OffsetDateTime getValidTo() {
         return validTo;
     }
 
     @JsonProperty("validTo")
-    public void setValidTo(ZonedDateTime validTo) {
+    public void setValidTo(OffsetDateTime validTo) {
         this.validTo = validTo;
     }
 
-    public ChargingProfile withValidTo(ZonedDateTime validTo) {
+    public ChargingProfile withValidTo(OffsetDateTime validTo) {
         this.validTo = validTo;
         return this;
     }

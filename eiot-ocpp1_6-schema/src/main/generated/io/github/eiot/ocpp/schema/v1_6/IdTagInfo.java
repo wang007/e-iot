@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -21,7 +21,7 @@ import jakarta.validation.constraints.Size;
 public class IdTagInfo {
 
     @JsonProperty("expiryDate")
-    private ZonedDateTime expiryDate;
+    private OffsetDateTime expiryDate;
     @JsonProperty("parentIdTag")
     @Size(max = 20)
     private String parentIdTag;
@@ -35,16 +35,16 @@ public class IdTagInfo {
     private IdTagInfo.Status status;
 
     @JsonProperty("expiryDate")
-    public ZonedDateTime getExpiryDate() {
+    public OffsetDateTime getExpiryDate() {
         return expiryDate;
     }
 
     @JsonProperty("expiryDate")
-    public void setExpiryDate(ZonedDateTime expiryDate) {
+    public void setExpiryDate(OffsetDateTime expiryDate) {
         this.expiryDate = expiryDate;
     }
 
-    public IdTagInfo withExpiryDate(ZonedDateTime expiryDate) {
+    public IdTagInfo withExpiryDate(OffsetDateTime expiryDate) {
         this.expiryDate = expiryDate;
         return this;
     }

@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -60,7 +60,7 @@ public class NotifyDERAlarmRequest {
     @JsonProperty("timestamp")
     @JsonPropertyDescription("Time of start or end of alarm.\r\n\r\n")
     @NotNull
-    private ZonedDateTime timestamp;
+    private OffsetDateTime timestamp;
     /**
      * Optional info provided by EV.
      * 
@@ -171,7 +171,7 @@ public class NotifyDERAlarmRequest {
      * 
      */
     @JsonProperty("timestamp")
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -183,11 +183,11 @@ public class NotifyDERAlarmRequest {
      * 
      */
     @JsonProperty("timestamp")
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public NotifyDERAlarmRequest withTimestamp(ZonedDateTime timestamp) {
+    public NotifyDERAlarmRequest withTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }

@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -87,7 +87,7 @@ public class Tariff {
      */
     @JsonProperty("validFrom")
     @JsonPropertyDescription("Time when this tariff becomes active. When absent, it is immediately active.\r\n")
-    private ZonedDateTime validFrom;
+    private OffsetDateTime validFrom;
     /**
      * Price elements and tax for time
      * 
@@ -251,7 +251,7 @@ public class Tariff {
      * 
      */
     @JsonProperty("validFrom")
-    public ZonedDateTime getValidFrom() {
+    public OffsetDateTime getValidFrom() {
         return validFrom;
     }
 
@@ -261,11 +261,11 @@ public class Tariff {
      * 
      */
     @JsonProperty("validFrom")
-    public void setValidFrom(ZonedDateTime validFrom) {
+    public void setValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
     }
 
-    public Tariff withValidFrom(ZonedDateTime validFrom) {
+    public Tariff withValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
         return this;
     }

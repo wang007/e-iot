@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -26,7 +26,7 @@ public class AFRRSignalRequest {
     @JsonProperty("timestamp")
     @JsonPropertyDescription("Time when signal becomes active.\r\n")
     @NotNull
-    private ZonedDateTime timestamp;
+    private OffsetDateTime timestamp;
     /**
      * Value of signal in _v2xSignalWattCurve_. 
      * 
@@ -53,7 +53,7 @@ public class AFRRSignalRequest {
      * 
      */
     @JsonProperty("timestamp")
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -64,11 +64,11 @@ public class AFRRSignalRequest {
      * 
      */
     @JsonProperty("timestamp")
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public AFRRSignalRequest withTimestamp(ZonedDateTime timestamp) {
+    public AFRRSignalRequest withTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }

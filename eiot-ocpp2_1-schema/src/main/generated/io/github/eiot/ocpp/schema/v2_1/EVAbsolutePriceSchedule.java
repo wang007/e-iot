@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -37,7 +37,7 @@ public class EVAbsolutePriceSchedule {
     @JsonProperty("timeAnchor")
     @JsonPropertyDescription("Starting point in time of the EVEnergyOffer.\r\n")
     @NotNull
-    private ZonedDateTime timeAnchor;
+    private OffsetDateTime timeAnchor;
     /**
      * Currency code according to ISO 4217.
      * 
@@ -86,7 +86,7 @@ public class EVAbsolutePriceSchedule {
      * 
      */
     @JsonProperty("timeAnchor")
-    public ZonedDateTime getTimeAnchor() {
+    public OffsetDateTime getTimeAnchor() {
         return timeAnchor;
     }
 
@@ -97,11 +97,11 @@ public class EVAbsolutePriceSchedule {
      * 
      */
     @JsonProperty("timeAnchor")
-    public void setTimeAnchor(ZonedDateTime timeAnchor) {
+    public void setTimeAnchor(OffsetDateTime timeAnchor) {
         this.timeAnchor = timeAnchor;
     }
 
-    public EVAbsolutePriceSchedule withTimeAnchor(ZonedDateTime timeAnchor) {
+    public EVAbsolutePriceSchedule withTimeAnchor(OffsetDateTime timeAnchor) {
         this.timeAnchor = timeAnchor;
         return this;
     }

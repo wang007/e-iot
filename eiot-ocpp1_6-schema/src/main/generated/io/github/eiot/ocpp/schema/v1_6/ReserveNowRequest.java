@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -40,7 +40,7 @@ public class ReserveNowRequest {
      */
     @JsonProperty("expiryDate")
     @NotNull
-    private ZonedDateTime expiryDate;
+    private OffsetDateTime expiryDate;
     /**
      * 
      * (Required)
@@ -93,7 +93,7 @@ public class ReserveNowRequest {
      * 
      */
     @JsonProperty("expiryDate")
-    public ZonedDateTime getExpiryDate() {
+    public OffsetDateTime getExpiryDate() {
         return expiryDate;
     }
 
@@ -103,11 +103,11 @@ public class ReserveNowRequest {
      * 
      */
     @JsonProperty("expiryDate")
-    public void setExpiryDate(ZonedDateTime expiryDate) {
+    public void setExpiryDate(OffsetDateTime expiryDate) {
         this.expiryDate = expiryDate;
     }
 
-    public ReserveNowRequest withExpiryDate(ZonedDateTime expiryDate) {
+    public ReserveNowRequest withExpiryDate(OffsetDateTime expiryDate) {
         this.expiryDate = expiryDate;
         return this;
     }

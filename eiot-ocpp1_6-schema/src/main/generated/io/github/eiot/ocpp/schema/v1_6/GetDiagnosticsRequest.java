@@ -2,7 +2,7 @@
 package io.github.eiot.ocpp.schema.v1_6;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -38,9 +38,9 @@ public class GetDiagnosticsRequest {
     @JsonProperty("retryInterval")
     private int retryInterval;
     @JsonProperty("startTime")
-    private ZonedDateTime startTime;
+    private OffsetDateTime startTime;
     @JsonProperty("stopTime")
-    private ZonedDateTime stopTime;
+    private OffsetDateTime stopTime;
 
     /**
      * 
@@ -98,31 +98,31 @@ public class GetDiagnosticsRequest {
     }
 
     @JsonProperty("startTime")
-    public ZonedDateTime getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 
     @JsonProperty("startTime")
-    public void setStartTime(ZonedDateTime startTime) {
+    public void setStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public GetDiagnosticsRequest withStartTime(ZonedDateTime startTime) {
+    public GetDiagnosticsRequest withStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
         return this;
     }
 
     @JsonProperty("stopTime")
-    public ZonedDateTime getStopTime() {
+    public OffsetDateTime getStopTime() {
         return stopTime;
     }
 
     @JsonProperty("stopTime")
-    public void setStopTime(ZonedDateTime stopTime) {
+    public void setStopTime(OffsetDateTime stopTime) {
         this.stopTime = stopTime;
     }
 
-    public GetDiagnosticsRequest withStopTime(ZonedDateTime stopTime) {
+    public GetDiagnosticsRequest withStopTime(OffsetDateTime stopTime) {
         this.stopTime = stopTime;
         return this;
     }

@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -61,7 +61,7 @@ public class NotifyCustomerInformationRequest {
     @JsonProperty("generatedAt")
     @JsonPropertyDescription(" Timestamp of the moment this message was generated at the Charging Station.\r\n")
     @NotNull
-    private ZonedDateTime generatedAt;
+    private OffsetDateTime generatedAt;
     /**
      * The Id of the request.
      * 
@@ -169,7 +169,7 @@ public class NotifyCustomerInformationRequest {
      * 
      */
     @JsonProperty("generatedAt")
-    public ZonedDateTime getGeneratedAt() {
+    public OffsetDateTime getGeneratedAt() {
         return generatedAt;
     }
 
@@ -180,11 +180,11 @@ public class NotifyCustomerInformationRequest {
      * 
      */
     @JsonProperty("generatedAt")
-    public void setGeneratedAt(ZonedDateTime generatedAt) {
+    public void setGeneratedAt(OffsetDateTime generatedAt) {
         this.generatedAt = generatedAt;
     }
 
-    public NotifyCustomerInformationRequest withGeneratedAt(ZonedDateTime generatedAt) {
+    public NotifyCustomerInformationRequest withGeneratedAt(OffsetDateTime generatedAt) {
         this.generatedAt = generatedAt;
         return this;
     }

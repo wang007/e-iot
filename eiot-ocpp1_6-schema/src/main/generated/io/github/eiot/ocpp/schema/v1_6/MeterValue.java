@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,7 +24,7 @@ public class MeterValue {
      */
     @JsonProperty("timestamp")
     @NotNull
-    private ZonedDateTime timestamp;
+    private OffsetDateTime timestamp;
     /**
      * 
      * (Required)
@@ -41,7 +41,7 @@ public class MeterValue {
      * 
      */
     @JsonProperty("timestamp")
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -51,11 +51,11 @@ public class MeterValue {
      * 
      */
     @JsonProperty("timestamp")
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public MeterValue withTimestamp(ZonedDateTime timestamp) {
+    public MeterValue withTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }

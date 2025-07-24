@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -56,7 +56,7 @@ public class NotifyDERStartStopRequest {
     @JsonProperty("timestamp")
     @JsonPropertyDescription("Time of start or end of event.\r\n\r\n")
     @NotNull
-    private ZonedDateTime timestamp;
+    private OffsetDateTime timestamp;
     /**
      * List of controlIds that are superseded as a result of this control starting.
      * 
@@ -145,7 +145,7 @@ public class NotifyDERStartStopRequest {
      * 
      */
     @JsonProperty("timestamp")
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -157,11 +157,11 @@ public class NotifyDERStartStopRequest {
      * 
      */
     @JsonProperty("timestamp")
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public NotifyDERStartStopRequest withTimestamp(ZonedDateTime timestamp) {
+    public NotifyDERStartStopRequest withTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }

@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -74,7 +74,7 @@ public class BatteryData {
      */
     @JsonProperty("productionDate")
     @JsonPropertyDescription("Production date of battery.\r\n\r\n")
-    private ZonedDateTime productionDate;
+    private OffsetDateTime productionDate;
     /**
      * Vendor-specific info from battery in undefined format.
      * 
@@ -210,7 +210,7 @@ public class BatteryData {
      * 
      */
     @JsonProperty("productionDate")
-    public ZonedDateTime getProductionDate() {
+    public OffsetDateTime getProductionDate() {
         return productionDate;
     }
 
@@ -221,11 +221,11 @@ public class BatteryData {
      * 
      */
     @JsonProperty("productionDate")
-    public void setProductionDate(ZonedDateTime productionDate) {
+    public void setProductionDate(OffsetDateTime productionDate) {
         this.productionDate = productionDate;
     }
 
-    public BatteryData withProductionDate(ZonedDateTime productionDate) {
+    public BatteryData withProductionDate(OffsetDateTime productionDate) {
         this.productionDate = productionDate;
         return this;
     }

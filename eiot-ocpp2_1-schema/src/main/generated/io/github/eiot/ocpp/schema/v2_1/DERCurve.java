@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -88,7 +88,7 @@ public class DERCurve {
      */
     @JsonProperty("startTime")
     @JsonPropertyDescription("Point in time when this curve will become activated. Only absent when _default_ is true.\r\n\r\n")
-    private ZonedDateTime startTime;
+    private OffsetDateTime startTime;
     /**
      * Duration in seconds that this curve will be active. Only absent when _default_ is true.
      * 
@@ -272,7 +272,7 @@ public class DERCurve {
      * 
      */
     @JsonProperty("startTime")
-    public ZonedDateTime getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 
@@ -283,11 +283,11 @@ public class DERCurve {
      * 
      */
     @JsonProperty("startTime")
-    public void setStartTime(ZonedDateTime startTime) {
+    public void setStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public DERCurve withStartTime(ZonedDateTime startTime) {
+    public DERCurve withStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
         return this;
     }

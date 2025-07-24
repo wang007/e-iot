@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -47,7 +47,7 @@ public class Firmware {
     @JsonProperty("retrieveDateTime")
     @JsonPropertyDescription("Date and time at which the firmware shall be retrieved.\r\n")
     @NotNull
-    private ZonedDateTime retrieveDateTime;
+    private OffsetDateTime retrieveDateTime;
     /**
      * Date and time at which the firmware shall be installed.
      * 
@@ -55,7 +55,7 @@ public class Firmware {
      */
     @JsonProperty("installDateTime")
     @JsonPropertyDescription("Date and time at which the firmware shall be installed.\r\n")
-    private ZonedDateTime installDateTime;
+    private OffsetDateTime installDateTime;
     /**
      * Certificate with which the firmware was signed.
      * PEM encoded X.509 certificate.
@@ -118,7 +118,7 @@ public class Firmware {
      * 
      */
     @JsonProperty("retrieveDateTime")
-    public ZonedDateTime getRetrieveDateTime() {
+    public OffsetDateTime getRetrieveDateTime() {
         return retrieveDateTime;
     }
 
@@ -129,11 +129,11 @@ public class Firmware {
      * 
      */
     @JsonProperty("retrieveDateTime")
-    public void setRetrieveDateTime(ZonedDateTime retrieveDateTime) {
+    public void setRetrieveDateTime(OffsetDateTime retrieveDateTime) {
         this.retrieveDateTime = retrieveDateTime;
     }
 
-    public Firmware withRetrieveDateTime(ZonedDateTime retrieveDateTime) {
+    public Firmware withRetrieveDateTime(OffsetDateTime retrieveDateTime) {
         this.retrieveDateTime = retrieveDateTime;
         return this;
     }
@@ -144,7 +144,7 @@ public class Firmware {
      * 
      */
     @JsonProperty("installDateTime")
-    public ZonedDateTime getInstallDateTime() {
+    public OffsetDateTime getInstallDateTime() {
         return installDateTime;
     }
 
@@ -154,11 +154,11 @@ public class Firmware {
      * 
      */
     @JsonProperty("installDateTime")
-    public void setInstallDateTime(ZonedDateTime installDateTime) {
+    public void setInstallDateTime(OffsetDateTime installDateTime) {
         this.installDateTime = installDateTime;
     }
 
-    public Firmware withInstallDateTime(ZonedDateTime installDateTime) {
+    public Firmware withInstallDateTime(OffsetDateTime installDateTime) {
         this.installDateTime = installDateTime;
         return this;
     }

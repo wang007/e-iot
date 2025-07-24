@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_0_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -110,7 +110,7 @@ public class ChargingProfile {
      */
     @JsonProperty("validFrom")
     @JsonPropertyDescription("Charging_ Profile. Valid_ From. Date_ Time\r\nurn:x-oca:ocpp:uid:1:569234\r\nPoint in time at which the profile starts to be valid. If absent, the profile is valid as soon as it is received by the Charging Station.\r\n")
-    private ZonedDateTime validFrom;
+    private OffsetDateTime validFrom;
     /**
      * Charging_ Profile. Valid_ To. Date_ Time
      * urn:x-oca:ocpp:uid:1:569235
@@ -120,7 +120,7 @@ public class ChargingProfile {
      */
     @JsonProperty("validTo")
     @JsonPropertyDescription("Charging_ Profile. Valid_ To. Date_ Time\r\nurn:x-oca:ocpp:uid:1:569235\r\nPoint in time at which the profile stops to be valid. If absent, the profile is valid until it is replaced by another profile.\r\n")
-    private ZonedDateTime validTo;
+    private OffsetDateTime validTo;
     /**
      * 
      * (Required)
@@ -325,7 +325,7 @@ public class ChargingProfile {
      * 
      */
     @JsonProperty("validFrom")
-    public ZonedDateTime getValidFrom() {
+    public OffsetDateTime getValidFrom() {
         return validFrom;
     }
 
@@ -337,11 +337,11 @@ public class ChargingProfile {
      * 
      */
     @JsonProperty("validFrom")
-    public void setValidFrom(ZonedDateTime validFrom) {
+    public void setValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
     }
 
-    public ChargingProfile withValidFrom(ZonedDateTime validFrom) {
+    public ChargingProfile withValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
         return this;
     }
@@ -354,7 +354,7 @@ public class ChargingProfile {
      * 
      */
     @JsonProperty("validTo")
-    public ZonedDateTime getValidTo() {
+    public OffsetDateTime getValidTo() {
         return validTo;
     }
 
@@ -366,11 +366,11 @@ public class ChargingProfile {
      * 
      */
     @JsonProperty("validTo")
-    public void setValidTo(ZonedDateTime validTo) {
+    public void setValidTo(OffsetDateTime validTo) {
         this.validTo = validTo;
     }
 
-    public ChargingProfile withValidTo(ZonedDateTime validTo) {
+    public ChargingProfile withValidTo(OffsetDateTime validTo) {
         this.validTo = validTo;
         return this;
     }

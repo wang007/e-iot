@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +27,7 @@ public class ChargingSchedule__2 {
     @JsonProperty("duration")
     private int duration;
     @JsonProperty("startSchedule")
-    private ZonedDateTime startSchedule;
+    private OffsetDateTime startSchedule;
     /**
      * 
      * (Required)
@@ -64,16 +64,16 @@ public class ChargingSchedule__2 {
     }
 
     @JsonProperty("startSchedule")
-    public ZonedDateTime getStartSchedule() {
+    public OffsetDateTime getStartSchedule() {
         return startSchedule;
     }
 
     @JsonProperty("startSchedule")
-    public void setStartSchedule(ZonedDateTime startSchedule) {
+    public void setStartSchedule(OffsetDateTime startSchedule) {
         this.startSchedule = startSchedule;
     }
 
-    public ChargingSchedule__2 withStartSchedule(ZonedDateTime startSchedule) {
+    public ChargingSchedule__2 withStartSchedule(OffsetDateTime startSchedule) {
         this.startSchedule = startSchedule;
         return this;
     }

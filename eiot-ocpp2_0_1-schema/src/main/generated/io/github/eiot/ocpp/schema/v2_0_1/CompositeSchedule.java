@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_0_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -82,7 +82,7 @@ public class CompositeSchedule {
     @JsonProperty("scheduleStart")
     @JsonPropertyDescription("Composite_ Schedule. Start. Date_ Time\r\nurn:x-oca:ocpp:uid:1:569456\r\nDate and time at which the schedule becomes active. All time measurements within the schedule are relative to this timestamp.\r\n")
     @NotNull
-    private ZonedDateTime scheduleStart;
+    private OffsetDateTime scheduleStart;
     /**
      * The unit of measure Limit is
      * expressed in.
@@ -212,7 +212,7 @@ public class CompositeSchedule {
      * 
      */
     @JsonProperty("scheduleStart")
-    public ZonedDateTime getScheduleStart() {
+    public OffsetDateTime getScheduleStart() {
         return scheduleStart;
     }
 
@@ -225,11 +225,11 @@ public class CompositeSchedule {
      * 
      */
     @JsonProperty("scheduleStart")
-    public void setScheduleStart(ZonedDateTime scheduleStart) {
+    public void setScheduleStart(OffsetDateTime scheduleStart) {
         this.scheduleStart = scheduleStart;
     }
 
-    public CompositeSchedule withScheduleStart(ZonedDateTime scheduleStart) {
+    public CompositeSchedule withScheduleStart(OffsetDateTime scheduleStart) {
         this.scheduleStart = scheduleStart;
         return this;
     }

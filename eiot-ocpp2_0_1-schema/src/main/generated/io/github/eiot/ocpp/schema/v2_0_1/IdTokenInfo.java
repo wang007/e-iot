@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_0_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -64,7 +64,7 @@ public class IdTokenInfo {
      */
     @JsonProperty("cacheExpiryDateTime")
     @JsonPropertyDescription("ID_ Token. Expiry. Date_ Time\r\nurn:x-oca:ocpp:uid:1:569373\r\nDate and Time after which the token must be considered invalid.\r\n")
-    private ZonedDateTime cacheExpiryDateTime;
+    private OffsetDateTime cacheExpiryDateTime;
     /**
      * Priority from a business point of view. Default priority is 0, The range is from -9 to 9. Higher values indicate a higher priority. The chargingPriority in &lt;&lt;transactioneventresponse,TransactionEventResponse&gt;&gt; overrules this one. 
      * 
@@ -191,7 +191,7 @@ public class IdTokenInfo {
      * 
      */
     @JsonProperty("cacheExpiryDateTime")
-    public ZonedDateTime getCacheExpiryDateTime() {
+    public OffsetDateTime getCacheExpiryDateTime() {
         return cacheExpiryDateTime;
     }
 
@@ -203,11 +203,11 @@ public class IdTokenInfo {
      * 
      */
     @JsonProperty("cacheExpiryDateTime")
-    public void setCacheExpiryDateTime(ZonedDateTime cacheExpiryDateTime) {
+    public void setCacheExpiryDateTime(OffsetDateTime cacheExpiryDateTime) {
         this.cacheExpiryDateTime = cacheExpiryDateTime;
     }
 
-    public IdTokenInfo withCacheExpiryDateTime(ZonedDateTime cacheExpiryDateTime) {
+    public IdTokenInfo withCacheExpiryDateTime(OffsetDateTime cacheExpiryDateTime) {
         this.cacheExpiryDateTime = cacheExpiryDateTime;
         return this;
     }

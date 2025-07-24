@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_0_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -39,7 +39,7 @@ public class NotifyEventRequest {
     @JsonProperty("generatedAt")
     @JsonPropertyDescription("Timestamp of the moment this message was generated at the Charging Station.\r\n")
     @NotNull
-    private ZonedDateTime generatedAt;
+    private OffsetDateTime generatedAt;
     /**
      * “to be continued” indicator. Indicates whether another part of the report follows in an upcoming notifyEventRequest message. Default value when omitted is false. 
      * 
@@ -99,7 +99,7 @@ public class NotifyEventRequest {
      * 
      */
     @JsonProperty("generatedAt")
-    public ZonedDateTime getGeneratedAt() {
+    public OffsetDateTime getGeneratedAt() {
         return generatedAt;
     }
 
@@ -110,11 +110,11 @@ public class NotifyEventRequest {
      * 
      */
     @JsonProperty("generatedAt")
-    public void setGeneratedAt(ZonedDateTime generatedAt) {
+    public void setGeneratedAt(OffsetDateTime generatedAt) {
         this.generatedAt = generatedAt;
     }
 
-    public NotifyEventRequest withGeneratedAt(ZonedDateTime generatedAt) {
+    public NotifyEventRequest withGeneratedAt(OffsetDateTime generatedAt) {
         this.generatedAt = generatedAt;
         return this;
     }

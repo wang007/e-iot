@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v1_6;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -41,7 +41,7 @@ public class BootNotificationResponse {
      */
     @JsonProperty("currentTime")
     @NotNull
-    private ZonedDateTime currentTime;
+    private OffsetDateTime currentTime;
     /**
      * 
      * (Required)
@@ -82,7 +82,7 @@ public class BootNotificationResponse {
      * 
      */
     @JsonProperty("currentTime")
-    public ZonedDateTime getCurrentTime() {
+    public OffsetDateTime getCurrentTime() {
         return currentTime;
     }
 
@@ -92,11 +92,11 @@ public class BootNotificationResponse {
      * 
      */
     @JsonProperty("currentTime")
-    public void setCurrentTime(ZonedDateTime currentTime) {
+    public void setCurrentTime(OffsetDateTime currentTime) {
         this.currentTime = currentTime;
     }
 
-    public BootNotificationResponse withCurrentTime(ZonedDateTime currentTime) {
+    public BootNotificationResponse withCurrentTime(OffsetDateTime currentTime) {
         this.currentTime = currentTime;
         return this;
     }

@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -25,7 +25,7 @@ public class HeartbeatResponse {
     @JsonProperty("currentTime")
     @JsonPropertyDescription("Contains the current time of the CSMS.\r\n")
     @NotNull
-    private ZonedDateTime currentTime;
+    private OffsetDateTime currentTime;
     /**
      * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
      * 
@@ -42,7 +42,7 @@ public class HeartbeatResponse {
      * 
      */
     @JsonProperty("currentTime")
-    public ZonedDateTime getCurrentTime() {
+    public OffsetDateTime getCurrentTime() {
         return currentTime;
     }
 
@@ -53,11 +53,11 @@ public class HeartbeatResponse {
      * 
      */
     @JsonProperty("currentTime")
-    public void setCurrentTime(ZonedDateTime currentTime) {
+    public void setCurrentTime(OffsetDateTime currentTime) {
         this.currentTime = currentTime;
     }
 
-    public HeartbeatResponse withCurrentTime(ZonedDateTime currentTime) {
+    public HeartbeatResponse withCurrentTime(OffsetDateTime currentTime) {
         this.currentTime = currentTime;
         return this;
     }

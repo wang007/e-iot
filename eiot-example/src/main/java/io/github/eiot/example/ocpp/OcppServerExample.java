@@ -14,6 +14,7 @@ import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpHeaders;
 
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 /**
@@ -46,7 +47,7 @@ public class OcppServerExample {
                                 .responseFrame();
                         BootNotificationResponse response = responseFrame.data();
 
-                        response.setCurrentTime(ZonedDateTime.now());
+                        response.setCurrentTime(OffsetDateTime.now());
                         response.setInterval(45); // heart beat interval 45s
                         response.setStatus(RegistrationStatusEnum.ACCEPTED); // success
 
@@ -112,7 +113,7 @@ public class OcppServerExample {
             Frame<HeartbeatRequest> requestFrame = ctx.frame();
             requestFrame.asRequest(HeartbeatResponse.class)
                     .responseFrame()
-                    .data(new HeartbeatResponse().withCurrentTime(ZonedDateTime.now()))
+                    .data(new HeartbeatResponse().withCurrentTime(OffsetDateTime.now()))
                     .write();
         }
     }

@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -67,7 +67,7 @@ public class NotifyMonitoringReportRequest {
     @JsonProperty("generatedAt")
     @JsonPropertyDescription("Timestamp of the moment this message was generated at the Charging Station.\r\n")
     @NotNull
-    private ZonedDateTime generatedAt;
+    private OffsetDateTime generatedAt;
     /**
      * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
      * 
@@ -180,7 +180,7 @@ public class NotifyMonitoringReportRequest {
      * 
      */
     @JsonProperty("generatedAt")
-    public ZonedDateTime getGeneratedAt() {
+    public OffsetDateTime getGeneratedAt() {
         return generatedAt;
     }
 
@@ -191,11 +191,11 @@ public class NotifyMonitoringReportRequest {
      * 
      */
     @JsonProperty("generatedAt")
-    public void setGeneratedAt(ZonedDateTime generatedAt) {
+    public void setGeneratedAt(OffsetDateTime generatedAt) {
         this.generatedAt = generatedAt;
     }
 
-    public NotifyMonitoringReportRequest withGeneratedAt(ZonedDateTime generatedAt) {
+    public NotifyMonitoringReportRequest withGeneratedAt(OffsetDateTime generatedAt) {
         this.generatedAt = generatedAt;
         return this;
     }

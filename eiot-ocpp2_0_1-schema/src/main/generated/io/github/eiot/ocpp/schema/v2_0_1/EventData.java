@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_0_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -63,7 +63,7 @@ public class EventData {
     @JsonProperty("timestamp")
     @JsonPropertyDescription("Timestamp of the moment the report was generated.\r\n")
     @NotNull
-    private ZonedDateTime timestamp;
+    private OffsetDateTime timestamp;
     /**
      * Type of monitor that triggered this event, e.g. exceeding a threshold value.
      * 
@@ -235,7 +235,7 @@ public class EventData {
      * 
      */
     @JsonProperty("timestamp")
-    public ZonedDateTime getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -246,11 +246,11 @@ public class EventData {
      * 
      */
     @JsonProperty("timestamp")
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public EventData withTimestamp(ZonedDateTime timestamp) {
+    public EventData withTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
         return this;
     }

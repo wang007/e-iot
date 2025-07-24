@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -79,7 +79,7 @@ public class MessageInfo {
      */
     @JsonProperty("startDateTime")
     @JsonPropertyDescription("From what date-time should this message be shown. If omitted: directly.\r\n")
-    private ZonedDateTime startDateTime;
+    private OffsetDateTime startDateTime;
     /**
      * Until what date-time should this message be shown, after this date/time this message SHALL be removed.
      * 
@@ -87,7 +87,7 @@ public class MessageInfo {
      */
     @JsonProperty("endDateTime")
     @JsonPropertyDescription("Until what date-time should this message be shown, after this date/time this message SHALL be removed.\r\n")
-    private ZonedDateTime endDateTime;
+    private OffsetDateTime endDateTime;
     /**
      * During which transaction shall this message be shown.
      * Message SHALL be removed by the Charging Station after transaction has
@@ -234,7 +234,7 @@ public class MessageInfo {
      * 
      */
     @JsonProperty("startDateTime")
-    public ZonedDateTime getStartDateTime() {
+    public OffsetDateTime getStartDateTime() {
         return startDateTime;
     }
 
@@ -244,11 +244,11 @@ public class MessageInfo {
      * 
      */
     @JsonProperty("startDateTime")
-    public void setStartDateTime(ZonedDateTime startDateTime) {
+    public void setStartDateTime(OffsetDateTime startDateTime) {
         this.startDateTime = startDateTime;
     }
 
-    public MessageInfo withStartDateTime(ZonedDateTime startDateTime) {
+    public MessageInfo withStartDateTime(OffsetDateTime startDateTime) {
         this.startDateTime = startDateTime;
         return this;
     }
@@ -259,7 +259,7 @@ public class MessageInfo {
      * 
      */
     @JsonProperty("endDateTime")
-    public ZonedDateTime getEndDateTime() {
+    public OffsetDateTime getEndDateTime() {
         return endDateTime;
     }
 
@@ -269,11 +269,11 @@ public class MessageInfo {
      * 
      */
     @JsonProperty("endDateTime")
-    public void setEndDateTime(ZonedDateTime endDateTime) {
+    public void setEndDateTime(OffsetDateTime endDateTime) {
         this.endDateTime = endDateTime;
     }
 
-    public MessageInfo withEndDateTime(ZonedDateTime endDateTime) {
+    public MessageInfo withEndDateTime(OffsetDateTime endDateTime) {
         this.endDateTime = endDateTime;
         return this;
     }

@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -45,7 +45,7 @@ public class EVPowerSchedule {
     @JsonProperty("timeAnchor")
     @JsonPropertyDescription("The time that defines the starting point for the EVEnergyOffer.\r\n")
     @NotNull
-    private ZonedDateTime timeAnchor;
+    private OffsetDateTime timeAnchor;
     /**
      * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
      * 
@@ -87,7 +87,7 @@ public class EVPowerSchedule {
      * 
      */
     @JsonProperty("timeAnchor")
-    public ZonedDateTime getTimeAnchor() {
+    public OffsetDateTime getTimeAnchor() {
         return timeAnchor;
     }
 
@@ -98,11 +98,11 @@ public class EVPowerSchedule {
      * 
      */
     @JsonProperty("timeAnchor")
-    public void setTimeAnchor(ZonedDateTime timeAnchor) {
+    public void setTimeAnchor(OffsetDateTime timeAnchor) {
         this.timeAnchor = timeAnchor;
     }
 
-    public EVPowerSchedule withTimeAnchor(ZonedDateTime timeAnchor) {
+    public EVPowerSchedule withTimeAnchor(OffsetDateTime timeAnchor) {
         this.timeAnchor = timeAnchor;
         return this;
     }

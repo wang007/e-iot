@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -98,7 +98,7 @@ public class ChargingProfile {
      */
     @JsonProperty("validFrom")
     @JsonPropertyDescription("Point in time at which the profile starts to be valid. If absent, the profile is valid as soon as it is received by the Charging Station.\r\n")
-    private ZonedDateTime validFrom;
+    private OffsetDateTime validFrom;
     /**
      * Point in time at which the profile stops to be valid. If absent, the profile is valid until it is replaced by another profile.
      * 
@@ -106,7 +106,7 @@ public class ChargingProfile {
      */
     @JsonProperty("validTo")
     @JsonPropertyDescription("Point in time at which the profile stops to be valid. If absent, the profile is valid until it is replaced by another profile.\r\n")
-    private ZonedDateTime validTo;
+    private OffsetDateTime validTo;
     /**
      * SHALL only be included if ChargingProfilePurpose is set to TxProfile in a SetChargingProfileRequest. The transactionId is used to match the profile to a specific transaction.
      * 
@@ -165,7 +165,7 @@ public class ChargingProfile {
      */
     @JsonProperty("dynUpdateTime")
     @JsonPropertyDescription("*(2.1)* Time at which limits or setpoints in this charging profile were last updated by a PullDynamicScheduleUpdateRequest or UpdateDynamicScheduleRequest or by an external actor. +\r\n    Only relevant in a dynamic charging profile.\r\n\r\n")
-    private ZonedDateTime dynUpdateTime;
+    private OffsetDateTime dynUpdateTime;
     /**
      * *(2.1)* ISO 15118-20 signature for all price schedules in _chargingSchedules_. +
      * Note: for 256-bit elliptic curves (like secp256k1) the ECDSA signature is 512 bits (64 bytes) and for 521-bit curves (like secp521r1) the signature is 1042 bits. This equals 131 bytes, which can be encoded as base64 in 176 bytes.
@@ -324,7 +324,7 @@ public class ChargingProfile {
      * 
      */
     @JsonProperty("validFrom")
-    public ZonedDateTime getValidFrom() {
+    public OffsetDateTime getValidFrom() {
         return validFrom;
     }
 
@@ -334,11 +334,11 @@ public class ChargingProfile {
      * 
      */
     @JsonProperty("validFrom")
-    public void setValidFrom(ZonedDateTime validFrom) {
+    public void setValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
     }
 
-    public ChargingProfile withValidFrom(ZonedDateTime validFrom) {
+    public ChargingProfile withValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
         return this;
     }
@@ -349,7 +349,7 @@ public class ChargingProfile {
      * 
      */
     @JsonProperty("validTo")
-    public ZonedDateTime getValidTo() {
+    public OffsetDateTime getValidTo() {
         return validTo;
     }
 
@@ -359,11 +359,11 @@ public class ChargingProfile {
      * 
      */
     @JsonProperty("validTo")
-    public void setValidTo(ZonedDateTime validTo) {
+    public void setValidTo(OffsetDateTime validTo) {
         this.validTo = validTo;
     }
 
-    public ChargingProfile withValidTo(ZonedDateTime validTo) {
+    public ChargingProfile withValidTo(OffsetDateTime validTo) {
         this.validTo = validTo;
         return this;
     }
@@ -513,7 +513,7 @@ public class ChargingProfile {
      * 
      */
     @JsonProperty("dynUpdateTime")
-    public ZonedDateTime getDynUpdateTime() {
+    public OffsetDateTime getDynUpdateTime() {
         return dynUpdateTime;
     }
 
@@ -525,11 +525,11 @@ public class ChargingProfile {
      * 
      */
     @JsonProperty("dynUpdateTime")
-    public void setDynUpdateTime(ZonedDateTime dynUpdateTime) {
+    public void setDynUpdateTime(OffsetDateTime dynUpdateTime) {
         this.dynUpdateTime = dynUpdateTime;
     }
 
-    public ChargingProfile withDynUpdateTime(ZonedDateTime dynUpdateTime) {
+    public ChargingProfile withDynUpdateTime(OffsetDateTime dynUpdateTime) {
         this.dynUpdateTime = dynUpdateTime;
         return this;
     }

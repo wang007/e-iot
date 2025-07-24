@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -30,7 +30,7 @@ public class NotifyEVChargingScheduleRequest {
     @JsonProperty("timeBase")
     @JsonPropertyDescription("Periods contained in the charging profile are relative to this point in time.\r\n")
     @NotNull
-    private ZonedDateTime timeBase;
+    private OffsetDateTime timeBase;
     /**
      * Charging schedule structure defines a list of charging periods, as used in: NotifyEVChargingScheduleRequest and ChargingProfileType. When used in a NotifyEVChargingScheduleRequest only _duration_ and _chargingSchedulePeriod_ are relevant and _chargingRateUnit_ must be 'W'. +
      * An ISO 15118-20 session may provide either an _absolutePriceSchedule_ or a _priceLevelSchedule_. An ISO 15118-2 session can only provide a_salesTariff_ element. The field _digestValue_ is used when price schedule or sales tariff are signed.
@@ -92,7 +92,7 @@ public class NotifyEVChargingScheduleRequest {
      * 
      */
     @JsonProperty("timeBase")
-    public ZonedDateTime getTimeBase() {
+    public OffsetDateTime getTimeBase() {
         return timeBase;
     }
 
@@ -103,11 +103,11 @@ public class NotifyEVChargingScheduleRequest {
      * 
      */
     @JsonProperty("timeBase")
-    public void setTimeBase(ZonedDateTime timeBase) {
+    public void setTimeBase(OffsetDateTime timeBase) {
         this.timeBase = timeBase;
     }
 
-    public NotifyEVChargingScheduleRequest withTimeBase(ZonedDateTime timeBase) {
+    public NotifyEVChargingScheduleRequest withTimeBase(OffsetDateTime timeBase) {
         this.timeBase = timeBase;
         return this;
     }

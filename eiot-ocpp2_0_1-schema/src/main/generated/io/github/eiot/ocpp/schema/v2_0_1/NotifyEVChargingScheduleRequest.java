@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_0_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -35,7 +35,7 @@ public class NotifyEVChargingScheduleRequest {
     @JsonProperty("timeBase")
     @JsonPropertyDescription("Periods contained in the charging profile are relative to this point in time.\r\n")
     @NotNull
-    private ZonedDateTime timeBase;
+    private OffsetDateTime timeBase;
     /**
      * Charging_ Schedule
      * urn:x-oca:ocpp:uid:2:233256
@@ -90,7 +90,7 @@ public class NotifyEVChargingScheduleRequest {
      * 
      */
     @JsonProperty("timeBase")
-    public ZonedDateTime getTimeBase() {
+    public OffsetDateTime getTimeBase() {
         return timeBase;
     }
 
@@ -101,11 +101,11 @@ public class NotifyEVChargingScheduleRequest {
      * 
      */
     @JsonProperty("timeBase")
-    public void setTimeBase(ZonedDateTime timeBase) {
+    public void setTimeBase(OffsetDateTime timeBase) {
         this.timeBase = timeBase;
     }
 
-    public NotifyEVChargingScheduleRequest withTimeBase(ZonedDateTime timeBase) {
+    public NotifyEVChargingScheduleRequest withTimeBase(OffsetDateTime timeBase) {
         this.timeBase = timeBase;
         return this;
     }

@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -61,7 +61,7 @@ public class FixedVar {
      */
     @JsonProperty("startTime")
     @JsonPropertyDescription("Time when this setting becomes active.\r\n")
-    private ZonedDateTime startTime;
+    private OffsetDateTime startTime;
     /**
      * Duration in seconds that this setting is active.
      * 
@@ -170,7 +170,7 @@ public class FixedVar {
      * 
      */
     @JsonProperty("startTime")
-    public ZonedDateTime getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 
@@ -180,11 +180,11 @@ public class FixedVar {
      * 
      */
     @JsonProperty("startTime")
-    public void setStartTime(ZonedDateTime startTime) {
+    public void setStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public FixedVar withStartTime(ZonedDateTime startTime) {
+    public FixedVar withStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
         return this;
     }

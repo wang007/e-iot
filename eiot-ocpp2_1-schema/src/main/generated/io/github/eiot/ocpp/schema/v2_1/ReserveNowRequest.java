@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -43,7 +43,7 @@ public class ReserveNowRequest {
     @JsonProperty("expiryDateTime")
     @JsonPropertyDescription("Date and time at which the reservation expires.\r\n")
     @NotNull
-    private ZonedDateTime expiryDateTime;
+    private OffsetDateTime expiryDateTime;
     /**
      * This field specifies the connector type. Values defined in Appendix as ConnectorEnumStringType.
      * 
@@ -125,7 +125,7 @@ public class ReserveNowRequest {
      * 
      */
     @JsonProperty("expiryDateTime")
-    public ZonedDateTime getExpiryDateTime() {
+    public OffsetDateTime getExpiryDateTime() {
         return expiryDateTime;
     }
 
@@ -136,11 +136,11 @@ public class ReserveNowRequest {
      * 
      */
     @JsonProperty("expiryDateTime")
-    public void setExpiryDateTime(ZonedDateTime expiryDateTime) {
+    public void setExpiryDateTime(OffsetDateTime expiryDateTime) {
         this.expiryDateTime = expiryDateTime;
     }
 
-    public ReserveNowRequest withExpiryDateTime(ZonedDateTime expiryDateTime) {
+    public ReserveNowRequest withExpiryDateTime(OffsetDateTime expiryDateTime) {
         this.expiryDateTime = expiryDateTime;
         return this;
     }

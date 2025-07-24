@@ -1,7 +1,7 @@
 
 package io.github.eiot.ocpp.schema.v2_1;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -52,7 +52,7 @@ public class ChargingPeriod {
     @JsonProperty("startPeriod")
     @JsonPropertyDescription("Start timestamp of charging period. A period ends when the next period starts. The last period ends when the session ends.\r\n\r\n")
     @NotNull
-    private ZonedDateTime startPeriod;
+    private OffsetDateTime startPeriod;
     /**
      * This class does not get 'AdditionalProperties = false' in the schema generation, so it can be extended with arbitrary JSON properties to allow adding custom data.
      * 
@@ -112,7 +112,7 @@ public class ChargingPeriod {
      * 
      */
     @JsonProperty("startPeriod")
-    public ZonedDateTime getStartPeriod() {
+    public OffsetDateTime getStartPeriod() {
         return startPeriod;
     }
 
@@ -124,11 +124,11 @@ public class ChargingPeriod {
      * 
      */
     @JsonProperty("startPeriod")
-    public void setStartPeriod(ZonedDateTime startPeriod) {
+    public void setStartPeriod(OffsetDateTime startPeriod) {
         this.startPeriod = startPeriod;
     }
 
-    public ChargingPeriod withStartPeriod(ZonedDateTime startPeriod) {
+    public ChargingPeriod withStartPeriod(OffsetDateTime startPeriod) {
         this.startPeriod = startPeriod;
         return this;
     }
