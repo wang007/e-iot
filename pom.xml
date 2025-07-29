@@ -15,10 +15,11 @@
 
     <properties>
         <generated.dir>${project.basedir}/src/main/generated</generated.dir>
-        <revision>1.0-SNAPSHOT</revision>
+        <revision>1.0.0-SNAPSHOT</revision>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <vertx.version>4.5.13</vertx.version>
+        <deploy.skip>true</deploy.skip>
     </properties>
 
     <modules>
@@ -30,6 +31,14 @@
         <module>eiot-ocpp2_1-schema</module>
         <module>eiot-ocpp2_0_1-schema</module>
     </modules>
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <dependencies>
         <dependency>
@@ -75,11 +84,11 @@
     <distributionManagement>
         <snapshotRepository>
             <id>oss</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>oss</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
     </distributionManagement>
 
@@ -127,26 +136,22 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.11.2</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <id>attach-javadocs</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <show>public</show>
+                            <source>17</source>
+                        </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
             <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -167,20 +172,19 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>oss</id>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <extensions>true</extensions>
                         <configuration>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                            <serverId>oss</serverId>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <publishingServerId>oss</publishingServerId>
+                            <excludeArtifacts>eiot-example,eiot</excludeArtifacts>
                         </configuration>
                     </plugin>
-
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -194,6 +198,15 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                                <arg>--batch</arg>
+                            </gpgArguments>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <passphrase>${gpgPassword}</passphrase>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

@@ -11,6 +11,8 @@
 
     <artifactId>eiot-base</artifactId>
 
+    <name>eiot-base</name>
+
     <properties>
         <generated.dir>${project.basedir}/src/main/generated</generated.dir>
         <maven.compiler.source>17</maven.compiler.source>
