@@ -18,7 +18,7 @@ Simple, high performance, based on vertx to implement a variety of charging prot
 <dependency>
     <groupId>io.github.wang007</groupId>
     <artifactId>eiot-ykc</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.0.1</version>
 </dependency>
 ```
 1. [云快充 使用示例](./eiot-example/src/main/java/io/github/eiot/example/ykc/YkcChargeServerExample.java)
@@ -34,14 +34,14 @@ Simple, high performance, based on vertx to implement a variety of charging prot
     <dependency>
         <groupId>io.github.wang007</groupId>
         <artifactId>eiot-ykc</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.0.1</version>
     </dependency>
 
     <!-- 对应的 schema -->
     <dependency>
         <groupId>io.github.wang007</groupId>
         <artifactId>eiot-ocpp1_6-schema</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.0.1</version>
     </dependency>
 </dependenies>
 ```
