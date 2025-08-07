@@ -33,7 +33,7 @@ Simple, high performance, based on vertx to implement a variety of charging prot
     <!-- 引入 jar -->
     <dependency>
         <groupId>io.github.wang007</groupId>
-        <artifactId>eiot-ykc</artifactId>
+        <artifactId>eiot-ocpp</artifactId>
         <version>0.0.1</version>
     </dependency>
 
