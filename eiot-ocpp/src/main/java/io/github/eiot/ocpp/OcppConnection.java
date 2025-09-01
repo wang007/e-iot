@@ -36,13 +36,6 @@ public interface OcppConnection extends IotConnection {
 
     /**
      * @param utf8TextData must be utf-8 bytes
-     * @param handler      the handler
-     */
-    @Override
-    void write(Buffer utf8TextData, Handler<AsyncResult<Void>> handler);
-
-    /**
-     * @param utf8TextData must be utf-8 bytes
      * @return the handler
      */
     @Override

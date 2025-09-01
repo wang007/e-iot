@@ -7,7 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Timer;
-import io.vertx.core.impl.ContextInternal;
+import io.vertx.core.internal.ContextInternal;
 import io.vertx.core.spi.metrics.TCPMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

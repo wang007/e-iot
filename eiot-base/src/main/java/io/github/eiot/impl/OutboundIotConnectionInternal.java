@@ -5,8 +5,8 @@ import io.github.eiot.IotConnection;
 import io.github.eiot.OutboundHook;
 import io.github.eiot.RequestFrame;
 import io.vertx.core.*;
-import io.vertx.core.impl.ContextInternal;
-import io.vertx.core.impl.future.PromiseInternal;
+import io.vertx.core.internal.ContextInternal;
+import io.vertx.core.internal.PromiseInternal;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;

@@ -8,9 +8,13 @@ import io.netty.util.ReferenceCounted;
 import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.impl.ContextInternal;
-import io.vertx.core.impl.future.PromiseInternal;
+import io.vertx.core.buffer.impl.BufferImpl;
+import io.vertx.core.internal.ContextInternal;
+import io.vertx.core.internal.PromiseInternal;
+import io.vertx.core.internal.concurrent.InboundMessageQueue;
 import io.vertx.core.net.impl.ConnectionBase;
+import io.vertx.core.net.impl.NetSocketImpl;
+import io.vertx.core.net.impl.VertxConnection;
 import io.vertx.core.net.impl.VertxHandler;
 import io.vertx.core.spi.metrics.TCPMetrics;
 import io.vertx.core.streams.impl.InboundBuffer;
@@ -25,7 +29,7 @@ import java.util.concurrent.TimeoutException;
  * <p>
  * created by wang007 on 2025/3/2
  */
-public abstract class IotConnectionBase extends ConnectionBase implements OutboundIotConnectionInternal {
+public abstract class IotConnectionBase extends VertxConnection implements OutboundIotConnectionInternal {
 
     private final Map<String, Object> map;
 
@@ -35,15 +39,16 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
     protected final int waitResponseTimeout;
     protected final String protocol;
 
-    private final InboundBuffer<Object> pending;
+    private final InboundMessageQueue<Object> pending;
 
     private boolean closed;
 
+    private Handler<Throwable> exceptionHandler;
     protected Handler<Frame<?>> frameHandler;
     protected OutboundHook outboundHook;
 
     private Handler<Void> endHandler;
-    private Handler<Void> drainHandler;
+    private volatile Handler<Void> drainHandler;
     private Handler<Buffer> handler;
 
     protected IotConnectionBase(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,
@@ -62,20 +67,27 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
             }
         });
 
-        pending = new InboundBuffer<>(context);
-        pending.drainHandler(v -> doResume());
-        pending.handler(this::handleMsg);
-        pending.exceptionHandler(context::reportException);
+        this.pending = new InboundMessageQueue<>(context.eventLoop(), context.executor()) {
+            @Override
+            protected void handleResume() {
+                IotConnectionBase.this.doResume();
+            }
+
+            @Override
+            protected void handlePause() {
+                IotConnectionBase.this.doPause();
+            }
+
+            @Override
+            protected void handleMessage(Object msg) {
+                IotConnectionBase.this.handleMsg(msg);
+            }
+        };
     }
 
     @Override
     public Vertx vertx() {
         return vertx;
-    }
-
-    @Override
-    public ContextInternal context() {
-        return context;
     }
 
     private void handleMsg(Object msg) {
@@ -93,14 +105,14 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
 
         Handler<Frame<?>> frameHandler;
         Handler<Buffer> handler;
-        Handler<Throwable> exceptionHandler;
+        Handler<Throwable> exceptionHandler0;
         boolean frameConvert;
         boolean setResponseResult;
 
         synchronized (this) {
             frameHandler = this.frameHandler;
             handler = this.handler;
-            exceptionHandler = exceptionHandler();
+            exceptionHandler0 = exceptionHandler();
             frameConvert = this.frameConverter;
             setResponseResult = this.setResponseResult;
         }
@@ -118,8 +130,8 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
                     } else {
                         ex = new ConvertIotException(terminalNo, null, "convert raw frame failed", e);
                     }
-                    if (exceptionHandler != null) {
-                        exceptionHandler.handle(ex);
+                    if (exceptionHandler0 != null) {
+                        exceptionHandler0.handle(ex);
                     }
                     return;
                 }
@@ -138,8 +150,8 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
                         if (trySetResponseResult(frame, ex)) {
                             return;
                         }
-                        if (exceptionHandler != null) {
-                            exceptionHandler.handle(ex);
+                        if (exceptionHandler0 != null) {
+                            exceptionHandler0.handle(ex);
                         }
                         return;
                     }
@@ -155,7 +167,10 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
         }
 
         if (handler != null) {
-            context.dispatch(byteBuf, v -> handler.handle(Buffer.buffer(v)));
+            context.dispatch(byteBuf, v -> {
+                BufferImpl buffer = new BufferImpl(v);
+                handler.handle(buffer);
+            });
         }
     }
 
@@ -188,7 +203,12 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
     @Override
     public synchronized IotConnectionBase exceptionHandler(Handler<Throwable> handler) {
         super.exceptionHandler(handler);
+        this.exceptionHandler = handler;
         return this;
+    }
+
+    public synchronized Handler<Throwable> exceptionHandler() {
+        return this.exceptionHandler;
     }
 
     @Override
@@ -255,10 +275,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
     protected void handleMessage(Object msg) {
         if (msg instanceof ByteBuf) {
             msg = VertxHandler.safeBuffer((ByteBuf) msg);
-            ByteBuf byteBuf = (ByteBuf) msg;
-            if (!pending.write(byteBuf)) {
-                doPause();
-            }
+            pending.write(msg);
         } else {
             if (msg instanceof ReferenceCounted) {
                 ((ReferenceCounted) msg).release();
@@ -267,8 +284,11 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
     }
 
     @Override
-    protected void handleInterestedOpsChanged() {
-        context.emit(null, v -> callDrainHandler());
+    protected void handleWriteQueueDrained() {
+        Handler<Void> handler = drainHandler;
+        if (handler != null) {
+            context.emit(null, handler);
+        }
     }
 
     @Override
@@ -285,7 +305,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
 
     @Override
     public IotConnection resume() {
-        pending.resume();
+        pending.fetch(Long.MAX_VALUE);
         return this;
     }
 
@@ -302,17 +322,12 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
     }
 
 
-    @SuppressWarnings("deprecation")
     @Override
     public Future<Void> write(Buffer data) {
-        return write(data.getByteBuf());
+        BufferImpl buffer = (BufferImpl) data;
+        return write(buffer.getByteBuf());
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void write(Buffer data, Handler<AsyncResult<Void>> handler) {
-        write(data.getByteBuf()).onComplete(handler);
-    }
 
     private Future<Void> write(ByteBuf byteBuf) {
         reportBytesWritten(byteBuf.readableBytes());
@@ -323,10 +338,9 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
 
 
     @Override
-    public void end(Handler<AsyncResult<Void>> handler) {
-        close(handler);
+    public Future<Void> end() {
+        return close();
     }
-
 
     @Override
     public IotConnection setWriteQueueMaxSize(int maxSize) {
@@ -336,20 +350,12 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
 
     @Override
     public boolean writeQueueFull() {
-        return isNotWritable();
+        return super.writeQueueFull();
     }
 
     @Override
     public synchronized IotConnection drainHandler(@Nullable Handler<Void> handler) {
         this.drainHandler = handler;
         return this;
-    }
-
-    private synchronized void callDrainHandler() {
-        if (drainHandler != null) {
-            if (!writeQueueFull()) {
-                drainHandler.handle(null);
-            }
-        }
     }
 }

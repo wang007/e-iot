@@ -11,12 +11,13 @@ import io.github.eiot.utils.StringUtil;
 import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.buffer.impl.BufferImpl;
 import io.vertx.core.http.WebSocketBase;
 import io.vertx.core.http.WebSocketFrameType;
 import io.vertx.core.http.impl.ws.WebSocketFrameImpl;
-import io.vertx.core.impl.ContextInternal;
-import io.vertx.core.impl.VertxInternal;
-import io.vertx.core.impl.future.PromiseInternal;
+import io.vertx.core.internal.ContextInternal;
+import io.vertx.core.internal.PromiseInternal;
+import io.vertx.core.internal.VertxInternal;
 import io.vertx.core.net.SocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -368,20 +369,15 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
 
     @Override
     public Future<Void> write(Buffer data) {
+        BufferImpl buffer = (BufferImpl) data;
         // Reduce the overhead of replication
-        WebSocketFrameImpl frame = new WebSocketFrameImpl(WebSocketFrameType.TEXT, data.getByteBuf(), true);
+        WebSocketFrameImpl frame = new WebSocketFrameImpl(WebSocketFrameType.TEXT, buffer.getByteBuf(), true);
         return webSocket.writeFrame(frame);
     }
 
     @Override
-    public void write(Buffer data, Handler<AsyncResult<Void>> handler) {
-        Future<Void> future = write(data);
-        future.onComplete(handler);
-    }
-
-    @Override
-    public void end(Handler<AsyncResult<Void>> handler) {
-        webSocket.end(handler);
+    public Future<Void> end() {
+        return webSocket.end();
     }
 
     @Override
