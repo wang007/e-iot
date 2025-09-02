@@ -70,7 +70,7 @@ public abstract class IotClientBase implements IotClient {
     public Future<Void> close() {
         PromiseInternal<Void> promise = vertxInternal.promise();
         netClient.close(promise);
-        return null;
+        return promise.future();
     }
 
     @Override
