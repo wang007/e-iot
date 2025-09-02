@@ -156,16 +156,6 @@ public class FakeOcppConnection implements OcppConnection {
     }
 
     @Override
-    public void write(Buffer utf8TextData, Handler<AsyncResult<Void>> handler) {
-
-    }
-
-    @Override
-    public void end(Handler<AsyncResult<Void>> handler) {
-
-    }
-
-    @Override
     public WriteStream<Buffer> setWriteQueueMaxSize(int i) {
         return null;
     }
@@ -182,6 +172,11 @@ public class FakeOcppConnection implements OcppConnection {
 
     @Override
     public Future<Void> write(Buffer utf8TextData) {
+        return null;
+    }
+
+    @Override
+    public Future<Void> end() {
         return null;
     }
 

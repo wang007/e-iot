@@ -5,9 +5,9 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.vertx.core.*;
-import io.vertx.core.impl.ContextInternal;
-import io.vertx.core.impl.VertxInternal;
-import io.vertx.core.impl.future.PromiseInternal;
+import io.vertx.core.internal.ContextInternal;
+import io.vertx.core.internal.PromiseInternal;
+import io.vertx.core.internal.VertxInternal;
 import io.vertx.core.net.SocketAddress;
 import io.vertx.core.net.impl.*;
 import io.vertx.core.shareddata.Shareable;
@@ -75,7 +75,7 @@ public abstract class IotServerBase implements IotServer, Closeable, Shareable {
     private void configurePipeline(NetSocketImpl so) {
         Channel ch = so.channel();
         TCPMetrics<?> metrics = so.metrics();
-        ContextInternal context = so.getContext();
+        ContextInternal context = so.context();
 
         FrameCodecOptions frameCodecOptions = options.getFrameCodecOptions();
         LengthFieldBasedFrameDecoder lengthFieldBasedFrameDecoder = new LengthFieldBasedFrameDecoder(
@@ -125,7 +125,7 @@ public abstract class IotServerBase implements IotServer, Closeable, Shareable {
     }
 
     @Override
-    public void close(Promise<Void> completion) {
+    public void close(Completable<Void> completion) {
         close().onComplete(completion);
     }
 

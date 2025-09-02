@@ -158,13 +158,8 @@ public class FakeOcppConnection implements OcppConnection {
     }
 
     @Override
-    public void write(Buffer utf8TextData, Handler<AsyncResult<Void>> handler) {
-
-    }
-
-    @Override
-    public void end(Handler<AsyncResult<Void>> handler) {
-
+    public Future<Void> end() {
+        return null;
     }
 
     @Override

@@ -4,7 +4,7 @@ import io.github.eiot.Frame;
 import io.github.eiot.impl.MatchCommandIotConnection;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.vertx.core.impl.ContextInternal;
+import io.vertx.core.internal.ContextInternal;
 import io.vertx.core.spi.metrics.TCPMetrics;
 
 /**

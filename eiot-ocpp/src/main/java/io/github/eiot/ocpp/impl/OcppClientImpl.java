@@ -5,7 +5,7 @@ import io.github.eiot.utils.StringUtil;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.WebSocketClient;
-import io.vertx.core.impl.VertxInternal;
+import io.vertx.core.internal.VertxInternal;
 
 import java.util.List;
 import java.util.stream.Collectors;

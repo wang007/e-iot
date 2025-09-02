@@ -18,6 +18,7 @@ import javax.net.ssl.SSLSession;
 import javax.security.cert.X509Certificate;
 import java.security.cert.Certificate;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * created by wang007 on 2025/5/13
@@ -40,6 +41,11 @@ public class OcppWebSocketWrapper implements WebSocketBase {
     @Fluent
     public WebSocketBase closeHandler(@Nullable Handler<Void> handler) {
         throw new UnsupportedOperationException("unsupported to set closeHandler");
+    }
+
+    @Override
+    public WebSocketBase shutdownHandler(@Nullable Handler<Void> handler) {
+        return webSocketBase.shutdownHandler(handler);
     }
 
     @Override
@@ -118,20 +124,8 @@ public class OcppWebSocketWrapper implements WebSocketBase {
     }
 
     @Override
-    @Fluent
-    public WebSocketBase writeFrame(WebSocketFrame frame, Handler<AsyncResult<Void>> handler) {
-        return webSocketBase.writeFrame(frame, handler);
-    }
-
-    @Override
     public Future<Void> writeFinalTextFrame(String text) {
         return webSocketBase.writeFinalTextFrame(text);
-    }
-
-    @Override
-    @Fluent
-    public WebSocketBase writeFinalTextFrame(String text, Handler<AsyncResult<Void>> handler) {
-        return webSocketBase.writeFinalTextFrame(text, handler);
     }
 
     @Override
@@ -140,20 +134,8 @@ public class OcppWebSocketWrapper implements WebSocketBase {
     }
 
     @Override
-    @Fluent
-    public WebSocketBase writeFinalBinaryFrame(Buffer data, Handler<AsyncResult<Void>> handler) {
-        return webSocketBase.writeFinalBinaryFrame(data, handler);
-    }
-
-    @Override
     public Future<Void> writeBinaryMessage(Buffer data) {
         return webSocketBase.writeBinaryMessage(data);
-    }
-
-    @Override
-    @Fluent
-    public WebSocketBase writeBinaryMessage(Buffer data, Handler<AsyncResult<Void>> handler) {
-        return webSocketBase.writeBinaryMessage(data, handler);
     }
 
     @Override
@@ -162,26 +144,8 @@ public class OcppWebSocketWrapper implements WebSocketBase {
     }
 
     @Override
-    @Fluent
-    public WebSocketBase writeTextMessage(String text, Handler<AsyncResult<Void>> handler) {
-        return webSocketBase.writeTextMessage(text, handler);
-    }
-
-    @Override
-    @Fluent
-    public WebSocketBase writePing(Buffer data, Handler<AsyncResult<Void>> handler) {
-        return webSocketBase.writePing(data, handler);
-    }
-
-    @Override
     public Future<Void> writePing(Buffer data) {
         return webSocketBase.writePing(data);
-    }
-
-    @Override
-    @Fluent
-    public WebSocketBase writePong(Buffer data, Handler<AsyncResult<Void>> handler) {
-        return webSocketBase.writePong(data, handler);
     }
 
     @Override
@@ -213,18 +177,8 @@ public class OcppWebSocketWrapper implements WebSocketBase {
     }
 
     @Override
-    public void end(Handler<AsyncResult<Void>> handler) {
-        webSocketBase.end(handler);
-    }
-
-    @Override
     public Future<Void> close() {
         return webSocketBase.close();
-    }
-
-    @Override
-    public void close(Handler<AsyncResult<Void>> handler) {
-        webSocketBase.close(handler);
     }
 
     @Override
@@ -232,10 +186,6 @@ public class OcppWebSocketWrapper implements WebSocketBase {
         return webSocketBase.close(statusCode);
     }
 
-    @Override
-    public void close(short statusCode, Handler<AsyncResult<Void>> handler) {
-        webSocketBase.close(statusCode, handler);
-    }
 
     @Override
     public Future<Void> close(short statusCode, @Nullable String reason) {
@@ -243,8 +193,8 @@ public class OcppWebSocketWrapper implements WebSocketBase {
     }
 
     @Override
-    public void close(short statusCode, @Nullable String reason, Handler<AsyncResult<Void>> handler) {
-        webSocketBase.close(statusCode, reason, handler);
+    public Future<Void> shutdown(long timeout, TimeUnit unit, short statusCode, @Nullable String reason) {
+        return null;
     }
 
     @Override
@@ -277,13 +227,6 @@ public class OcppWebSocketWrapper implements WebSocketBase {
 
     @Override
     @GenIgnore
-    @Deprecated
-    public X509Certificate[] peerCertificateChain() throws SSLPeerUnverifiedException {
-        return webSocketBase.peerCertificateChain();
-    }
-
-    @Override
-    @GenIgnore
     public List<Certificate> peerCertificates() throws SSLPeerUnverifiedException {
         return webSocketBase.peerCertificates();
     }
@@ -291,11 +234,6 @@ public class OcppWebSocketWrapper implements WebSocketBase {
     @Override
     public Future<Void> write(Buffer data) {
         return webSocketBase.write(data);
-    }
-
-    @Override
-    public void write(Buffer data, Handler<AsyncResult<Void>> handler) {
-        webSocketBase.write(data, handler);
     }
 
     @Override

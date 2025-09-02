@@ -84,13 +84,8 @@ public class FakeIotConnection implements IotConnection {
     }
 
     @Override
-    public void write(Buffer buffer, Handler<AsyncResult<Void>> handler) {
-
-    }
-
-    @Override
-    public void end(Handler<AsyncResult<Void>> handler) {
-
+    public Future<Void> end() {
+        return null;
     }
 
     @Override

@@ -5,11 +5,11 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.vertx.core.Future;
-import io.vertx.core.impl.ContextInternal;
-import io.vertx.core.impl.VertxInternal;
-import io.vertx.core.impl.future.PromiseInternal;
+import io.vertx.core.internal.ContextInternal;
+import io.vertx.core.internal.PromiseInternal;
+import io.vertx.core.internal.VertxInternal;
+import io.vertx.core.net.NetClient;
 import io.vertx.core.net.SocketAddress;
-import io.vertx.core.net.impl.NetClientImpl;
 import io.vertx.core.net.impl.NetSocketImpl;
 import io.vertx.core.net.impl.VertxHandler;
 import io.vertx.core.spi.metrics.TCPMetrics;
@@ -21,12 +21,12 @@ public abstract class IotClientBase implements IotClient {
 
     protected final IotClientOptions options;
     protected final VertxInternal vertxInternal;
-    protected final NetClientImpl netClient;
+    protected final NetClient netClient;
 
     protected IotClientBase(VertxInternal vertxInternal, IotClientOptions options) {
         this.vertxInternal = vertxInternal;
         this.options = new IotClientOptions(options);
-        this.netClient = (NetClientImpl) vertxInternal.createNetClient(options);
+        this.netClient = vertxInternal.createNetClient(options);
     }
 
     @Override
@@ -41,7 +41,7 @@ public abstract class IotClientBase implements IotClient {
 
     private IotConnectionBase wrap(NetSocketImpl so) {
         TCPMetrics<?> metrics = so.metrics();
-        ContextInternal context = so.getContext();
+        ContextInternal context = so.context();
         Channel ch = so.channel();
 
         FrameCodecOptions frameCodecOptions = options.getFrameCodecOptions();
@@ -68,9 +68,7 @@ public abstract class IotClientBase implements IotClient {
 
     @Override
     public Future<Void> close() {
-        PromiseInternal<Void> promise = vertxInternal.promise();
-        netClient.close(promise);
-        return null;
+        return netClient.close();
     }
 
     @Override

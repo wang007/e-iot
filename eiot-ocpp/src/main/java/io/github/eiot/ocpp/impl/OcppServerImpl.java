@@ -9,11 +9,11 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.impl.HttpServerImpl;
-import io.vertx.core.impl.VertxInternal;
+import io.vertx.core.internal.VertxInternal;
 import io.vertx.core.net.SocketAddress;
 
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +29,8 @@ public class OcppServerImpl implements OcppServer {
     private Handler<IotConnection> connectionHandler;
     private Handler<Throwable> exceptionHandler;
     private Handler<OcppWebSocketHandshake> handshakeHandler;
+
+    private final AtomicBoolean listening = new AtomicBoolean();
 
     private boolean compatibleOcpp2_0_1;
 
@@ -98,7 +100,12 @@ public class OcppServerImpl implements OcppServer {
         if (frameHandler == null && connectionHandler == null) {
             throw new IllegalStateException("Set frame or connect handler first");
         }
-        return this.httpServer.listen(address).map(this);
+        return this.httpServer
+                .listen(address)
+                .map(s -> {
+                    this.listening.lazySet(true);
+                    return this;
+                });
     }
 
     @Override
@@ -134,7 +141,7 @@ public class OcppServerImpl implements OcppServer {
 
     @Override
     public synchronized OcppServer frameHandler(Handler<Frame<?>> handler) {
-        if (httpServer.isListening()) {
+        if (listening.get()) {
             throw new IllegalStateException("Cannot set frameHandler when server is listening");
         }
         this.frameHandler = handler;
@@ -143,7 +150,7 @@ public class OcppServerImpl implements OcppServer {
 
     @Override
     public synchronized OcppServer connectionHandler(Handler<IotConnection> handler) {
-        if (httpServer.isListening()) {
+        if (listening.get()) {
             throw new IllegalStateException("Cannot set connectionHandler when server is listening");
         }
         this.connectionHandler = handler;
@@ -152,7 +159,7 @@ public class OcppServerImpl implements OcppServer {
 
     @Override
     public synchronized OcppServer exceptionHandler(Handler<Throwable> handler) {
-        if (httpServer.isListening()) {
+        if (listening.get()) {
             throw new IllegalStateException("Cannot set exceptionHandler when server is listening");
         }
         this.exceptionHandler = handler;

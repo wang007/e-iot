@@ -6,7 +6,7 @@ import io.github.eiot.impl.IotServerBase;
 import io.github.eiot.IotServerOptions;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Vertx;
-import io.vertx.core.impl.ContextInternal;
+import io.vertx.core.internal.ContextInternal;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.spi.metrics.TCPMetrics;
 

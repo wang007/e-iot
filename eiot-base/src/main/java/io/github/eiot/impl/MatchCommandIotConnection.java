@@ -6,7 +6,7 @@ import io.github.eiot.exception.ConvertIotException;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import io.vertx.core.impl.ContextInternal;
+import io.vertx.core.internal.ContextInternal;
 import io.vertx.core.spi.metrics.TCPMetrics;
 
 import java.util.ArrayDeque;

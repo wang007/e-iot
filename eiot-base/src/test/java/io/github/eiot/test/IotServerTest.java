@@ -9,6 +9,7 @@ import io.netty.buffer.ByteBuf;
 import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.buffer.impl.BufferImpl;
 import io.vertx.core.net.SocketAddress;
 import io.vertx.test.core.VertxTestBase;
 import org.junit.Test;
@@ -363,7 +364,7 @@ public class IotServerTest extends VertxTestBase {
         iotServer.connectionHandler(connection -> {
             connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
             connection.handler(buffer -> {
-                ByteBuf byteBuf = buffer.getByteBuf();
+                ByteBuf byteBuf = ((BufferImpl)buffer).getByteBuf();
 
                 RawExampleFrame rawExampleFrame = RawExampleFrame.new4Receiver(connection, byteBuf);
                 ExampleFrame<ExampleHeartbeatRequest> frame = (ExampleFrame<ExampleHeartbeatRequest>) ExampleFrameConverter.INSTANCE.apply(rawExampleFrame);
@@ -372,7 +373,7 @@ public class IotServerTest extends VertxTestBase {
                 ExampleHeartbeatResponse response = responseFrame.newData();
                 response.setResult(1);
                 responseFrame.data(response);
-                connection.write(Buffer.buffer(responseFrame.toByteBuf()));
+                connection.write(new BufferImpl(responseFrame.toByteBuf()));
             });
         });
         startServer(socketAddress);

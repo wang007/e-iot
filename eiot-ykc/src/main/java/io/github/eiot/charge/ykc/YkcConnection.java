@@ -6,7 +6,7 @@ import io.github.eiot.impl.SeqNoIotConnection;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.Future;
-import io.vertx.core.impl.ContextInternal;
+import io.vertx.core.internal.ContextInternal;
 import io.vertx.core.spi.metrics.TCPMetrics;
 
 /**
