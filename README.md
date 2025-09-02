@@ -15,34 +15,56 @@ Simple, high performance, based on vertx to implement a variety of charging prot
 
 ```xml
 <!-- 引入 jar -->
+<!-- vertx 4.x 版本 -->
 <dependency>
     <groupId>io.github.wang007</groupId>
     <artifactId>eiot-ykc</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
+
+<!-- vertx 5.x 版本 -->
+<dependency>
+<groupId>io.github.wang007</groupId>
+<artifactId>eiot-ykc</artifactId>
+<version>2.0.1</version>
+</dependency>
+
 ```
 1. [云快充 使用示例](./eiot-example/src/main/java/io/github/eiot/example/ykc/YkcChargeServerExample.java)
 2. [云快充 代理服务示例](./eiot-example/src/main/java/io/github/eiot/example/ykc/YkcReverseServerExample.java)
-
-
 
 #### OCPP
 ```xml
 
 <dependenies>
     <!-- 引入 jar -->
+    <!-- vertx 4.x 版本 -->
     <dependency>
         <groupId>io.github.wang007</groupId>
         <artifactId>eiot-ocpp</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.2</version>
     </dependency>
-
     <!-- 对应的 schema -->
     <dependency>
         <groupId>io.github.wang007</groupId>
         <artifactId>eiot-ocpp1_6-schema</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.2</version>
     </dependency>
+
+
+    <!-- vertx 5.x 版本 -->
+    <dependency>
+        <groupId>io.github.wang007</groupId>
+        <artifactId>eiot-ocpp</artifactId>
+        <version>2.0.1</version>
+    </dependency>
+    <!-- 对应的 schema -->
+    <dependency>
+        <groupId>io.github.wang007</groupId>
+        <artifactId>eiot-ocpp1_6-schema</artifactId>
+        <version>2.0.1</version>
+    </dependency>
+    
 </dependenies>
 ```
 1. [ocpp 使用示例](./eiot-example/src/main/java/io/github/eiot/example/ocpp/OcppServerExample.java)
