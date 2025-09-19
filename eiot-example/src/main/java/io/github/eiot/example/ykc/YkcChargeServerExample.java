@@ -2,10 +2,7 @@ package io.github.eiot.example.ykc;
 
 import io.github.eiot.CommandDef;
 import io.github.eiot.Frame;
-import io.github.eiot.charge.ykc.DefaultYkcFrame;
-import io.github.eiot.charge.ykc.YkcFrame;
-import io.github.eiot.charge.ykc.YkcServer;
-import io.github.eiot.charge.ykc.YkcCommand;
+import io.github.eiot.charge.ykc.*;
 import io.github.eiot.charge.ykc.data.*;
 import io.github.eiot.codec.CP56time2a;
 import io.github.eiot.route.CommandDefHandler;
@@ -37,19 +34,15 @@ public class YkcChargeServerExample {
                         Frame<YkcHeartbeatRequest> frame = ctx.frame();
                         System.out.println("heartbeat. gunNo: " + frame.data().getGunNo());
 
-                        Frame<YkcHeartbeatResponse> responseFrame = frame.asRequest(YkcHeartbeatResponse.class).responseFrame();
-
+                        Frame<YkcHeartbeatResponse> responseFrame = frame.asRequest(YkcCommand.HeartbeatRequest).responseFrame();
                         YkcHeartbeatResponse response = responseFrame.newData();
                         response.setGunNo(frame.data().getGunNo());
                         response.setResult(1);
                         responseFrame.data(response).write();
 
                         // sync time for charge point
-                        YkcFrame<YkcSyncTimeRequest> ykcFrame = YkcFrame.create(frame.iotConnection(), YkcCommand.SyncTimeRequest);
-                        YkcSyncTimeRequest timeRequest = ykcFrame.newData();
-                        timeRequest.setTime(CP56time2a.now());
-                        ykcFrame.data(timeRequest)
-                                .asRequest(YkcSyncTimeResponse.class)
+                        YkcFrame.create(frame.iotConnection(), YkcCommand.SyncTimeRequest)
+                                .dataBuilder(data -> data.setTime(CP56time2a.now()))
                                 .request()
                                 .onFailure(ex -> {
                                     System.out.println("sync time for charge point failed.");
@@ -97,7 +90,7 @@ public class YkcChargeServerExample {
                 // Login authentication processing
 
                 // response login result
-                Frame<YkcLoginResponse> responseFrame = frame.<YkcLoginResponse>asRequest().responseFrame();
+                Frame<YkcLoginResponse> responseFrame = frame.asRequest(YkcCommand.LoginRequest).responseFrame();
                 YkcLoginResponse loginResponse = responseFrame.newData();
                 loginResponse.setResult(1);
                 responseFrame

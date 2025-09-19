@@ -18,7 +18,7 @@ import java.util.Map;
  * <p>
  * created by wang007 on 2025/3/15
  */
-public abstract class AbstractFrame<V, F extends AbstractRawFrame> implements CommandDefFrame<V> {
+public abstract class AbstractFrame<V, F extends AbstractRawFrame<F>> implements CommandDefFrame<V> {
 
     private final F rawFrame;
     private final CommandDef<V> commandDef;

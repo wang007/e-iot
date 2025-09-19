@@ -55,7 +55,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
 
     private OutboundHook outboundHook;
 
-    private final Map<String, RequestFrame<?, Frame<?>>> waitingResults = new ConcurrentHashMap<>(8, 1.0f);
+    private final Map<String, RequestFrame<?, ?>> waitingResults = new ConcurrentHashMap<>(8, 1.0f);
 
     private final Map<String, Promise<ErrorOcppFrame>> writeResultAwaitErrors;
 
@@ -138,7 +138,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
                     OcppFrame<?> ocppFrame = (OcppFrame<?>) frame;
                     if (ocppFrame.messageTypeId() == MessageTypeId.CALLRESULT) {
                         // record call result type.
-                        RequestFrame<?, Frame<?>> requestFrame = waitingResults.get(ocppFrame.messageId());
+                        RequestFrame<?, ?> requestFrame = waitingResults.get(ocppFrame.messageId());
                         if (requestFrame != null) {
                             ocppFrame.put(OcppRequestFrame.REQUEST_FRAME_COMMAND_KEY, requestFrame.command());
                         }
@@ -252,7 +252,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
             return ex != null ? promise.tryFail(ex) : promise.tryComplete(errorOcppFrame);
         }
 
-        RequestFrame<?, Frame<?>> waiting = waitingResults.remove(messageId);
+        RequestFrame<?, ?> waiting = waitingResults.remove(messageId);
         if (waiting == null) {
             return false;
         }
@@ -269,7 +269,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
     }
 
     @Override
-    public Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
+    public Future<RequestFrame<?, ?>> beforeRequest(RequestFrame<?, ?> requestFrame, int timeout) {
         OcppFrame<?> ocppFrame = (OcppFrame<?>) requestFrame;
         String messageId = ocppFrame.messageId();
         if (StringUtil.isEmpty(messageId)) {
@@ -283,7 +283,7 @@ public class OcppConnectionImpl implements OcppConnection, OutboundIotConnection
     }
 
     @Override
-    public Future<Frame<?>> request(RequestFrame<?, Frame<?>> frame, int timeoutMs) {
+    public Future<Frame<?>> request(RequestFrame<?, ?> frame, int timeoutMs) {
         if (timeoutMs <= 0) {
             timeoutMs = this.waitResponseTimeout;
         }

@@ -96,7 +96,7 @@ public class IotServerTest extends VertxTestBase {
                     ExampleHeartbeatRequest data = frame.newData();
                     data.setTime(BCDTime.now());
                     frame.data(data);
-                    return frame.asRequest(ExampleHeartbeatResponse.class).request();
+                    return frame.asRequest(ExampleCommand.HeartbeatRequest).request();
                 });
     }
 
@@ -168,7 +168,8 @@ public class IotServerTest extends VertxTestBase {
             connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
 
             connection.frameHandler(frame -> {
-                Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
+                Frame<ExampleHeartbeatRequest> requestFrame = (Frame<ExampleHeartbeatRequest>) frame;
+                Frame<ExampleHeartbeatResponse> responseFrame = requestFrame.asRequest(ExampleCommand.HeartbeatRequest).responseFrame();
                 ExampleHeartbeatResponse data = responseFrame.newData();
                 responseFrame.data(data).write().onFailure(this::fail);
             });
@@ -181,7 +182,7 @@ public class IotServerTest extends VertxTestBase {
                 .onSuccess(connection -> {
                     OutboundHook outboundHook = new OutboundHook() {
                         @Override
-                        public Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> frame) {
+                        public Future<RequestFrame<?, ?>> beforeRequest(RequestFrame<?, ?> frame) {
                             complete();
                             return Future.succeededFuture(frame);
                         }
@@ -192,7 +193,7 @@ public class IotServerTest extends VertxTestBase {
                     DefaultExampleFrame<ExampleHeartbeatRequest> exampleFrame = new DefaultExampleFrame<>(connection, ExampleCommand.HeartbeatRequest);
                     ExampleHeartbeatRequest data = exampleFrame.newData();
                     data.setTime(BCDTime.now());
-                    exampleFrame.data(data).asRequest().request();
+                    exampleFrame.data(data).asRequest(ExampleCommand.HeartbeatRequest).request();
                 });
         await();
     }
@@ -241,7 +242,10 @@ public class IotServerTest extends VertxTestBase {
             Object data = frame.data();
             assertTrue(data != null);
             frame.iotConnection().put(IotConnection.TERMINAL_NO_KEY, terminalNo);
-            Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
+
+            Frame<ExampleHeartbeatRequest> requestFrame = (Frame<ExampleHeartbeatRequest>) frame;
+
+            Frame<ExampleHeartbeatResponse> responseFrame = requestFrame.asRequest(ExampleCommand.HeartbeatRequest).responseFrame();
             ExampleHeartbeatResponse response = responseFrame.newData();
             response.setResult(1);
             responseFrame.data(response).write();
@@ -267,7 +271,7 @@ public class IotServerTest extends VertxTestBase {
                         data.setTime(BCDTime.now());
                         data.setStatus(i);
                         frame.data(data)
-                                .asRequest(ExampleHeartbeatResponse.class)
+                                .asRequest(ExampleCommand.HeartbeatRequest)
                                 .request()
                                 .onSuccess(responseFrame -> {
                                     ExampleHeartbeatResponse response = responseFrame.data();
@@ -287,7 +291,8 @@ public class IotServerTest extends VertxTestBase {
         ExampleIotServer iotServer = ExampleIotServer.create(vertx);
         iotServer.frameHandler(frame -> {
             frame.iotConnection().put(IotConnection.TERMINAL_NO_KEY, terminalNo);
-            Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
+            Frame<ExampleHeartbeatRequest> requestFrame = (Frame<ExampleHeartbeatRequest>) frame;
+            Frame<ExampleHeartbeatResponse> responseFrame = requestFrame.asRequest(ExampleCommand.HeartbeatRequest).responseFrame();
             ExampleHeartbeatResponse response = responseFrame.newData();
             response.setResult(1);
             responseFrame.data(response).write();
@@ -314,7 +319,7 @@ public class IotServerTest extends VertxTestBase {
                         data.setTime(BCDTime.now());
                         data.setStatus(i);
                         frame.data(data)
-                                .asRequest(ExampleHeartbeatResponse.class)
+                                .asRequest(ExampleCommand.HeartbeatRequest)
                                 .request()
                                 .onSuccess(responseFrame -> {
                                     ExampleHeartbeatResponse response = responseFrame.data();
@@ -343,7 +348,7 @@ public class IotServerTest extends VertxTestBase {
                     data.setTime(BCDTime.now());
 
                     frame.data(data)
-                            .asRequest()
+                            .asRequest(ExampleCommand.HeartbeatRequest)
                             .request(100) // timeout 100ms timeout
                             .onFailure(ex -> {
                                 assertTrue(ex instanceof TimeoutException);
@@ -368,7 +373,7 @@ public class IotServerTest extends VertxTestBase {
                 RawExampleFrame rawExampleFrame = RawExampleFrame.new4Receiver(connection, byteBuf);
                 ExampleFrame<ExampleHeartbeatRequest> frame = (ExampleFrame<ExampleHeartbeatRequest>) ExampleFrameConverter.INSTANCE.apply(rawExampleFrame);
 
-                Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
+                Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleCommand.HeartbeatRequest).responseFrame();
                 ExampleHeartbeatResponse response = responseFrame.newData();
                 response.setResult(1);
                 responseFrame.data(response);
@@ -385,7 +390,7 @@ public class IotServerTest extends VertxTestBase {
                     ExampleHeartbeatRequest data = frame.newData();
                     data.setTime(BCDTime.now());
                     frame.data(data)
-                            .asRequest(ExampleHeartbeatResponse.class)
+                            .asRequest(ExampleCommand.HeartbeatRequest)
                             .request()
                             .onFailure(this::fail)
                             .onSuccess(responseFrame -> {
@@ -425,7 +430,8 @@ public class IotServerTest extends VertxTestBase {
         iotServer.frameHandler(frame -> {
             ExampleHeartbeatRequest request = (ExampleHeartbeatRequest) frame.data();
             frame.iotConnection().put(IotConnection.TERMINAL_NO_KEY, terminalNo);
-            Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
+            Frame<ExampleHeartbeatRequest> requestFrame = (Frame<ExampleHeartbeatRequest>) frame;
+            Frame<ExampleHeartbeatResponse> responseFrame = requestFrame.asRequest(ExampleCommand.HeartbeatRequest).responseFrame();
             ExampleHeartbeatResponse response = responseFrame.newData();
             response.setResult(request.getStatus());
             responseFrame.data(response).write();
@@ -452,7 +458,7 @@ public class IotServerTest extends VertxTestBase {
                         data.setStatus(i);
                         data.setTime(BCDTime.now());
                         frame.data(data)
-                                .asRequest(ExampleHeartbeatResponse.class)
+                                .asRequest(ExampleCommand.HeartbeatRequest)
                                 .request()
                                 .onFailure(this::fail)
                                 .onSuccess(responseFrame -> {

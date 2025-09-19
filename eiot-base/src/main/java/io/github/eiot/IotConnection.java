@@ -46,7 +46,7 @@ public interface IotConnection extends AttributeHolder, ReadStream<Buffer>, Writ
      * @param timeoutMs timeout
      * @return
      */
-    Future<Frame<?>> request(RequestFrame<?, Frame<?>> frame, int timeoutMs);
+    Future<Frame<?>> request(RequestFrame<?, ?> frame, int timeoutMs);
 
     /**
      * Use default timeout request the current frame and wait for the response frame.
@@ -54,7 +54,7 @@ public interface IotConnection extends AttributeHolder, ReadStream<Buffer>, Writ
      * @param frame request frame
      * @return
      */
-    default Future<Frame<?>> request(RequestFrame<?, Frame<?>> frame) {
+    default Future<Frame<?>> request(RequestFrame<?, ?> frame) {
         return request(frame, 0);
     }
 
@@ -110,7 +110,6 @@ public interface IotConnection extends AttributeHolder, ReadStream<Buffer>, Writ
     IotConnection outboundHook(OutboundHook hook);
 
     /**
-     *
      * @return return an outboundHook
      */
     OutboundHook outboundHook();

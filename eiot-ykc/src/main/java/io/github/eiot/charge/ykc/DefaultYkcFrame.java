@@ -1,8 +1,7 @@
 package io.github.eiot.charge.ykc;
 
+import io.github.eiot.*;
 import io.github.eiot.impl.AbstractFrame;
-import io.github.eiot.IotConnection;
-import io.github.eiot.CommandDef;
 import io.github.eiot.codec.Hex;
 import io.github.eiot.charge.ykc.data.YkcBaseData;
 
@@ -67,11 +66,14 @@ public class DefaultYkcFrame<T> extends AbstractFrame<T, RawYkcFrame> implements
     }
 
     @Override
-    public <Resp> YkcRequestFrame<T, Resp> asRequest() {
-        if (commandDef().responseType() == null) {
-            throw new IllegalStateException("not request type frame");
-        }
-        return new YkcRequestFrame<>(this);
+    public <Resp> YkcRequestFrame<T, Resp> asRequest(RequestCommandDef<T, Resp> requestCommand) {
+        return new YkcRequestFrame<>(this, requestCommand);
+    }
+
+    @Override
+    public YkcFrame<T> data(T t) {
+        super.data(t);
+        return this;
     }
 
     @Override

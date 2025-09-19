@@ -1,10 +1,9 @@
 package io.github.eiot.charge.ykc;
 
-import io.github.eiot.CommandDef;
-import io.github.eiot.Frame;
-import io.github.eiot.IotConnection;
-import io.github.eiot.RequestFrame;
+import io.github.eiot.*;
 import io.github.eiot.codec.Hex;
+
+import java.util.function.Consumer;
 
 /**
  * 云快充协议
@@ -15,6 +14,11 @@ public interface YkcFrame<T> extends Frame<T> {
 
     static <T> YkcFrame<T> create(IotConnection connection, CommandDef<T> commandDef) {
         return new DefaultYkcFrame<T>(connection, commandDef);
+    }
+
+    static <T, Resp> YkcRequestFrame<T, Resp> create(IotConnection connection, RequestCommandDef<T, Resp> requestCommand) {
+        DefaultYkcFrame<T> ykcFrame = new DefaultYkcFrame<>(connection, requestCommand);
+        return ykcFrame.asRequest(requestCommand);
     }
 
     /**
@@ -58,6 +62,15 @@ public interface YkcFrame<T> extends Frame<T> {
     @Override
     T data();
 
+    @Override
+    YkcFrame<T> data(T t);
+
+    @Override
+    default YkcFrame<T> dataBuilder(Consumer<T> consumer) {
+        Frame.super.dataBuilder(consumer);
+        return this;
+    }
+
     /**
      * @return 校验和 2byte
      */
@@ -71,10 +84,6 @@ public interface YkcFrame<T> extends Frame<T> {
     YkcFrame<T> checkCode(int checkCode);
 
     @Override
-    <Resp> YkcRequestFrame<T, Resp> asRequest();
+    <Resp> YkcRequestFrame<T, Resp> asRequest(RequestCommandDef<T, Resp> requestCommand);
 
-    @Override
-    default <Resp> YkcRequestFrame<T, Resp> asRequest(Class<Resp> responseType) throws IllegalStateException {
-        return asRequest();
-    }
 }

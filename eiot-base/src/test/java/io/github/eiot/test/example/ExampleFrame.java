@@ -1,6 +1,7 @@
 package io.github.eiot.test.example;
 
 import io.github.eiot.Frame;
+import io.github.eiot.RequestCommandDef;
 import io.github.eiot.RequestFrame;
 import io.github.eiot.codec.BCD;
 import io.github.eiot.codec.Hex;
@@ -30,5 +31,6 @@ public interface ExampleFrame<T> extends Frame<T> {
 
     ExampleFrame<T> sequenceNo(int seqNo);
 
-    <Resp> RequestFrame<T, ExampleFrame<Resp>> asRequest() throws IllegalStateException;
+    @Override
+    <Resp> ExampleRequestFrame<T, Resp> asRequest(RequestCommandDef<T, Resp> requestCommand);
 }

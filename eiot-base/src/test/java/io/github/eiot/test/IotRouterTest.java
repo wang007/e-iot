@@ -318,7 +318,7 @@ public class IotRouterTest extends IotServerTest {
                     Frame<ExampleHeartbeatRequest> frame = ctx.frame();
                     assertTrue(frame.data() != null);
 
-                    Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
+                    Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleCommand.HeartbeatRequest).responseFrame();
                     ExampleHeartbeatResponse response = responseFrame.newData();
                     response.setResult(1);
                     responseFrame.data(response).write();
@@ -328,7 +328,7 @@ public class IotRouterTest extends IotServerTest {
                     request.setTime(BCDTime.now());
                     request.setStatus(1);
                     requestFrame.data(request)
-                            .asRequest(ExampleHeartbeatResponse.class)
+                            .asRequest(ExampleCommand.HeartbeatRequest)
                             .request()
                             .onFailure(this::fail)
                             .onSuccess(respFrame -> {
@@ -346,7 +346,8 @@ public class IotRouterTest extends IotServerTest {
                 .onSuccess(connection -> {
                     connection.put(IotConnection.TERMINAL_NO_KEY, terminalNo);
                     connection.frameHandler(frame -> {
-                        Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
+                        Frame<ExampleHeartbeatRequest> requestFrame = (Frame<ExampleHeartbeatRequest>) frame;
+                        Frame<ExampleHeartbeatResponse> responseFrame = requestFrame.asRequest(ExampleCommand.HeartbeatRequest).responseFrame();
                         ExampleHeartbeatResponse response = responseFrame.newData();
                         response.setResult(1);
                         responseFrame.data(response).write();
@@ -356,7 +357,7 @@ public class IotRouterTest extends IotServerTest {
                     ExampleHeartbeatRequest heartbeatRequest = frame.newData();
                     heartbeatRequest.setTime(BCDTime.now());
                     heartbeatRequest.setStatus(1);
-                    frame.data(heartbeatRequest).asRequest().request();
+                    frame.data(heartbeatRequest).asRequest(ExampleCommand.HeartbeatRequest).request();
                 });
 
         await();

@@ -20,7 +20,7 @@ public interface OutboundHook {
      * @param frame The frame that needs to be sent
      * @return a future completed with the request frame
      */
-    default Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> frame) {
+    default Future<RequestFrame<?, ?>> beforeRequest(RequestFrame<?, ?> frame) {
         return Future.succeededFuture(frame);
     }
 

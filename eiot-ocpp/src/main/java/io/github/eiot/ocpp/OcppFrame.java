@@ -1,12 +1,11 @@
 package io.github.eiot.ocpp;
 
-import io.github.eiot.CommandDef;
-import io.github.eiot.Frame;
-import io.github.eiot.IotConnection;
-import io.github.eiot.RequestFrame;
+import io.github.eiot.*;
 import io.github.eiot.ocpp.exception.OcppProtocolUnsupportedException;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
+
+import java.util.function.Consumer;
 
 /**
  * ocpp frame represent ocpp message
@@ -18,6 +17,12 @@ public interface OcppFrame<T> extends Frame<T> {
     static <T> OcppFrame<T> create(IotConnection connection, CommandDef<T> commandDef) {
         return new DefaultOcppFrame<T>(connection, commandDef);
     }
+
+    static <Req, Resp> OcppRequestFrame<Req, Resp> create(IotConnection connection, RequestCommandDef<Req, Resp> requestCommand) {
+        DefaultOcppFrame<Req> ocppFrame = new DefaultOcppFrame<>(connection, requestCommand);
+        return ocppFrame.asRequest(requestCommand);
+    }
+
 
     /**
      * @return @return the ocpp version
@@ -65,6 +70,12 @@ public interface OcppFrame<T> extends Frame<T> {
 
     @Override
     OcppFrame<T> data(T t);
+
+    @Override
+    default OcppFrame<T> dataBuilder(Consumer<T> consumer) {
+        Frame.super.dataBuilder(consumer);
+        return this;
+    }
 
     /**
      * send current frame.
@@ -208,10 +219,5 @@ public interface OcppFrame<T> extends Frame<T> {
     }
 
     @Override
-    <Resp> OcppRequestFrame<T, Resp> asRequest() throws IllegalStateException;
-
-    @Override
-    default <Resp> OcppRequestFrame<T, Resp> asRequest(Class<Resp> responseType) throws IllegalStateException {
-        return asRequest();
-    }
+    <Resp> OcppRequestFrame<T, Resp> asRequest(RequestCommandDef<T, Resp> requestCommand);
 }

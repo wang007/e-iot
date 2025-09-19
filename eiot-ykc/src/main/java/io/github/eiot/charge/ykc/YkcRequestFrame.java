@@ -1,28 +1,60 @@
 package io.github.eiot.charge.ykc;
 
 import io.github.eiot.CommandDef;
+import io.github.eiot.RequestCommandDef;
 import io.github.eiot.impl.RequestFrameBase;
 import io.github.eiot.codec.Hex;
+
+import java.util.function.Consumer;
 
 /**
  * created by wang007 on 2025/3/16
  */
-public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, YkcFrame<Resp>> implements YkcFrame<Req> {
+public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, Resp, YkcFrame<Resp>> implements YkcFrame<Req> {
 
     private final YkcFrame<Req> ykcFrame;
 
-    public YkcRequestFrame(DefaultYkcFrame<Req> frame) {
-        super(frame);
+    public YkcRequestFrame(DefaultYkcFrame<Req> frame, RequestCommandDef<Req, Resp> requestCommand) {
+        super(frame, requestCommand);
         this.ykcFrame = frame;
+    }
+
+    @Override
+    public YkcFrame<Resp> responseFrame() {
+        CommandDef<Resp> commandDef = requestCommand.responseType();
+        DefaultYkcFrame<Resp> responseFrame = new DefaultYkcFrame<>(iotConnection(), commandDef);
+        responseFrame.sequenceNo(sequenceNo());
+        return responseFrame;
+    }
+
+    @Override
+    public YkcRequestFrame<Req, Resp> sequenceNo(int seqNo) {
+        ykcFrame.sequenceNo(seqNo);
+        return this;
+    }
+
+    @Override
+    public YkcRequestFrame<Req, Resp> checkCode(int checkCode) {
+        ykcFrame.checkCode(checkCode);
+        return this;
+    }
+
+    @Override
+    public YkcRequestFrame<Req, Resp> data(Req req) {
+        super.data(req);
+        return this;
+    }
+
+    @Override
+    public YkcRequestFrame<Req, Resp> dataBuilder(Consumer<Req> consumer) {
+        super.dataBuilder(consumer);
+        return this;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public YkcFrame<Resp> responseFrame() {
-        CommandDef<Resp> commandDef = (CommandDef<Resp>) frame.commandDef().responseType();
-        DefaultYkcFrame<Resp> responseFrame = new DefaultYkcFrame<>(iotConnection(), commandDef);
-        responseFrame.sequenceNo(sequenceNo());
-        return responseFrame;
+    public <Resp> YkcRequestFrame<Req, Resp> asRequest(RequestCommandDef<Req, Resp> requestCommand) {
+        return (YkcRequestFrame<Req, Resp>) this;
     }
 
     @Override
@@ -33,12 +65,6 @@ public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, YkcFrame<R
     @Override
     public int sequenceNo() {
         return ykcFrame.sequenceNo();
-    }
-
-    @Override
-    public YkcRequestFrame<Req, Resp> sequenceNo(int seqNo) {
-        ykcFrame.sequenceNo(seqNo);
-        return this;
     }
 
     @Override
@@ -54,18 +80,6 @@ public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, YkcFrame<R
     @Override
     public int checkCode() {
         return ykcFrame.checkCode();
-    }
-
-    @Override
-    public YkcRequestFrame<Req, Resp> checkCode(int checkCode) {
-        ykcFrame.checkCode(checkCode);
-        return this;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public YkcRequestFrame<Req, Resp> asRequest() {
-        return this;
     }
 
 }

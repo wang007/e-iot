@@ -28,7 +28,7 @@ public class ExampleIotConnection extends SeqNoIotConnection {
     }
 
     @Override
-    protected void updateSeqNo(RequestFrame<?, Frame<?>> requestFrame, int seqNo) {
+    protected void updateSeqNo(RequestFrame<?, ?> requestFrame, int seqNo) {
         ExampleFrame<?> frame = (ExampleFrame<?>) requestFrame;
         frame.sequenceNo(seqNo);
     }

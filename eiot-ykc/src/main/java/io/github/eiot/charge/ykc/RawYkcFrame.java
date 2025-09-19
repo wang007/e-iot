@@ -11,13 +11,14 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * body 部分未解析的 frame
  * <p>
  * created by wang007 on 2025/3/15
  */
-public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
+public class RawYkcFrame extends AbstractRawFrame<RawYkcFrame> implements YkcFrame<ByteBuf> {
 
     private static final ComposeCodec YKC_CODEC;
 
@@ -161,7 +162,7 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
     }
 
     @Override
-    public <Resp> YkcRequestFrame<ByteBuf, Resp> asRequest() {
+    public <Resp> YkcRequestFrame<ByteBuf, Resp> asRequest(RequestCommandDef<ByteBuf, Resp> requestCommand) {
         throw new IllegalStateException("raw frame not support");
     }
 
