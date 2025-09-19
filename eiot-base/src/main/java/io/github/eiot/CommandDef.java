@@ -25,9 +25,4 @@ public interface CommandDef<Req> {
      * @return data type
      */
     Class<Req> dataType();
-
-    /**
-     * @return If no response frame exists, return null.
-     */
-    CommandDef<?> responseType();
 }

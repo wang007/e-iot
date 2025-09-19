@@ -1,6 +1,7 @@
 package io.github.eiot.impl;
 
 import io.github.eiot.CommandDef;
+import io.github.eiot.RequestCommandDef;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,12 +38,23 @@ public class CommandDefProtocol {
         return this.map.get(command);
     }
 
-    public <Req> CommandDef<Req> createAndRegister(String command, Class<Req> dataType, CommandDef<?> responseType) {
-        return createAndRegister(command, dataType, null, responseType);
+    public <Req> CommandDef<Req> createAndRegister(String command, Class<Req> dataType) {
+        return createAndRegister(command, dataType, dataType.getName());
     }
 
-    public <Req> CommandDef<Req> createAndRegister(String command, Class<Req> dataType, String alias, CommandDef<?> responseType) {
-        CommandDef<Req> c = new CommandDefImpl<>(command, dataType, alias, responseType);
+    public <Req> CommandDef<Req> createAndRegister(String command, Class<Req> dataType, String alias) {
+        CommandDef<Req> c = new CommandDefImpl<>(command, dataType, alias, null);
+        register(c);
+        return c;
+    }
+
+    public <Req, Resp> RequestCommandDef<Req, Resp> createAndRegister(String command, Class<Req> dataType, CommandDef<Resp> response) {
+        return createAndRegister(command, dataType, dataType.getName(), response);
+    }
+
+    public <Req, Resp> RequestCommandDef<Req, Resp> createAndRegister(String command, Class<Req> dataType, String alias,
+                                                                      CommandDef<Resp> response) {
+        CommandDefImpl<Req, Resp> c = new CommandDefImpl<>(command, dataType, alias, response);
         register(c);
         return c;
     }
