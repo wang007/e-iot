@@ -21,7 +21,7 @@ import java.util.concurrent.TimeoutException;
  * <p>
  * created by wang007 on 2025/2/20
  */
-public interface RequestFrame<Req, ResFrame extends Frame<?>> extends Frame<Req> {
+public interface RequestFrame<Req, Resp> extends Frame<Req> {
 
     /**
      * The command of the response frame.
@@ -36,7 +36,7 @@ public interface RequestFrame<Req, ResFrame extends Frame<?>> extends Frame<Req>
      *
      * @return new response frame
      */
-    ResFrame responseFrame();
+    Frame<Resp> responseFrame();
 
     /**
      * Send the current frame and wait for the response frame.
@@ -47,7 +47,7 @@ public interface RequestFrame<Req, ResFrame extends Frame<?>> extends Frame<Req>
      *
      * @return a future completed with the response frame
      */
-    Future<ResFrame> request();
+    Future<? extends Frame<Resp>> request();
 
     /**
      * {@link #request()} but timeout can be declared
@@ -55,14 +55,14 @@ public interface RequestFrame<Req, ResFrame extends Frame<?>> extends Frame<Req>
      * @param timeout timeout
      * @return a future completed with the response frame
      */
-    Future<ResFrame> request(int timeout);
+    Future<? extends Frame<Resp>> request(int timeout);
 
     /**
      * Gets the future after calling {@link #request()}
      *
      * @return a future completed with the response frame
      */
-    Future<ResFrame> requestResult();
+    Future<? extends Frame<Resp>> requestResult();
 
     /**
      * set the response frame result by {@link #request()} when the response frame come back.
@@ -73,8 +73,8 @@ public interface RequestFrame<Req, ResFrame extends Frame<?>> extends Frame<Req>
      * @param ex    failed result
      * @return set result
      */
-    boolean trySetResponseResult(ResFrame frame, Throwable ex);
+    boolean trySetResponseResult(Frame<?> frame, Throwable ex);
 
     @Override
-    RequestFrame<Req, ResFrame> data(Req req);
+    RequestFrame<Req, Resp> data(Req req);
 }

@@ -1,6 +1,7 @@
 package io.github.eiot.ocpp;
 
 import io.github.eiot.IotConnection;
+import io.github.eiot.RequestCommandDef;
 import io.github.eiot.Side;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
@@ -85,7 +86,7 @@ public class ErrorOcppFrame implements OcppFrame<Void> {
     }
 
     @Override
-    public <Resp> OcppRequestFrame<Void, Resp> asRequest() throws IllegalStateException {
+    public <Resp> OcppRequestFrame<Void, Resp> asRequest(RequestCommandDef<Void, Resp> requestCommand) {
         throw new IllegalStateException("error frame not support request");
     }
 

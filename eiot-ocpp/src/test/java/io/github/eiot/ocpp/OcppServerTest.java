@@ -113,7 +113,7 @@ public class OcppServerTest extends VertxTestBase {
                     BootNotificationRequest request = ocppFrame.newData();
                     request.setReason(BootReasonEnum.POWER_UP);
                     request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
-                    return ocppFrame.data(request).asRequest(BootNotificationResponse.class).request();
+                    return ocppFrame.data(request).asRequest(Ocpp2_1Command.BootNotificationRequest).request();
                 })
                 .onFailure(this::fail);
     }
@@ -136,7 +136,8 @@ public class OcppServerTest extends VertxTestBase {
                 assertTrue(data.getReason() == BootReasonEnum.POWER_UP);
                 assertTrue(data.getChargingStation().getModel().equals("SingleSocketCharger"));
 
-                Frame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                Frame<BootNotificationRequest> requestFrame = (Frame<BootNotificationRequest>) frame;
+                Frame<BootNotificationResponse> responseFrame = requestFrame.asRequest(Ocpp2_1Command.BootNotificationRequest).responseFrame();
                 BootNotificationResponse response = responseFrame.newData();
                 response.setStatus(RegistrationStatusEnum.ACCEPTED);
                 responseFrame.data(response).write();
@@ -150,7 +151,7 @@ public class OcppServerTest extends VertxTestBase {
                 .onSuccess(connection -> {
                     connection.outboundHook(new OutboundHook() {
                         @Override
-                        public Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> frame) {
+                        public Future<RequestFrame<?, ?>> beforeRequest(RequestFrame<?, ?> frame) {
                             complete();
                             return Future.succeededFuture(frame);
                         }
@@ -160,7 +161,7 @@ public class OcppServerTest extends VertxTestBase {
                     BootNotificationRequest request = ocppFrame.newData();
                     request.setReason(BootReasonEnum.POWER_UP);
                     request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
-                    ocppFrame.data(request).asRequest(BootNotificationResponse.class)
+                    ocppFrame.data(request).asRequest(Ocpp2_1Command.BootNotificationRequest)
                             .request(100000000)
                             .onFailure(this::fail)
                             .onSuccess(responseFrame -> {
@@ -179,7 +180,8 @@ public class OcppServerTest extends VertxTestBase {
 
         ocppServer.connectionHandler(connection -> {
             connection.frameHandler(frame -> {
-                Frame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                Frame<BootNotificationRequest> requestFrame = (Frame<BootNotificationRequest>) frame;
+                Frame<BootNotificationResponse> responseFrame = requestFrame.asRequest(Ocpp2_1Command.BootNotificationRequest).responseFrame();
                 BootNotificationResponse response = responseFrame.newData();
                 response.setStatus(RegistrationStatusEnum.ACCEPTED);
                 response.setInterval(300);
@@ -197,7 +199,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
                         request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request()
                                 .onSuccess(responseFrame -> {
                                     BootNotificationResponse data = responseFrame.data();
@@ -217,7 +219,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
 
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request()
                                 .onFailure(this::fail)
                                 .onSuccess(responseFrame -> {
@@ -237,7 +239,8 @@ public class OcppServerTest extends VertxTestBase {
 
         ocppServer.connectionHandler(connection -> {
             connection.frameHandler(frame -> {
-                Frame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                Frame<BootNotificationRequest> requestFrame = (Frame<BootNotificationRequest>) frame;
+                Frame<BootNotificationResponse> responseFrame = requestFrame.asRequest(Ocpp2_1Command.BootNotificationRequest).responseFrame();
                 BootNotificationResponse response = responseFrame.newData();
                 response.setStatus(RegistrationStatusEnum.ACCEPTED);
                 response.setInterval(300);
@@ -248,7 +251,7 @@ public class OcppServerTest extends VertxTestBase {
                 request.setChargingStation(new ChargingStation());
                 request.setReason(BootReasonEnum.APPLICATION_RESET);
                 ocppFrame.data(request)
-                        .asRequest(BootNotificationResponse.class)
+                        .asRequest(Ocpp2_1Command.BootNotificationRequest)
                         .request()
                         .onFailure(this::fail)
                         .onSuccess(respFrame -> {
@@ -268,7 +271,8 @@ public class OcppServerTest extends VertxTestBase {
                             BootNotificationRequest data = (BootNotificationRequest) frame.data();
                             assertTrue(data.getReason() == BootReasonEnum.APPLICATION_RESET);
 
-                            Frame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                            Frame<BootNotificationRequest> requestFrame = (Frame<BootNotificationRequest>) frame;
+                            Frame<BootNotificationResponse> responseFrame = requestFrame.asRequest(Ocpp2_1Command.BootNotificationRequest).responseFrame();
                             BootNotificationResponse response = responseFrame.newData();
                             response.setStatus(RegistrationStatusEnum.ACCEPTED);
                             responseFrame.data(response).write();
@@ -279,7 +283,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
                         request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request()
                                 .onSuccess(responseFrame -> {
                                     BootNotificationResponse data = responseFrame.data();
@@ -297,7 +301,8 @@ public class OcppServerTest extends VertxTestBase {
                         BootNotificationRequest data = (BootNotificationRequest) frame.data();
                         assertTrue(data.getReason() == BootReasonEnum.APPLICATION_RESET);
 
-                        Frame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                        Frame<BootNotificationRequest> requestFrame = (Frame<BootNotificationRequest>) frame;
+                        Frame<BootNotificationResponse> responseFrame = requestFrame.asRequest(Ocpp2_1Command.BootNotificationRequest).responseFrame();
                         BootNotificationResponse response = responseFrame.newData();
                         response.setStatus(RegistrationStatusEnum.ACCEPTED);
                         responseFrame.data(response).write();
@@ -309,7 +314,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
 
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request()
                                 .onFailure(this::fail)
                                 .onSuccess(responseFrame -> {
@@ -346,7 +351,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
                         request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request(1000000000)
                                 .onFailure(this::fail)
                                 .onSuccess(responseFrame -> {
@@ -369,7 +374,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
                         request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request(1000000000)
                                 .onFailure(this::fail)
                                 .onSuccess(responseFrame -> {
@@ -432,8 +437,8 @@ public class OcppServerTest extends VertxTestBase {
         AtomicInteger failedCount = new AtomicInteger();
 
         ocppServer.frameHandler(frame -> {
-            OcppFrame<Object> ocppFrame = (OcppFrame<Object>) frame;
-            OcppFrame<BootNotificationResponse> responseFrame = ocppFrame.asRequest(BootNotificationResponse.class).responseFrame();
+            OcppFrame<BootNotificationRequest> ocppFrame = (OcppFrame<BootNotificationRequest>) frame;
+            OcppFrame<BootNotificationResponse> responseFrame = ocppFrame.asRequest(Ocpp2_1Command.BootNotificationRequest).responseFrame();
             BootNotificationResponse response = responseFrame.newData();
             response.setInterval(count.getAndIncrement());
             response.setStatus(RegistrationStatusEnum.ACCEPTED);
@@ -462,7 +467,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
                         request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request()
                                 .onFailure(this::fail)
                                 .onSuccess(responseFrame -> {
@@ -484,7 +489,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
                         request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request()
                                 .onFailure(this::fail)
                                 .onSuccess(responseFrame -> {
@@ -513,7 +518,7 @@ public class OcppServerTest extends VertxTestBase {
                 .onFailure(this::fail)
                 .onSuccess(connection -> {
                     OcppFrame<BootNotificationRequest> ocppFrame = OcppFrame.create(connection, Ocpp2_1Command.BootNotificationRequest);
-                    ocppFrame.asRequest()
+                    ocppFrame.asRequest(Ocpp2_1Command.BootNotificationRequest)
                             .request(500)
                             .onSuccess(result -> this.fail("not except success"))
                             .onFailure(ex -> {
@@ -533,7 +538,7 @@ public class OcppServerTest extends VertxTestBase {
                 RawOcppFrame ocppFrame = RawOcppFrame.new4Receiver((OcppConnection) connection, json);
                 OcppFrame<BootNotificationRequest> frame = (OcppFrame<BootNotificationRequest>) OcppFrameConverter.INSTANCE.apply(ocppFrame);
 
-                OcppFrame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                OcppFrame<BootNotificationResponse> responseFrame = frame.asRequest(Ocpp2_1Command.BootNotificationRequest).responseFrame();
                 BootNotificationResponse response = responseFrame.newData();
                 response.setStatus(RegistrationStatusEnum.ACCEPTED);
                 response.setCurrentTime(ZonedDateTime.now());
@@ -551,7 +556,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
                         request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request()
                                 .onSuccess(responseFrame -> {
                                     BootNotificationResponse data = responseFrame.data();
@@ -570,7 +575,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
                         request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request()
                                 .onSuccess(responseFrame -> {
                                     BootNotificationResponse data = responseFrame.data();
@@ -613,7 +618,8 @@ public class OcppServerTest extends VertxTestBase {
 
         ocppServer.connectionHandler(connection -> {
             connection.frameHandler(frame -> {
-                Frame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                Frame<BootNotificationRequest> requestFrame = (Frame<BootNotificationRequest>) frame;
+                Frame<BootNotificationResponse> responseFrame = requestFrame.asRequest(Ocpp2_1Command.BootNotificationRequest).responseFrame();
                 BootNotificationResponse response = responseFrame.newData();
                 response.setStatus(RegistrationStatusEnum.ACCEPTED);
                 response.setInterval(300);
@@ -634,7 +640,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
                         request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request()
                                 .onSuccess(responseFrame -> {
                                     BootNotificationResponse data = responseFrame.data();
@@ -657,7 +663,7 @@ public class OcppServerTest extends VertxTestBase {
                         request.setReason(BootReasonEnum.POWER_UP);
                         request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                         ocppFrame.data(request)
-                                .asRequest(BootNotificationResponse.class)
+                                .asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .request(100000000)
                                 .onSuccess(responseFrame -> {
                                     BootNotificationResponse data = responseFrame.data();
@@ -687,7 +693,7 @@ public class OcppServerTest extends VertxTestBase {
         router.route(Ocpp2_1Command.BootNotificationRequest)
                 .handler(ctx -> {
                     Frame<BootNotificationRequest> frame = ctx.frame();
-                    Frame<BootNotificationResponse> responseFrame = frame.asRequest(BootNotificationResponse.class).responseFrame();
+                    Frame<BootNotificationResponse> responseFrame = frame.asRequest(Ocpp2_1Command.BootNotificationRequest).responseFrame();
                     BootNotificationResponse response = responseFrame.newData();
                     response.setStatus(RegistrationStatusEnum.ACCEPTED);
                     response.setInterval(300);
@@ -705,7 +711,7 @@ public class OcppServerTest extends VertxTestBase {
                     request.setReason(BootReasonEnum.POWER_UP);
                     request.setChargingStation(new ChargingStation().withModel("SingleSocketCharger").withVendorName("VendorX"));
                     ocppFrame.data(request)
-                            .asRequest(BootNotificationResponse.class)
+                            .asRequest(Ocpp2_1Command.BootNotificationRequest)
                             .request()
                             .onSuccess(responseFrame -> {
                                 BootNotificationResponse data = responseFrame.data();

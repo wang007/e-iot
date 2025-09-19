@@ -49,6 +49,10 @@ public class YkcFrameTest {
         RawYkcFrame rawYkcFrame;
         if (frame instanceof RawYkcFrame) {
             rawYkcFrame = (RawYkcFrame) frame;
+        } else if (frame instanceof YkcRequestFrame<?,?>){
+            YkcRequestFrame<?, ?> requestFrame = (YkcRequestFrame<?, ?>) frame;
+            DefaultYkcFrame<?> defaultYkcFrame = (DefaultYkcFrame<?>) requestFrame.delegateFrame();
+            rawYkcFrame = defaultYkcFrame.rawFrame();
         } else {
             DefaultYkcFrame<?> defaultYkcFrame = (DefaultYkcFrame<?>) frame;
             rawYkcFrame = defaultYkcFrame.rawFrame();
@@ -161,7 +165,7 @@ public class YkcFrameTest {
         }
 
 
-        YkcFrame<YkcBillingModelResponse> responseFrame = requestYkcFrame.asRequest(YkcCommand.BillingModelResponse.dataType()).responseFrame();
+        YkcFrame<YkcBillingModelResponse> responseFrame = requestYkcFrame.asRequest(YkcCommand.BillingModelRequest).responseFrame();
         YkcBillingModelResponse response = responseFrame.newData();
         response.setResult(1);
         responseFrame.data(response);

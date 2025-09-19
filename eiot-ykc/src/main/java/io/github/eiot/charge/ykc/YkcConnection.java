@@ -21,7 +21,7 @@ public class YkcConnection extends SeqNoIotConnection implements YkcConnectionBa
     }
 
     @Override
-    protected void updateSeqNo(RequestFrame<?, Frame<?>> requestFrame, int seqNo) {
+    protected void updateSeqNo(RequestFrame<?, ?> requestFrame, int seqNo) {
         YkcFrame<?> ykcFrame = (YkcFrame<?>) requestFrame;
         ykcFrame.sequenceNo(seqNo);
     }

@@ -24,8 +24,8 @@ public class DefaultExampleFrame<T> extends AbstractFrame<T, RawExampleFrame> im
     }
 
     @Override
-    public <Resp> RequestFrame<T, ExampleFrame<Resp>> asRequest() throws IllegalStateException {
-        return new ExampleRequestFrame<>(this);
+    public <Resp> ExampleRequestFrame<T, Resp> asRequest(RequestCommandDef<T, Resp> requestCommand) {
+        return new ExampleRequestFrame<>(this, requestCommand);
     }
 
     @Override

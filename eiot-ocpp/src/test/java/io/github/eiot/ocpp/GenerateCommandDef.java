@@ -9,6 +9,11 @@ import java.util.stream.Collectors;
  */
 public class GenerateCommandDef {
 
+    public static void main(String[] args) {
+        generate("/Users/wangzhancheng/IdeaProjects/e-iot/eiot-ocpp2_0_1-schema/src/main/generated/io/github/eiot/ocpp/schema/v2_0_1",
+                "io.github.eiot.ocpp.schema.v2_0_1", "ocpp2.0.1", "io.github.eiot.ocpp.schema.v2_0_1.Ocpp2_0_1Command");
+    }
+
     public static void generate(String path, String commandPackage, String protocol, String className) {
         File dir = new File(path);
         if (!dir.exists() || !dir.isDirectory()) {
@@ -66,6 +71,7 @@ public class GenerateCommandDef {
         text.append("package ").append(pkgName).append(";\r\n");
         text.append("\r\n");
         text.append("import io.github.eiot.CommandDef;\r\n");
+        text.append("import io.github.eiot.RequestCommandDef;\r\n");
         text.append("import io.github.eiot.impl.CommandDefProtocol;\r\n");
         text.append("import " + commandPackage + ".*;\r\n");
         text.append("\r\n");
@@ -78,9 +84,11 @@ public class GenerateCommandDef {
         commands.forEach((k, v) -> {
             v.forEach(n -> {
                 if (n.endsWith("Response")) {
-                    text.append("    CommandDef<" + n + "> " + k + "Response = COMMAND_PROTOCOL.createAndRegister(\"" + k + "Response\", " + n + ".class, null);\r\n");
+                    text.append("    CommandDef<" + n + "> " + k + "Response = COMMAND_PROTOCOL.createAndRegister(\"" + k + "Response\", " + n + ".class);\r\n");
                 } else {
-                    text.append("    CommandDef<" + n + "> " + k + "Request = COMMAND_PROTOCOL.createAndRegister(\"" + k + "\", " + n + ".class, " + k + "Response);\r\n");
+                    String responseType = n.substring(0, n.length() - 7) + "Response"; // replace end of Request.
+                    text.append("    RequestCommandDef<" + n + ", " + responseType +"> " + k + "Request =\r\n");
+                    text.append("        COMMAND_PROTOCOL.createAndRegister(\"" + k + "\", " + n + ".class, " + k + "Response);\r\n");
                 }
             });
             text.append("\r\n");

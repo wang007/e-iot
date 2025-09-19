@@ -133,7 +133,7 @@ public class OcppFrameTest {
         Assert.assertEquals(ocppFrame.data().getReason(), BootReasonEnum.POWER_UP);
         Assert.assertEquals(ocppFrame.data().getChargingStation().getModel(), "SingleSocketCharger");
 
-        OcppFrame<BootNotificationResponse> responseOcppFrame = ocppFrame.asRequest(BootNotificationResponse.class).responseFrame();
+        OcppFrame<BootNotificationResponse> responseOcppFrame = ocppFrame.asRequest(Ocpp2_1Command.BootNotificationRequest).responseFrame();
         BootNotificationResponse bootNotificationResponse = responseOcppFrame.newData();
         bootNotificationResponse.setCurrentTime(ZonedDateTime.now());
         bootNotificationResponse.setStatus(RegistrationStatusEnum.ACCEPTED);

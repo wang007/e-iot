@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * created by wang007 on 2025/3/14
  */
-public abstract class AbstractRawFrame implements Frame<ByteBuf> {
+public abstract class AbstractRawFrame<S extends AbstractRawFrame<S>> implements Frame<ByteBuf> {
 
     private final Map<String, Object> attributes = new ConcurrentHashMap<>(4, 1.0f);
 
@@ -62,11 +62,11 @@ public abstract class AbstractRawFrame implements Frame<ByteBuf> {
     protected abstract ByteBuf decodeData();
 
     @Override
-    public final Frame<ByteBuf> data(ByteBuf t) {
+    public final S data(ByteBuf t) {
         ensureWriteable(true);
         encodeData(t);
         this.data = t;
-        return this;
+        return (S) this;
     }
 
     protected abstract void encodeData(ByteBuf t);

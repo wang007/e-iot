@@ -239,7 +239,7 @@ public abstract class IotConnectionBase extends VertxConnection implements Outbo
     }
 
     @Override
-    public final Future<Frame<?>> request(RequestFrame<?, Frame<?>> frame, int timeoutMs) {
+    public final Future<Frame<?>> request(RequestFrame<?,?> frame, int timeoutMs) {
         if (timeoutMs <= 0) {
             timeoutMs = this.waitResponseTimeout;
         }

@@ -29,7 +29,7 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
 
     private final Queue<Integer> seqNoQueue;
 
-    protected final Map<Integer, RequestFrame<?, Frame<?>>> waitingResults = new HashMap<>(8, 1.0f);
+    protected final Map<Integer, RequestFrame<?, ?>> waitingResults = new HashMap<>(8, 1.0f);
 
     protected SeqNoIotConnection(ContextInternal context, ChannelHandlerContext chctx, TCPMetrics<?> metrics,
                                  boolean frameConverter, boolean setResponseResult,
@@ -52,10 +52,10 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
 
 
     @Override
-    public Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
+    public Future<RequestFrame<?, ?>> beforeRequest(RequestFrame<?, ?> requestFrame, int timeout) {
         synchronized (this) {
             BooleanRef success = new BooleanRef();
-            Future<RequestFrame<?, Frame<?>>> frameFuture;
+            Future<RequestFrame<?, ?>> frameFuture;
             if (seqNoQueue.isEmpty()) {
                 String terminalNo = requestFrame.terminalNo();
                 logger.warn("terminalNo: " + terminalNo + " not seqNo use, waiting");
@@ -132,7 +132,7 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
                         // save to waiting result.
                         int seqNo = getSeqNo(f);
                         synchronized (this) {
-                            RequestFrame<?, Frame<?>> old = waitingResults.put(seqNo, f);
+                            RequestFrame<?, ?> old = waitingResults.put(seqNo, f);
                             if (old != null) {
                                 waitingResults.put(seqNo, old);
                                 throw new IllegalStateException("the same seqNo for waiting result");
@@ -166,7 +166,7 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
         }
 
         synchronized (this) {
-            RequestFrame<?, Frame<?>> waitFrame = waitingResults.get(seqNo);
+            RequestFrame<?, ?> waitFrame = waitingResults.get(seqNo);
             if (waitFrame == null) {
                 return false;
             }
@@ -194,7 +194,7 @@ public abstract class SeqNoIotConnection extends IotConnectionBase {
      * @param requestFrame the request frame
      * @param seqNo        seqNo
      */
-    protected abstract void updateSeqNo(RequestFrame<?, Frame<?>> requestFrame, int seqNo);
+    protected abstract void updateSeqNo(RequestFrame<?, ?> requestFrame, int seqNo);
 
     /**
      * get seqNo from frame

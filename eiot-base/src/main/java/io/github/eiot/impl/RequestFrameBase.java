@@ -1,9 +1,6 @@
 package io.github.eiot.impl;
 
-import io.github.eiot.Frame;
-import io.github.eiot.IotConnection;
-import io.github.eiot.RequestFrame;
-import io.github.eiot.Side;
+import io.github.eiot.*;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
@@ -13,16 +10,16 @@ import java.util.Map;
 /**
  * created by wang007 on 2025/3/15
  */
-public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implements RequestFrame<Req, ResFrame> {
+public abstract class RequestFrameBase<Req, Resp, RespFrame extends Frame<Resp>> implements RequestFrame<Req, Resp> {
 
-    private final Promise<ResFrame> promise;
+    private final Promise<RespFrame> promise;
 
     protected final CommandDefFrame<Req> frame;
 
-    public RequestFrameBase(CommandDefFrame<Req> frame) {
-        if (frame.commandDef().responseType() == null) {
-            throw new IllegalStateException("Current frame is not request type");
-        }
+    protected final RequestCommandDef<Req, Resp> requestCommand;
+
+    public RequestFrameBase(CommandDefFrame<Req> frame, RequestCommandDef<Req, Resp> requestCommand) {
+        this.requestCommand = requestCommand;
         promise = frame.side() == Side.SENDER ? Promise.promise() : null;
         this.frame = frame;
     }
@@ -33,31 +30,31 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
 
     @Override
     public String responseCommand() {
-        return frame.commandDef().responseType().command();
+        return requestCommand.responseType().command();
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public Future<ResFrame> request() {
+    @Override
+    public Future<RespFrame> request() {
         if (promise == null) {
             throw new IllegalStateException("receiver frame not request.");
         }
-        Future<Frame<?>> future = iotConnection().request((RequestFrame<?, Frame<?>>) this);
-        return (Future<ResFrame>) future;
+        Future<Frame<?>> future = iotConnection().request(this);
+        return (Future<RespFrame>) future;
     }
 
-    @Override
     @SuppressWarnings("unchecked")
-    public Future<ResFrame> request(int timeout) {
+    @Override
+    public Future<RespFrame> request(int timeout) {
         if (promise == null) {
             throw new IllegalStateException("receiver frame not request.");
         }
-        Future<Frame<?>> future = iotConnection().request((RequestFrame<?, Frame<?>>) this, timeout);
-        return (Future<ResFrame>) future;
+        Future<Frame<?>> future = iotConnection().request(this, timeout);
+        return (Future<RespFrame>) future;
     }
 
     @Override
-    public Future<ResFrame> requestResult() {
+    public Future<RespFrame> requestResult() {
         if (promise == null) {
             throw new IllegalStateException("receiver frame not request.");
         }
@@ -65,18 +62,24 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
     }
 
     @Override
-    public boolean trySetResponseResult(ResFrame frame, Throwable ex) {
+    public RequestFrameBase<Req, Resp, RespFrame> data(Req req) {
+        frame.data(req);
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean trySetResponseResult(Frame<?> frame, Throwable ex) {
         if (ex != null) {
             return promise.tryFail(ex);
         }
-        return promise.tryComplete(frame);
+        return promise.tryComplete((RespFrame) frame);
     }
 
     @Override
     public boolean isRaw() {
         return frame.isRaw();
     }
-
 
     @Override
     public Map<String, Object> attributes() {
@@ -98,11 +101,6 @@ public abstract class RequestFrameBase<Req, ResFrame extends Frame<?>> implement
         return frame.data();
     }
 
-    @Override
-    public RequestFrameBase<Req, ResFrame> data(Req req) {
-         frame.data(req);
-         return this;
-    }
 
     @Override
     public int rawDataSize() {

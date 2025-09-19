@@ -236,7 +236,7 @@ public class RawOcppFrame implements OcppFrame<JsonObject> {
     }
 
     @Override
-    public <Resp> OcppRequestFrame<JsonObject, Resp> asRequest() throws IllegalStateException {
+    public <Resp> OcppRequestFrame<JsonObject, Resp> asRequest(RequestCommandDef<JsonObject, Resp> requestCommand) {
         throw new IllegalStateException("raw frame not support");
     }
 

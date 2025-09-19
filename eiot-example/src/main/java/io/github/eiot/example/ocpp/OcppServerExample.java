@@ -43,7 +43,7 @@ public class OcppServerExample {
                         ChargingStation chargingStation = data.getChargingStation();
                         System.out.println("login in charging Station: " + chargingStation);
 
-                        Frame<BootNotificationResponse> responseFrame = requestFrame.asRequest(BootNotificationResponse.class)
+                        Frame<BootNotificationResponse> responseFrame = requestFrame.asRequest(Ocpp2_1Command.BootNotificationRequest)
                                 .responseFrame();
                         BootNotificationResponse response = responseFrame.data();
 
@@ -60,7 +60,7 @@ public class OcppServerExample {
                                 .withRequestedMessage(MessageTriggerEnum.HEARTBEAT);
 
                         frame.data(requestData)
-                                .asRequest(TriggerMessageResponse.class)
+                                .asRequest(Ocpp2_1Command.TriggerMessageRequest)
                                 .request()
                                 .onSuccess(respFrame -> {
                                     TriggerMessageResponse tmResponse = respFrame.data();
@@ -111,7 +111,7 @@ public class OcppServerExample {
         @Override
         public void handle(IotRoutingContext<HeartbeatRequest> ctx) {
             Frame<HeartbeatRequest> requestFrame = ctx.frame();
-            requestFrame.asRequest(HeartbeatResponse.class)
+            requestFrame.asRequest(Ocpp2_1Command.HeartbeatRequest)
                     .responseFrame()
                     .data(new HeartbeatResponse().withCurrentTime(OffsetDateTime.now()))
                     .write();

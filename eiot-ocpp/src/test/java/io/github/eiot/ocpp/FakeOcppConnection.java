@@ -61,7 +61,7 @@ public class FakeOcppConnection implements OcppConnection {
     }
 
     @Override
-    public Future<Frame<?>> request(RequestFrame<?, Frame<?>> frame, int timeoutMs) {
+    public Future<Frame<?>> request(RequestFrame<?, ?> frame, int timeoutMs) {
         return null;
     }
 
