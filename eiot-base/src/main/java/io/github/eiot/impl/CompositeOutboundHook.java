@@ -38,7 +38,7 @@ public class CompositeOutboundHook implements OutboundHook {
     @Override
     public Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> frame) {
         Integer idx = frame.get(BEFORE_REQ_IDX_KEY, 0);
-        if (idx > hooks.size()) {
+        if (idx >= hooks.size()) {
             return Future.succeededFuture(frame);
         }
         frame.put(BEFORE_REQ_IDX_KEY, idx + 1);
@@ -49,7 +49,7 @@ public class CompositeOutboundHook implements OutboundHook {
     @Override
     public Future<Frame<?>> beforeWrite(Frame<?> frame) {
         Integer idx = frame.get(BEFORE_WR_IDX_KEY, 0);
-        if (idx > hooks.size()) {
+        if (idx >= hooks.size()) {
             return Future.succeededFuture(frame);
         }
         frame.put(BEFORE_WR_IDX_KEY, idx + 1);
