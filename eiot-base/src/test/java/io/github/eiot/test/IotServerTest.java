@@ -171,7 +171,7 @@ public class IotServerTest extends VertxTestBase {
             connection.frameHandler(frame -> {
                 Frame<ExampleHeartbeatResponse> responseFrame = frame.asRequest(ExampleHeartbeatResponse.class).responseFrame();
                 ExampleHeartbeatResponse data = responseFrame.newData();
-                responseFrame.data(data).write();
+                responseFrame.data(data).write().onFailure(this::fail);
             });
         });
 
