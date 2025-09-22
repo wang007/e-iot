@@ -36,7 +36,7 @@ public class CompositeOutboundHook implements OutboundHook {
     }
 
     @Override
-    public Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> frame) {
+    public Future<RequestFrame<?, ?>> beforeRequest(RequestFrame<?, ?> frame) {
         Integer idx = frame.get(BEFORE_REQ_IDX_KEY, 0);
         if (idx >= hooks.size()) {
             return Future.succeededFuture(frame);

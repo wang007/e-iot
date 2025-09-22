@@ -21,7 +21,7 @@ public class CheckCodeHandler implements Handler<IotRoutingContext<Object>> {
             ctx.next();
             return;
         }
-        CheckCodeException exception = new CheckCodeException(frame.terminalNo(), frame, "frame checkout failed, command: " + frame.command());
+        CheckCodeException exception = new CheckCodeException(frame.terminalNo(), frame, "frame checkCode failed, command: " + frame.command());
         ctx.fail(exception);
     }
 }

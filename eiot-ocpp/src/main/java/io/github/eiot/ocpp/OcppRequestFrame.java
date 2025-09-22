@@ -7,6 +7,8 @@ import io.github.eiot.impl.RequestFrameBase;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 
+import java.util.function.Consumer;
+
 /**
  * created by wang007 on 2025/4/22
  */
@@ -30,6 +32,12 @@ public class OcppRequestFrame<Req, Resp> extends RequestFrameBase<Req, Resp, Ocp
     @Override
     public OcppRequestFrame<Req, Resp> data(Req req) {
         ocppFrame.data(req);
+        return this;
+    }
+
+    @Override
+    public OcppRequestFrame<Req, Resp> dataBuilder(Consumer<Req> consumer) {
+        super.dataBuilder(consumer);
         return this;
     }
 

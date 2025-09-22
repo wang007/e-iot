@@ -21,7 +21,7 @@ interface YkcConnectionBase extends IotConnection {
         Frame<?> frame = frame0;
         if (!frame.isRaw()) {
             if (frame instanceof RequestFrameBase) {
-                frame = ((RequestFrameBase<?, ?>) frame).delegateFrame();
+                frame = ((RequestFrameBase<?, ?, ?>) frame).delegateFrame();
             }
             frame = ((AbstractFrame<?, ?>) frame).rawFrame();
         }

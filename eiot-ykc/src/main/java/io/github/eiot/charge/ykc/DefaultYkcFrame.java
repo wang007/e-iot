@@ -67,13 +67,13 @@ public class DefaultYkcFrame<T> extends AbstractFrame<T, RawYkcFrame> implements
 
     @Override
     public <Resp> YkcRequestFrame<T, Resp> asRequest(RequestCommandDef<T, Resp> requestCommand) {
-        CommandDef<T> current = commandDef();
-        if (current instanceof RequestCommandDef) {
-            if (((RequestCommandDef<?, ?>) current).responseType().equals(requestCommand.responseType())) {
-                throw new IllegalStateException("requestCommand not match commandDef()");
-            }
-        }
         return new YkcRequestFrame<>(this, requestCommand);
+    }
+
+    @Override
+    public YkcFrame<T> data(T t) {
+        super.data(t);
+        return this;
     }
 
     @Override

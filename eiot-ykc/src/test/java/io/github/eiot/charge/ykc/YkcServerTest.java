@@ -85,7 +85,7 @@ public class YkcServerTest extends VertxTestBase {
                     YkcHeartbeatRequest request = ykcFrame.newData();
                     request.setGunNo(1);
                     request.setGunStatus(0);
-                    return ykcFrame.data(request).asRequest(YkcHeartbeatResponse.class).request();
+                    return ykcFrame.data(request).asRequest(YkcCommand.HeartbeatRequest).request();
                 });
     }
 
@@ -133,7 +133,8 @@ public class YkcServerTest extends VertxTestBase {
         IotServer iotServer = matchSeqNoFirst ? this.iotServer : YkcServer.create(vertx, YkcServer.newOptions().setSeqNoMatchFirst(false));
         iotServer.frameHandler(frame -> {
             checkCheckCodeResult(frame);
-            Frame<YkcHeartbeatResponse> responseFrame = frame.asRequest(YkcHeartbeatResponse.class).responseFrame();
+            Frame<YkcHeartbeatRequest> requestFrame = (Frame<YkcHeartbeatRequest>) frame;
+            Frame<YkcHeartbeatResponse> responseFrame = requestFrame.asRequest(YkcCommand.HeartbeatRequest).responseFrame();
             YkcHeartbeatResponse response = responseFrame.newData();
             response.setResult(0);
             response.setGunNo(1);
@@ -163,7 +164,7 @@ public class YkcServerTest extends VertxTestBase {
                         request.setGunNo(1);
                         request.setGunStatus(0);
                         ykcFrame.data(request)
-                                .asRequest(YkcHeartbeatResponse.class)
+                                .asRequest(YkcCommand.HeartbeatRequest)
                                 .request()
                                 .onSuccess(responseFrame -> {
                                     YkcHeartbeatResponse data = responseFrame.data();

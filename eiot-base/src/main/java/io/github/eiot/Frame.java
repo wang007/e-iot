@@ -3,6 +3,8 @@ package io.github.eiot;
 import io.netty.buffer.ByteBuf;
 import io.vertx.core.Future;
 
+import java.util.function.Consumer;
+
 /**
  * {@link Frame} represents a data structure in the interaction process,
  * and a frame is a complete data. A frame usually contains frame type, data length, data, checksum, and so on.
@@ -41,6 +43,15 @@ public interface Frame<T> extends AttributeHolder {
      * @return this
      */
     Frame<T> data(T t);
+
+    default Frame<T> dataBuilder(Consumer<T> consumer) {
+        T data = data();
+        if (data == null) {
+            data = newData();
+        }
+        consumer.accept(data);
+        return data(data);
+    }
 
     /**
      * @return frame bytes size

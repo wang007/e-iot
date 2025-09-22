@@ -3,6 +3,8 @@ package io.github.eiot.charge.ykc;
 import io.github.eiot.*;
 import io.github.eiot.codec.Hex;
 
+import java.util.function.Consumer;
+
 /**
  * 云快充协议
  * <p>
@@ -59,6 +61,15 @@ public interface YkcFrame<T> extends Frame<T> {
      */
     @Override
     T data();
+
+    @Override
+    YkcFrame<T> data(T t);
+
+    @Override
+    default YkcFrame<T> dataBuilder(Consumer<T> consumer) {
+        Frame.super.dataBuilder(consumer);
+        return this;
+    }
 
     /**
      * @return 校验和 2byte

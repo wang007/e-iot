@@ -23,7 +23,7 @@ import java.util.List;
  * <p>
  * created by wang007 on 2025/4/12
  */
-public class RawExampleFrame extends AbstractRawFrame implements ExampleFrame<ByteBuf> {
+public class RawExampleFrame extends AbstractRawFrame<RawExampleFrame> implements ExampleFrame<ByteBuf> {
 
     private static final ComposeCodec CODEC;
 
@@ -157,8 +157,9 @@ public class RawExampleFrame extends AbstractRawFrame implements ExampleFrame<By
         return Unpooled.buffer();
     }
 
+
     @Override
-    public <Resp> RequestFrame<ByteBuf, Resp> asRequest(RequestCommandDef<ByteBuf, Resp> requestCommand) {
+    public <Resp> ExampleRequestFrame<ByteBuf, Resp> asRequest(RequestCommandDef<ByteBuf, Resp> requestCommand) {
         throw new IllegalStateException("raw frame not support");
     }
 }

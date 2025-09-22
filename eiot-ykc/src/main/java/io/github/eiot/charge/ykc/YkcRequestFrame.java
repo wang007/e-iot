@@ -5,6 +5,8 @@ import io.github.eiot.RequestCommandDef;
 import io.github.eiot.impl.RequestFrameBase;
 import io.github.eiot.codec.Hex;
 
+import java.util.function.Consumer;
+
 /**
  * created by wang007 on 2025/3/16
  */
@@ -43,8 +45,16 @@ public class YkcRequestFrame<Req, Resp> extends RequestFrameBase<Req, Resp, YkcF
         return this;
     }
 
-    public <Resp1> YkcRequestFrame<Req, Resp1> asRequest(RequestCommandDef<Req, Resp1> requestCommand) {
-        return (YkcRequestFrame<Req, Resp1>) this;
+    @Override
+    public YkcRequestFrame<Req, Resp> dataBuilder(Consumer<Req> consumer) {
+        super.dataBuilder(consumer);
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <Resp> YkcRequestFrame<Req, Resp> asRequest(RequestCommandDef<Req, Resp> requestCommand) {
+        return (YkcRequestFrame<Req, Resp>) this;
     }
 
     @Override
