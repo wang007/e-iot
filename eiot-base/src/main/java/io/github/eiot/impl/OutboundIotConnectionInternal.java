@@ -31,7 +31,7 @@ public interface OutboundIotConnectionInternal extends IotConnection {
      * @param timeout      the timeout
      * @return the ops result of Future
      */
-    default Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
+    default Future<RequestFrame<?, ?>> beforeRequest(RequestFrame<?, ?> requestFrame, int timeout) {
         return Future.succeededFuture(requestFrame);
     }
 
@@ -42,7 +42,7 @@ public interface OutboundIotConnectionInternal extends IotConnection {
      * @param timeoutMs timeout
      * @param promise the promise
      */
-    default void request(RequestFrame<?, Frame<?>> frame, int timeoutMs, Promise<Frame<?>> promise) {
+    default void request(RequestFrame<?, ?> frame, int timeoutMs, Promise<Frame<?>> promise) {
         long start = System.nanoTime();
         context().emit(v -> {
             try {

@@ -1,9 +1,6 @@
 package io.github.eiot.ocpp;
 
-import io.github.eiot.CommandDef;
-import io.github.eiot.Frame;
-import io.github.eiot.IotConnection;
-import io.github.eiot.RequestFrame;
+import io.github.eiot.*;
 import io.github.eiot.ocpp.exception.OcppProtocolUnsupportedException;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
@@ -208,10 +205,5 @@ public interface OcppFrame<T> extends Frame<T> {
     }
 
     @Override
-    <Resp> OcppRequestFrame<T, Resp> asRequest() throws IllegalStateException;
-
-    @Override
-    default <Resp> OcppRequestFrame<T, Resp> asRequest(Class<Resp> responseType) throws IllegalStateException {
-        return asRequest();
-    }
+    <Resp> OcppRequestFrame<T, Resp> asRequest(RequestCommandDef<T, Resp> requestCommand);
 }

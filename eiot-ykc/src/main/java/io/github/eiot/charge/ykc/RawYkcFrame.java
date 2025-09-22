@@ -161,7 +161,7 @@ public class RawYkcFrame extends AbstractRawFrame implements YkcFrame<ByteBuf> {
     }
 
     @Override
-    public <Resp> YkcRequestFrame<ByteBuf, Resp> asRequest() {
+    public <Resp> YkcRequestFrame<ByteBuf, Resp> asRequest(RequestCommandDef<ByteBuf, Resp> requestCommand) {
         throw new IllegalStateException("raw frame not support");
     }
 

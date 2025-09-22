@@ -78,7 +78,6 @@ public interface Frame<T> extends AttributeHolder {
     ByteBuf toByteBuf();
 
     /**
-     *
      * @return return the raw byteBuf hex format
      */
     String toRawString();
@@ -99,26 +98,13 @@ public interface Frame<T> extends AttributeHolder {
 
     /**
      * Convert current frame to request frame type.
-     *
+     * <p>
      * NOTE: The current frame must be of the request type, otherwise an IllegalStateException is thrown
      *
-     * @param <Resp> response type of the current request
+     * @param <Resp>         response type of the current request
+     * @param requestCommand request commandDef
      * @return the request frame
      * @throws IllegalStateException current frame is not request type
-     *
      */
-    <Resp> RequestFrame<T, ? extends Frame<Resp>> asRequest() throws IllegalStateException;
-
-    /**
-     * like {@link #asRequest()} but declare the type through parameters
-     *
-     * @param responseType response type of the current request
-     * @param <Resp> response type of the current request
-     * @return the request frame
-     * @throws IllegalStateException
-     */
-    default <Resp> RequestFrame<T, ? extends Frame<Resp>> asRequest(Class<Resp> responseType) throws IllegalStateException {
-        return this.<Resp>asRequest();
-    }
-
+    <Resp> RequestFrame<T, Resp> asRequest(RequestCommandDef<T, Resp> requestCommand);
 }

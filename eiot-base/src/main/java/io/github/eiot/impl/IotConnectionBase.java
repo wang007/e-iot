@@ -219,7 +219,7 @@ public abstract class IotConnectionBase extends ConnectionBase implements Outbou
     }
 
     @Override
-    public final Future<Frame<?>> request(RequestFrame<?, Frame<?>> frame, int timeoutMs) {
+    public final Future<Frame<?>> request(RequestFrame<?,?> frame, int timeoutMs) {
         if (timeoutMs <= 0) {
             timeoutMs = this.waitResponseTimeout;
         }

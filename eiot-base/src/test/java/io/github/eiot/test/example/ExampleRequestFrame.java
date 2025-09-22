@@ -8,28 +8,33 @@ import io.github.eiot.impl.RequestFrameBase;
 /**
  * created by wang007 on 2025/4/12
  */
-public class ExampleRequestFrame<Req, Resp> extends RequestFrameBase<Req, ExampleFrame<Resp>> implements ExampleFrame<Req> {
+public class ExampleRequestFrame<Req, Resp> extends RequestFrameBase<Req, Resp, ExampleFrame<Resp>> implements ExampleFrame<Req> {
 
     private final DefaultExampleFrame<Req> frame;
 
-    public ExampleRequestFrame(DefaultExampleFrame<Req> frame) {
-        super(frame);
+    public ExampleRequestFrame(DefaultExampleFrame<Req> frame, RequestCommandDef<Req, Resp> requestCommand) {
+        super(frame, requestCommand);
         this.frame = frame;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public RequestFrame<Req, ExampleFrame<Resp>> asRequest() throws IllegalStateException {
-        return this;
+    public ExampleFrame<Resp> responseFrame() {
+        CommandDef<Resp> responseCommand = requestCommand.responseType();
+        DefaultExampleFrame<Resp> responseFrame = new DefaultExampleFrame<Resp>(iotConnection(), responseCommand);
+        responseFrame.sequenceNo(sequenceNo());
+        return responseFrame;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public ExampleFrame<Resp> responseFrame() {
-        CommandDef<Resp> messageType = (CommandDef<Resp>) frame.commandDef().responseType();
-        DefaultExampleFrame<Resp> responseFrame = new DefaultExampleFrame<Resp>(iotConnection(), messageType);
-        responseFrame.sequenceNo(sequenceNo());
-        return responseFrame;
+    public <Resp> ExampleRequestFrame<Req, Resp> asRequest(RequestCommandDef<Req, Resp> requestCommand) {
+        return (ExampleRequestFrame<Req, Resp>) this;
+    }
+
+    @Override
+    public ExampleRequestFrame<Req, Resp> data(Req data) {
+        super.data(data);
+        return this;
     }
 
     @Override
@@ -49,7 +54,8 @@ public class ExampleRequestFrame<Req, Resp> extends RequestFrameBase<Req, Exampl
 
     @Override
     public ExampleRequestFrame<Req, Resp> sequenceNo(int seqNo) {
-         frame.sequenceNo(seqNo);
-         return this;
+        frame.sequenceNo(seqNo);
+        return this;
     }
+
 }

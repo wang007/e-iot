@@ -158,8 +158,7 @@ public class RawExampleFrame extends AbstractRawFrame implements ExampleFrame<By
     }
 
     @Override
-    public <Resp> RequestFrame<ByteBuf, ExampleFrame<Resp>> asRequest() throws IllegalStateException {
+    public <Resp> RequestFrame<ByteBuf, Resp> asRequest(RequestCommandDef<ByteBuf, Resp> requestCommand) {
         throw new IllegalStateException("raw frame not support");
     }
-
 }

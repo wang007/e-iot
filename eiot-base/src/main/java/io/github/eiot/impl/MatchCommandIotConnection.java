@@ -31,17 +31,17 @@ public abstract class MatchCommandIotConnection extends IotConnectionBase {
     }
 
     @Override
-    public Future<RequestFrame<?, Frame<?>>> beforeRequest(RequestFrame<?, Frame<?>> requestFrame, int timeout) {
+    public Future<RequestFrame<?, ?>> beforeRequest(RequestFrame<?, ?> requestFrame, int timeout) {
         String responseType = requestFrame.responseCommand();
         synchronized (this) {
-            Future<RequestFrame<?, Frame<?>>> future;
+            Future<RequestFrame<?, ?>> future;
             PendingRequestFrames requestFrames = waitResults.get(responseType);
             if (requestFrames == null) {
                 requestFrames = new PendingRequestFrames(requestFrame);
                 waitResults.put(responseType, requestFrames);
                 future = Future.succeededFuture(requestFrame);
             } else {
-                Promise<RequestFrame<?, Frame<?>>> promise = context.promise();
+                Promise<RequestFrame<?, ?>> promise = context.promise();
                 requestFrames.addPending(promise, requestFrame);
                 future = promise.future();
             }
@@ -82,7 +82,7 @@ public abstract class MatchCommandIotConnection extends IotConnectionBase {
                 frame = null;
             }
 
-            RequestFrame<?, Frame<?>> current = requestFrames.current;
+            RequestFrame<?, ?> current = requestFrames.current;
             return current.trySetResponseResult(frame, ex);
         }
     }
@@ -91,11 +91,11 @@ public abstract class MatchCommandIotConnection extends IotConnectionBase {
     // not thread safe
     private static class PendingRequestFrames {
 
-        private RequestFrame<?, Frame<?>> current;
+        private RequestFrame<?, ?> current;
 
         private Queue<PendingRequestFrame> pendingRequests;
 
-        PendingRequestFrames(RequestFrame<?, Frame<?>> requestFrame) {
+        PendingRequestFrames(RequestFrame<?, ?> requestFrame) {
             this.current = requestFrame;
         }
 
@@ -103,7 +103,7 @@ public abstract class MatchCommandIotConnection extends IotConnectionBase {
             return pendingRequests != null && !pendingRequests.isEmpty();
         }
 
-        public void addPending(Promise<RequestFrame<?, Frame<?>>> promise, RequestFrame<?, Frame<?>> requestFrame) {
+        public void addPending(Promise<RequestFrame<?, ?>> promise, RequestFrame<?, ?> requestFrame) {
             getPendingRequests().add(new PendingRequestFrame(promise, requestFrame));
         }
 
@@ -132,10 +132,10 @@ public abstract class MatchCommandIotConnection extends IotConnectionBase {
     }
 
     private static class PendingRequestFrame {
-        public final Promise<RequestFrame<?, Frame<?>>> promise;
-        public final RequestFrame<?, Frame<?>> requestFrame;
+        public final Promise<RequestFrame<?, ?>> promise;
+        public final RequestFrame<?, ?> requestFrame;
 
-        public PendingRequestFrame(Promise<RequestFrame<?, Frame<?>>> promise, RequestFrame<?, Frame<?>> requestFrame) {
+        public PendingRequestFrame(Promise<RequestFrame<?, ?>> promise, RequestFrame<?, ?> requestFrame) {
             this.promise = promise;
             this.requestFrame = requestFrame;
         }

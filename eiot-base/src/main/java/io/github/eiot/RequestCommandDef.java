@@ -8,5 +8,5 @@ public interface RequestCommandDef<Req, Resp> extends CommandDef<Req> {
     /**
      * @return If no response frame exists, return null.
      */
-    CommandDef<?> responseType();
+    CommandDef<Resp> responseType();
 }

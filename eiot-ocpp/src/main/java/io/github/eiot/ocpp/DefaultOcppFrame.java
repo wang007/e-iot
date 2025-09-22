@@ -129,11 +129,8 @@ public class DefaultOcppFrame<T> implements OcppFrame<T>, CommandDefFrame<T> {
     }
 
     @Override
-    public <Resp> OcppRequestFrame<T, Resp> asRequest() throws IllegalStateException {
-        if (commandDef().responseType() == null) {
-            throw new IllegalStateException("not request type frame");
-        }
-        return new OcppRequestFrame<>(this);
+    public <Resp> OcppRequestFrame<T, Resp> asRequest(RequestCommandDef<T, Resp> requestCommand) {
+        return new OcppRequestFrame<>(this, requestCommand);
     }
 
     @Override
