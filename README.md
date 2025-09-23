@@ -19,14 +19,14 @@ Simple, high performance, based on vertx to implement a variety of charging prot
 <dependency>
     <groupId>io.github.wang007</groupId>
     <artifactId>eiot-ykc</artifactId>
-    <version>0.0.2</version>
+    <version>1.1.1</version>
 </dependency>
 
 <!-- vertx 5.x 版本 -->
 <dependency>
 <groupId>io.github.wang007</groupId>
 <artifactId>eiot-ykc</artifactId>
-<version>2.0.1</version>
+<version>2.1.1</version>
 </dependency>
 
 ```
@@ -42,13 +42,13 @@ Simple, high performance, based on vertx to implement a variety of charging prot
     <dependency>
         <groupId>io.github.wang007</groupId>
         <artifactId>eiot-ocpp</artifactId>
-        <version>0.0.2</version>
+        <version>1.1.1</version>
     </dependency>
     <!-- 对应的 schema -->
     <dependency>
         <groupId>io.github.wang007</groupId>
         <artifactId>eiot-ocpp1_6-schema</artifactId>
-        <version>0.0.2</version>
+        <version>1.1.1</version>
     </dependency>
 
 
@@ -56,13 +56,13 @@ Simple, high performance, based on vertx to implement a variety of charging prot
     <dependency>
         <groupId>io.github.wang007</groupId>
         <artifactId>eiot-ocpp</artifactId>
-        <version>2.0.1</version>
+        <version>2.1.1</version>
     </dependency>
     <!-- 对应的 schema -->
     <dependency>
         <groupId>io.github.wang007</groupId>
         <artifactId>eiot-ocpp1_6-schema</artifactId>
-        <version>2.0.1</version>
+        <version>2.1.1</version>
     </dependency>
     
 </dependenies>
